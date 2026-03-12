@@ -10,7 +10,7 @@ use Illuminate\Database\Eloquent\Relations\HasOne;
 class Gathering extends Model
 {
     protected $fillable = [
-        'event_period_id', 'name', 'type', 'date', 'location', 'notes'
+        'event_period_id', 'gathering_type_id', 'name', 'date', 'location', 'notes'
     ];
 
     protected $casts = ['date' => 'datetime'];
@@ -18,6 +18,11 @@ class Gathering extends Model
     public function eventPeriod(): BelongsTo
     {
         return $this->belongsTo(EventPeriod::class);
+    }
+
+    public function gatheringType(): BelongsTo
+    {
+        return $this->belongsTo(GatheringType::class);
     }
 
     public function rsvps(): HasMany
