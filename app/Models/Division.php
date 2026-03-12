@@ -10,8 +10,8 @@ class Division extends Model
 {
     protected $fillable = ['name', 'access_level'];
 
-    public function panitiaAssignments(): HasMany
+    public function committeeAssignments(): HasMany
     {
-        return $this->hasMany(PanitiaAssignment::class);
+        return $this->hasMany(CommitteeAssignment::class);
     }
 }

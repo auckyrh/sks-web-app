@@ -18,6 +18,7 @@ class DatabaseSeeder extends Seeder
 
         $this->call([
             WilayahLingkunganSeeder::class,
+            DivisionSeeder::class,
         ]);
 
         // User::factory(10)->create();
