@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->foreignId('event_period_id')->constrained()->cascadeOnDelete();
             $table->string('name');
-            $table->enum('type', ['gathering', 'rekoleksi', 'gladi_kotor', 'gladi_bersih', 'pertemuan_ortu']);
+            $table->foreignId('gathering_type_id')->constrained('gathering_types')->restrictOnDelete();
             $table->dateTime('date');
             $table->string('location');
             $table->text('notes')->nullable();
