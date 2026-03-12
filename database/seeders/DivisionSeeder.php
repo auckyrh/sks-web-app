@@ -43,6 +43,7 @@ class DivisionSeeder extends Seeder
             Division::create($division);
         }
 
-        $this->command->info('✅ 23 divisi berhasil di-seed!');
+        $count = count($divisions);
+        $this->command->info("✅ {$count} divisi berhasil di-seed!");
     }
 }

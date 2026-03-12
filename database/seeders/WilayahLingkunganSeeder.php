@@ -52,17 +52,22 @@ class WilayahLingkunganSeeder extends Seeder
             ],
         ];
 
+        $wilayahCount = 0;
+        $lingkunganCount = 0;
+
         foreach ($data as $wilayahName => $lingkunganList) {
             $wilayah = Wilayah::create(['name' => $wilayahName]);
+            $wilayahCount++;
 
             foreach ($lingkunganList as $lingkunganName) {
                 Lingkungan::create([
                     'wilayah_id' => $wilayah->id,
                     'name' => $lingkunganName,
                 ]);
+                $lingkunganCount++;
             }
         }
 
-        $this->command->info('✅ 11 wilayah dan 48 lingkungan berhasil di-seed!');
+        $this->command->info("✅ {$wilayahCount} wilayah dan {$lingkunganCount} lingkungan berhasil di-seed!");
     }
 }
