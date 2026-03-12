@@ -3,6 +3,9 @@
 namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
+use Filament\Models\Contracts\FilamentUser;
+use Filament\Models\Contracts\HasName;
+use Filament\Panel;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Foundation\Auth\User as Authenticatable;
@@ -11,7 +14,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 
-class User extends Authenticatable
+class User extends Authenticatable implements FilamentUser, HasName
 {
     use HasFactory, Notifiable, SoftDeletes;
 
@@ -37,6 +40,17 @@ class User extends Authenticatable
     {
         return $this->hasOne(CommitteeAssignment::class)
             ->whereHas('eventPeriod', fn($q) => $q->where('is_active', true));
+    }
+
+    public function getFilamentName(): string
+    {
+        return $this->full_name;
+    }
+
+    public function canAccessPanel(Panel $panel): bool
+    {
+        return true;
+//        return str_ends_with($this->email, '@yourdomain.com') && $this->hasVerifiedEmail();
     }
 
     public function isSuperAdmin(): bool { return $this->role === 'superadmin'; }
