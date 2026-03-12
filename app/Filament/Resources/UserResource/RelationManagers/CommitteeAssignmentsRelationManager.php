@@ -20,6 +20,7 @@ class CommitteeAssignmentsRelationManager extends RelationManager
             Forms\Components\Select::make('event_period_id')
                 ->label('Event Period')
                 ->relationship('eventPeriod', 'year')
+                ->getOptionLabelFromRecordUsing(fn ($record) => "{$record->year} - {$record->theme}")
                 ->required()
                 ->native(false)
                 ->preload(),
