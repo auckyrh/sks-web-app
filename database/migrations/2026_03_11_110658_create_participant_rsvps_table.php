@@ -18,6 +18,7 @@ return new class extends Migration
             $table->tinyInteger('day'); // 1, 2, 3
             $table->enum('will_attend', ['yes', 'no', 'maybe'])->default('maybe');
             $table->foreignId('updated_by')->nullable()->constrained('users')->nullOnDelete();
+            $table->softDeletes();
             $table->timestamps();
 
             $table->unique(['participant_id', 'day']);

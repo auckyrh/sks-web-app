@@ -17,6 +17,7 @@ return new class extends Migration
             $table->foreignId('user_id')->constrained()->cascadeOnDelete();
             $table->enum('will_attend', ['yes', 'no', 'maybe'])->default('maybe');
             $table->dateTime('responded_at')->nullable();
+            $table->softDeletes();
             $table->timestamps();
 
             $table->unique(['gathering_id', 'user_id']);

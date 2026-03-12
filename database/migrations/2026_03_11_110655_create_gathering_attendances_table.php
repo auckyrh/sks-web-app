@@ -18,6 +18,7 @@ return new class extends Migration
             $table->boolean('attended')->default(false);
             $table->string('notes')->nullable();
             $table->foreignId('recorded_by')->nullable()->constrained('users')->nullOnDelete();
+            $table->softDeletes();
             $table->timestamps();
 
             $table->unique(['gathering_id', 'user_id']);

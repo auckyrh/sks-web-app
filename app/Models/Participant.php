@@ -6,13 +6,16 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Participant extends Model
 {
+    use SoftDeletes;
     protected $fillable = [
         'registration_id', 'event_period_id', 'event_class_id',
         'child_full_name', 'nickname', 'gender', 'birth_date', 'grade',
-        'parent_name', 'parent_wa', 'tshirt_size', 'allergies', 'notes'
+        'parent_name', 'parent_wa', 'tshirt_size', 'allergies', 'notes',
+        'created_by', 'deleted_by'
     ];
 
     protected $casts = ['birth_date' => 'date'];
