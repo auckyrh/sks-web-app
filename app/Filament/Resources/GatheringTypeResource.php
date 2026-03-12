@@ -33,14 +33,16 @@ class GatheringTypeResource extends Resource
                 ->maxLength(255),
             Forms\Components\Select::make('color')
                 ->label('Warna Badge')
-                ->options([
-                    'primary' => 'Primary (Biru)',
-                    'warning' => 'Warning (Kuning)',
-                    'success' => 'Success (Hijau)',
-                    'info'    => 'Info (Cyan)',
-                    'danger'  => 'Danger (Merah)',
-                    'gray'    => 'Gray',
-                ])
+                ->allowHtml()
+                ->options(fn () => collect(self::registeredColors())
+                    ->mapWithKeys(fn ($hex, $name) => [
+                        $name => '<div style="display:flex;align-items:center;justify-content:space-between;gap:8px;">
+                                    <span>' . ucfirst($name) . '</span>
+                                    <span style="display:inline-block;width:16px;height:16px;border-radius:4px;background:' . $hex . ';flex-shrink:0;"></span>
+                                  </div>',
+                    ])
+                    ->all()
+                )
                 ->required()
                 ->native(false),
             Forms\Components\TextInput::make('order')
@@ -65,16 +67,10 @@ class GatheringTypeResource extends Resource
                     ->label('Label')
                     ->searchable()
                     ->sortable(),
-                Tables\Columns\BadgeColumn::make('color')
+                Tables\Columns\TextColumn::make('color')
                     ->label('Warna')
-                    ->colors([
-                        'primary' => 'primary',
-                        'warning' => 'warning',
-                        'success' => 'success',
-                        'info'    => 'info',
-                        'danger'  => 'danger',
-                        'gray'    => 'gray',
-                    ]),
+                    ->badge()
+                    ->color(fn ($state) => $state),
                 Tables\Columns\TextColumn::make('order')
                     ->label('Urutan')
                     ->sortable(),
@@ -90,6 +86,25 @@ class GatheringTypeResource extends Resource
                     Tables\Actions\DeleteBulkAction::make(),
                 ]),
             ]);
+    }
+
+    /** Colors registered in AppServiceProvider — keep in sync. */
+    public static function registeredColors(): array
+    {
+        return [
+            'primary' => '#3b82f6',
+            'info'    => '#0ea5e9',
+            'success' => '#22c55e',
+            'warning' => '#f59e0b',
+            'danger'  => '#ef4444',
+            'gray'    => '#71717a',
+            'indigo'  => '#6366f1',
+            'violet'  => '#8b5cf6',
+            'sky'     => '#0ea5e9',
+            'teal'    => '#14b8a6',
+            'orange'  => '#f97316',
+            'rose'    => '#f43f5e',
+        ];
     }
 
     public static function getPages(): array

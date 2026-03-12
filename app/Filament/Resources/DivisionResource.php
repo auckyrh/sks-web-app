@@ -55,7 +55,7 @@ class DivisionResource extends Resource
                     ->label('Level Akses')
                     ->colors([
                         'success' => 'upper',
-                        'gray'    => 'lower',
+                        'danger'  => 'lower',
                     ])
                     ->formatStateUsing(fn ($state) => $state === 'upper' ? 'Upper' : 'Lower'),
                 Tables\Columns\TextColumn::make('created_at')
