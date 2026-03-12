@@ -20,8 +20,8 @@ return new class extends Migration
             $table->enum('gender', ['M', 'F']);
             $table->date('birth_date');
             $table->string('address');
-            $table->foreignId('wilayah_id')->constrained('wilayah')->restrictOnDelete();
-            $table->foreignId('lingkungan_id')->nullable()->constrained('lingkungan')->nullOnDelete();
+            $table->foreignId('wilayah_id')->constrained('wilayahs')->restrictOnDelete();
+            $table->foreignId('lingkungan_id')->nullable()->constrained('lingkungans')->nullOnDelete();
             $table->tinyInteger('grade');
             $table->enum('registration_source', ['BIAK', 'YCK', 'UMUM']);
             $table->boolean('has_joined_biak_yck')->default(false);
