@@ -15,6 +15,7 @@ return new class extends Migration
             $table->id();
             $table->year('year')->unique();
             $table->string('theme');
+            $table->string('event_logo')->nullable();
             $table->boolean('is_active')->default(false);
             $table->date('event_start_date')->nullable();
             $table->date('event_end_date')->nullable();

@@ -38,6 +38,12 @@ class EventPeriodResource extends Resource
                         ->required()
                         ->maxLength(255)
                         ->columnSpanFull(),
+                    Forms\Components\FileUpload::make('event_logo')
+                        ->label('Logo Event')
+                        ->image()
+                        ->nullable()
+                        ->directory('event-logos')
+                        ->columnSpanFull(),
                     Forms\Components\Toggle::make('is_active')
                         ->label('Aktif (Tahun Berjalan)')
                         ->helperText('Hanya 1 event yang bisa aktif dalam satu waktu bersamaan')
@@ -77,6 +83,12 @@ class EventPeriodResource extends Resource
     {
         return $table
             ->columns([
+                Tables\Columns\ImageColumn::make('event_logo')
+                    ->label('')
+                    ->circular()
+                    ->defaultImageUrl(fn () => 'https://ui-avatars.com/api/?name=S&background=random')
+                    ->width(40)
+                    ->height(40),
                 Tables\Columns\TextColumn::make('year')
                     ->label('Tahun')
                     ->sortable()
@@ -95,11 +107,11 @@ class EventPeriodResource extends Resource
                     ->label('Selesai Event')
                     ->date('d M Y')
                     ->sortable(),
-                Tables\Columns\TextColumn::make('paymentTiers.amount')
-                    ->label('Biaya')
-                    ->money('IDR')
-                    ->listWithLineBreaks()
-                    ->bulleted(),
+//                Tables\Columns\TextColumn::make('paymentTiers.amount')
+//                    ->label('Biaya')
+//                    ->money('IDR')
+//                    ->listWithLineBreaks()
+//                    ->bulleted(),
                 Tables\Columns\TextColumn::make('registration_open_at')
                     ->label('Pendaftaran Dibuka')
                     ->dateTime('d M Y, H:i')
@@ -129,6 +141,7 @@ class EventPeriodResource extends Resource
         return [
             RelationManagers\EventClassesRelationManager::class,
             RelationManagers\PaymentTiersRelationManager::class,
+            RelationManagers\GatheringsRelationManager::class,
         ];
     }
 

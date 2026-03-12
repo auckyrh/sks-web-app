@@ -10,7 +10,7 @@ use Illuminate\Database\Eloquent\Relations\HasOne;
 class EventPeriod extends Model
 {
     protected $fillable = [
-        'year', 'theme', 'is_active',
+        'year', 'theme', 'event_logo', 'is_active',
         'event_start_date', 'event_end_date',
         'registration_open_at', 'registration_close_at'
     ];
