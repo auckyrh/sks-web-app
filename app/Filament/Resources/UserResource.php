@@ -16,58 +16,68 @@ use Illuminate\Database\Eloquent\SoftDeletingScope;
 class UserResource extends Resource
 {
     protected static ?string $model = User::class;
-
-    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
+    protected static ?string $navigationIcon = 'heroicon-o-users';
+    protected static ?string $navigationGroup = 'User Management';
+    protected static ?string $navigationLabel = 'Users';
+    protected static ?int $navigationSort = 1;
 
     public static function form(Form $form): Form
     {
-        return $form
-            ->schema([
-                Forms\Components\FileUpload::make('photo')
-                    ->label('Foto / Avatar')
-                    ->image()
-                    ->nullable()
-                    ->directory('avatars')
-                    ->columnSpanFull(),
-                Forms\Components\TextInput::make('full_name')
-                    ->label('Nama Lengkap')
-                    ->required()
-                    ->maxLength(255),
-                Forms\Components\TextInput::make('nick_name')
-                    ->label('Nama Panggilan')
-                    ->nullable()
-                    ->maxLength(255),
-                Forms\Components\TextInput::make('email')
-                    ->email()
-                    ->required()
-                    ->maxLength(255),
-                Forms\Components\TextInput::make('phone')
-                    ->label('No. HP')
-                    ->tel()
-                    ->nullable()
-                    ->maxLength(255),
-                Forms\Components\Select::make('role')
-                    ->options([
-                        'superadmin' => 'Super Admin',
-                        'admin'      => 'Admin',
-                        'member'     => 'Member',
-                    ])
-                    ->required()
-                    ->native(false),
-                Forms\Components\DatePicker::make('birth_date')
-                    ->label('Tanggal Lahir')
-                    ->nullable()
-                    ->native(false)
-                    ->displayFormat('d M Y'),
-                Forms\Components\TextInput::make('address')
-                    ->label('Alamat Domisili')
-                    ->nullable()
-                    ->maxLength(255),
-                Forms\Components\TextInput::make('password')
-                    ->password()
-                    ->required()
-                    ->maxLength(255),
-            ]);
+        return $form->schema([
+            Forms\Components\Section::make('Data Pribadi')
+                ->schema([
+                    Forms\Components\TextInput::make('full_name')
+                        ->label('Nama Lengkap')
+                        ->required()
+                        ->maxLength(255),
+                    Forms\Components\TextInput::make('nick_name')
+                        ->label('Nama Panggilan')
+                        ->nullable()
+                        ->maxLength(255),
+                    Forms\Components\DatePicker::make('birth_date')
+                        ->label('Tanggal Lahir')
+                        ->native(false)
+                        ->displayFormat('d M Y')
+                        ->nullable(),
+                    Forms\Components\TextInput::make('address')
+                        ->label('Alamat')
+                        ->nullable()
+                ])->columns(2),
+
+            Forms\Components\Section::make('Akun & Akses')
+                ->schema([
+                    Forms\Components\TextInput::make('email')
+                        ->label('Email')
+                        ->email()
+                        ->required()
+                        ->unique(ignoreRecord: true),
+                    Forms\Components\TextInput::make('phone')
+                        ->label('No. WhatsApp')
+                        ->tel()
+                        ->nullable(),
+                    Forms\Components\Select::make('role')
+                        ->label('Role')
+                        ->options([
+                            'superadmin' => 'Super Admin',
+                            'admin'      => 'Admin',
+                            'member'     => 'Member',
+                        ])
+                        ->required()
+                        ->native(false),
+                    Forms\Components\FileUpload::make('photo')
+                        ->label('Foto')
+                        ->image()
+                        ->directory('panitia-photos')
+                        ->nullable(),
+                    Forms\Components\TextInput::make('password')
+                        ->label('Password')
+                        ->password()
+                        ->dehydrateStateUsing(fn ($state) => filled($state) ? bcrypt($state) : null)
+                        ->dehydrated(fn ($state) => filled($state))
+                        ->required(fn (string $operation) => $operation === 'create')
+                        ->helperText('Kosongkan jika tidak ingin mengubah password'),
+                ])->columns(2),
+        ]);
     }
 
     public static function table(Table $table): Table
@@ -76,53 +86,56 @@ class UserResource extends Resource
             ->columns([
                 Tables\Columns\ImageColumn::make('photo')
                     ->label('')
-                    ->circular()
-                    ->defaultImageUrl(fn ($record) => 'https://ui-avatars.com/api/?name=' . urlencode($record->full_name) . '&background=random')
-                    ->width(40)
-                    ->height(40),
+                    ->circular(),
                 Tables\Columns\TextColumn::make('full_name')
-                    ->label('Nama Lengkap')
-                    ->searchable(),
+                    ->label('Nama')
+                    ->searchable()
+                    ->sortable(),
                 Tables\Columns\TextColumn::make('nick_name')
                     ->label('Panggilan')
                     ->searchable(),
                 Tables\Columns\TextColumn::make('email')
+                    ->label('Email')
                     ->searchable(),
                 Tables\Columns\TextColumn::make('phone')
-                    ->label('No. HP')
-                    ->searchable(),
-                Tables\Columns\TextColumn::make('role')
+                    ->label('WhatsApp'),
+                Tables\Columns\BadgeColumn::make('role')
+                    ->label('Role')
+                    ->colors([
+                        'danger'  => 'superadmin',
+                        'warning' => 'admin',
+                        'gray'    => 'member',
+                    ]),
+                Tables\Columns\TextColumn::make('currentAssignment.division.name')
+                    ->label('Divisi (Aktif)')
                     ->badge()
-                    ->color(fn ($state) => match($state) {
-                        'superadmin' => 'danger',
-                        'admin'      => 'warning',
-                        'member'     => 'gray',
-                    }),
-                Tables\Columns\TextColumn::make('email_verified_at')
-                    ->dateTime()
-                    ->sortable(),
+                    ->color('primary'),
                 Tables\Columns\TextColumn::make('deleted_at')
-                    ->dateTime()
-                    ->sortable()
-                    ->toggleable(isToggledHiddenByDefault: true),
-                Tables\Columns\TextColumn::make('created_at')
-                    ->dateTime()
-                    ->sortable()
-                    ->toggleable(isToggledHiddenByDefault: true),
-                Tables\Columns\TextColumn::make('updated_at')
-                    ->dateTime()
+                    ->label('Dihapus')
+                    ->dateTime('d M Y')
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
             ])
+            ->defaultSort('full_name')
             ->filters([
-                //
+                Tables\Filters\SelectFilter::make('role')
+                    ->label('Role')
+                    ->options([
+                        'superadmin' => 'Super Admin',
+                        'admin'      => 'Admin',
+                        'member'     => 'Member',
+                    ]),
+                Tables\Filters\TrashedFilter::make(),
             ])
             ->actions([
                 Tables\Actions\EditAction::make(),
+                Tables\Actions\DeleteAction::make(),
+                Tables\Actions\RestoreAction::make(),
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
                     Tables\Actions\DeleteBulkAction::make(),
+                    Tables\Actions\RestoreBulkAction::make(),
                 ]),
             ]);
     }
@@ -130,7 +143,7 @@ class UserResource extends Resource
     public static function getRelations(): array
     {
         return [
-            //
+            RelationManagers\CommitteeAssignmentsRelationManager::class,
         ];
     }
 
