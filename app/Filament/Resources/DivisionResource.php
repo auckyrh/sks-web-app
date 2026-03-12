@@ -64,7 +64,7 @@ class DivisionResource extends Resource
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
             ])
-            ->defaultSort('name')
+            ->defaultSort('id')
             ->filters([
                 Tables\Filters\SelectFilter::make('access_level')
                     ->label('Level Akses')
