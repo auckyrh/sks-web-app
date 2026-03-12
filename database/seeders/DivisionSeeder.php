@@ -21,9 +21,9 @@ class DivisionSeeder extends Seeder
             ['name' => 'Dana',                       'access_level' => 'upper'],
             ['name' => 'Pendaftaran',                'access_level' => 'upper'],
             ['name' => 'Acara',                      'access_level' => 'upper'],
+            ['name' => 'Materi',                     'access_level' => 'upper'],
 
             // Lower access
-            ['name' => 'Materi',                     'access_level' => 'lower'],
             ['name' => 'Design',                     'access_level' => 'lower'],
             ['name' => 'Choir',                      'access_level' => 'lower'],
             ['name' => 'MC',                         'access_level' => 'lower'],
@@ -31,7 +31,7 @@ class DivisionSeeder extends Seeder
             ['name' => 'Penjaga Pos',                'access_level' => 'lower'],
             ['name' => 'Band & Singer',              'access_level' => 'lower'],
             ['name' => 'Publikasi & Dokumentasi',    'access_level' => 'lower'],
-            ['name' => 'Multi Media',                'access_level' => 'lower'],
+            ['name' => 'Multimedia',                 'access_level' => 'lower'],
             ['name' => 'Liturgi & Doa',              'access_level' => 'lower'],
             ['name' => 'Konsumsi',                   'access_level' => 'lower'],
             ['name' => 'Kesehatan',                  'access_level' => 'lower'],
