@@ -52,4 +52,21 @@ class EventPeriod extends Model
     {
         return $this->hasMany(PublicPage::class);
     }
+
+    public function committeeAssignments(): HasMany
+    {
+        return $this->hasMany(CommitteeAssignment::class);
+    }
+
+    protected static function booted(): void
+    {
+        static::saving(function ($period) {
+            if ($period->is_active) {
+                static::where('id', '!=', $period->id)
+                    ->where('is_active', true)
+                    ->update(['is_active' => false]);
+            }
+        });
+    }
+
 }
