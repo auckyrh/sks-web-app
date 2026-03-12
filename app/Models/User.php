@@ -27,14 +27,14 @@ class User extends Authenticatable
         ];
     }
 
-    public function panitiaAssignments(): HasMany
+    public function committeeAssignments(): HasMany
     {
-        return $this->hasMany(PanitiaAssignment::class);
+        return $this->hasMany(CommitteeAssignment::class);
     }
 
     public function currentAssignment(): HasOne
     {
-        return $this->hasOne(PanitiaAssignment::class)
+        return $this->hasOne(CommitteeAssignment::class)
             ->whereHas('eventPeriod', fn($q) => $q->where('is_active', true));
     }
 

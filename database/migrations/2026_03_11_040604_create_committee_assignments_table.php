@@ -11,12 +11,12 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('panitia_assignments', function (Blueprint $table) {
+        Schema::create('committee_assignments', function (Blueprint $table) {
             $table->id();
             $table->foreignId('user_id')->constrained()->cascadeOnDelete();
             $table->foreignId('event_period_id')->constrained()->cascadeOnDelete();
             $table->foreignId('division_id')->constrained()->cascadeOnDelete();
-            $table->enum('position', ['koordinator', 'anggota'])->default('anggota');
+            $table->enum('position', ['coordinator', 'regular'])->default('regular');
             $table->boolean('is_active')->default(true);
             $table->timestamps();
 
@@ -29,6 +29,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('panitia_assignments');
+        Schema::dropIfExists('committee_assignments');
     }
 };

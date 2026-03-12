@@ -7,8 +7,10 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 
-class PanitiaAssignment extends Model
+class CommitteeAssignment extends Model
 {
+    protected $table = 'committee_assignments';
+
     protected $fillable = [
         'user_id', 'event_period_id', 'division_id', 'position', 'is_active'
     ];
