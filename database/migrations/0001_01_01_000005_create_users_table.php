@@ -23,6 +23,7 @@ return new class extends Migration
             $table->string('photo')->nullable();
             $table->date('birth_date')->nullable();
             $table->string('address')->nullable();
+            $table->foreignId('wilayah_id')->nullable()->constrained('wilayahs')->nullOnDelete();
             $table->rememberToken();
             $table->softDeletes();
             $table->timestamps();
