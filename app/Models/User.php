@@ -13,6 +13,7 @@ use Illuminate\Notifications\Notifiable;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
+use Illuminate\Support\Facades\Storage;
 
 class User extends Authenticatable implements FilamentUser, HasName
 {
@@ -62,4 +63,21 @@ class User extends Authenticatable implements FilamentUser, HasName
     public function isAdmin(): bool { return $this->role === 'admin'; }
     public function isMember(): bool { return $this->role === 'member'; }
 
+    protected static function booted(): void
+    {
+        static::updating(function ($user) {
+            $old = $user->getOriginal('photo');
+            $new = $user->photo;
+
+            if ($old && $old !== $new) {
+                Storage::disk('public')->delete($old);
+            }
+        });
+
+        static::forceDeleted(function ($user) {
+            if ($user->photo) {
+                Storage::disk('public')->delete($user->photo);
+            }
+        });
+    }
 }

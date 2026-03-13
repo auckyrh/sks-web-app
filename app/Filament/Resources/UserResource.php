@@ -74,8 +74,16 @@ class UserResource extends Resource
                     Forms\Components\FileUpload::make('photo')
                         ->label('Foto')
                         ->image()
-                        ->directory('panitia-photos')
-                        ->nullable(),
+                        ->disk('public')
+                        ->visibility('public')
+                        ->directory('user-photos')
+                        ->nullable()
+                        ->getUploadedFileNameForStorageUsing(function ($file, Forms\Get $get) {
+                            $name = str_replace(' ', '-', ucwords(strtolower($get('full_name') ?? 'unknown')));
+                            $ts   = now()->format('Ymd_His');
+                            $ext  = $file->getClientOriginalExtension();
+                            return "PHOTO-{$name}-{$ts}.{$ext}";
+                        }),
                     Forms\Components\TextInput::make('password')
                         ->label('Password')
                         ->password()
