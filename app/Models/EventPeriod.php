@@ -67,6 +67,21 @@ class EventPeriod extends Model
                     ->update(['is_active' => false]);
             }
         });
+
+        static::updating(function ($period) {
+            $old = $period->getOriginal('event_logo');
+            $new = $period->event_logo;
+
+            if ($old && $old !== $new) {
+                \Illuminate\Support\Facades\Storage::disk('public')->delete($old);
+            }
+        });
+
+        static::deleted(function ($period) {
+            if ($period->event_logo) {
+                \Illuminate\Support\Facades\Storage::disk('public')->delete($period->event_logo);
+            }
+        });
     }
 
 }

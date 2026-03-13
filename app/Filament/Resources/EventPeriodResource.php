@@ -49,9 +49,15 @@ class EventPeriodResource extends Resource
                     Forms\Components\FileUpload::make('event_logo')
                         ->label('Logo Event')
                         ->image()
-                        ->nullable()
+                        ->disk('public')
+                        ->visibility('public')
                         ->directory('event-logos')
-                        ->columnSpan(['sm' => 1, 'xl' => 1]),
+                        ->nullable()
+                        ->getUploadedFileNameForStorageUsing(function ($file, Forms\Get $get) {
+                            $year = $get('year') ?? now()->year;
+                            $ext = $file->getClientOriginalExtension();
+                            return 'LOGO-SKS-' . $year . '.' . $ext;
+                        }),
                 ]),
 
             Forms\Components\Section::make('Tanggal Pelaksanaan')
@@ -88,6 +94,7 @@ class EventPeriodResource extends Resource
             ->columns([
                 Tables\Columns\ImageColumn::make('event_logo')
                     ->label('')
+                    ->disk('public')
                     ->circular()
                     ->defaultImageUrl(fn () => 'https://ui-avatars.com/api/?name=S&background=random')
                     ->width(40)
