@@ -145,6 +145,8 @@ class RegistrationResource extends Resource
                     Forms\Components\FileUpload::make('payment_proof_path')
                         ->label('Bukti Transfer')
                         ->image()
+                        ->disk('public')
+                        ->visibility('public')
                         ->directory('payment-proofs')
                         ->nullable(),
                     Forms\Components\Select::make('payment_status')
