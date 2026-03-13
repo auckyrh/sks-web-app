@@ -176,11 +176,12 @@ class RegistrationResource extends Resource
                                         ->nullable()
                                         ->getUploadedFileNameForStorageUsing(function ($file, Forms\Get $get) {
                                             $year  = \App\Models\EventPeriod::where('is_active', true)->first()?->year ?? now()->year;
-                                            $name  = \Illuminate\Support\Str::slug($get('child_full_name') ?? 'unknown');
+                                            $name = str_replace(' ', '-', ucwords(strtolower($get('child_full_name') ?? 'unknown'))); // John-Doe
+//                                            $name  = \Illuminate\Support\Str::slug($get('child_full_name') ?? 'unknown'); // john-doe
                                             $grade = $get('grade') ?? '0';
                                             $ts    = now()->format('Ymd_His');
                                             $ext   = $file->getClientOriginalExtension();
-                                            return "BUKTI-SKS-{$year}-{$name}-kelas{$grade}-{$ts}.{$ext}";
+                                            return "BUKTI-SKS-{$year}-{$name}-Kelas{$grade}-{$ts}.{$ext}";
                                         }),
                                 ]),
                         ])->columns(2),

@@ -112,10 +112,11 @@ class PublicRegistrationForm extends Component
 
         $tier = PaymentTier::find($this->payment_tier_id);
         $year  = $this->activePeriod->year;
-        $name  = Str::slug($this->child_full_name);
+//        $name  = Str::slug($this->child_full_name); // john-doe
+        $name  = str_replace(' ', '-', ucwords(strtolower($this->child_full_name)));
         $ts    = now()->format('Ymd_His');
         $ext   = $this->payment_proof->getClientOriginalExtension();
-        $filename = "BUKTI-SKS-{$year}-{$name}-kelas{$this->grade}-{$ts}.{$ext}";
+        $filename = "BUKTI-SKS-{$year}-{$name}-Kelas{$this->grade}-{$ts}.{$ext}";
         $path = $this->payment_proof->storeAs('payment-proofs', $filename, 'public');
 
         $registration = Registration::create([
