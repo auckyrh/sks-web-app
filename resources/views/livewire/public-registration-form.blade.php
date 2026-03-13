@@ -77,7 +77,9 @@
 
                     <div class="w-full min-w-0">
                         <label class="block text-sm font-medium text-gray-700 mb-1">Tanggal Lahir <span class="text-red-500">*</span></label>
-                        <input wire:model="birth_date" type="date" class="w-full min-w-0 border rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-yellow-400 box-border">
+                        <div class="overflow-hidden w-full rounded-lg">
+                            <input wire:model="birth_date" type="date" class="w-full border rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-yellow-400 appearance-none" style="max-width:100%;box-sizing:border-box;">
+                        </div>
                         @error('birth_date') <p class="text-red-500 text-xs mt-1">{{ $message }}</p> @enderror
                     </div>
 
