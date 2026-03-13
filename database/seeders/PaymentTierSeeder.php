@@ -62,8 +62,8 @@ class PaymentTierSeeder extends Seeder
                 ['event_period_id' => $period->id, 'name' => 'Early Bird'],
                 [
                     'amount'     => 350000,
-                    'valid_from' => "{$year}-04-01",
-                    'valid_until'=> "{$year}-04-30",
+                    'valid_from' => "{$year}-04-06",
+                    'valid_until'=> "{$year}-04-20",
                 ]
             );
 
@@ -71,8 +71,8 @@ class PaymentTierSeeder extends Seeder
                 ['event_period_id' => $period->id, 'name' => 'Regular'],
                 [
                     'amount'     => 400000,
-                    'valid_from' => "{$year}-05-01",
-                    'valid_until'=> "{$year}-05-31",
+                    'valid_from' => "{$year}-04-21",
+                    'valid_until'=> "{$year}-05-20",
                 ]
             );
             $count += 2;
