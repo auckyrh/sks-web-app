@@ -7,6 +7,7 @@ use App\Models\Lingkungan;
 use App\Models\PaymentTier;
 use App\Models\Registration;
 use App\Models\Wilayah;
+use Illuminate\Support\Str;
 use Livewire\Component;
 use Livewire\WithFileUploads;
 use Illuminate\Support\Facades\Storage;
@@ -110,7 +111,12 @@ class PublicRegistrationForm extends Component
         ]);
 
         $tier = PaymentTier::find($this->payment_tier_id);
-        $path = $this->payment_proof->store('payment-proofs', 'public');
+        $year  = $this->activePeriod->year;
+        $name  = Str::slug($this->child_full_name);
+        $ts    = now()->format('Ymd_His');
+        $ext   = $this->payment_proof->getClientOriginalExtension();
+        $filename = "BUKTI-SKS-{$year}-{$name}-kelas{$this->grade}-{$ts}.{$ext}";
+        $path = $this->payment_proof->storeAs('payment-proofs', $filename, 'public');
 
         $registration = Registration::create([
             'event_period_id' => $this->activePeriod->id,

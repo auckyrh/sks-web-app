@@ -121,53 +121,70 @@ class RegistrationResource extends Resource
 
             Forms\Components\Section::make('Pembayaran')
                 ->schema([
-                    Forms\Components\Select::make('payment_tier_id')
-                        ->label('Tier Pembayaran')
-                        ->options(fn () =>
-                        \App\Models\PaymentTier::whereHas('eventPeriod', fn($q) =>
-                        $q->where('is_active', true))
-                            ->get()
-                            ->mapWithKeys(fn ($tier) =>
-                            [$tier->id => $tier->name . ' — Rp ' . number_format($tier->amount, 0, ',', '.')]
-                            )
-                        )
-                        ->required()
-                        ->native(false)
-                        ->live()
-                        ->afterStateUpdated(fn ($state, Forms\Set $set) =>
-                        $set('payment_amount', \App\Models\PaymentTier::find($state)?->amount)
-                        ),
-                    Forms\Components\TextInput::make('payment_amount')
-                        ->label('Nominal Pembayaran')
-                        ->numeric()
-                        ->prefix('Rp')
-                        ->required(),
-                    Forms\Components\FileUpload::make('payment_proof_path')
-                        ->label('Bukti Transfer')
-                        ->image()
-                        ->disk('public')
-                        ->visibility('public')
-                        ->directory('payment-proofs')
-                        ->nullable(),
-                    Forms\Components\Select::make('payment_status')
-                        ->label('Status Pembayaran')
-                        ->options([
-                            'pending'  => 'Pending',
-                            'verified' => 'Verified',
-                            'rejected' => 'Rejected',
-                        ])
-                        ->default('pending')
-                        ->native(false),
-                    Forms\Components\Select::make('status')
-                        ->label('Status Pendaftaran')
-                        ->options([
-                            'pending'   => 'Pending',
-                            'confirmed' => 'Confirmed',
-                            'cancelled' => 'Cancelled',
-                        ])
-                        ->default('pending')
-                        ->native(false),
-                ])->columns(2),
+                    Forms\Components\Grid::make()
+                        ->schema([
+                            Forms\Components\Group::make()
+                                ->schema([
+                                    Forms\Components\Select::make('payment_tier_id')
+                                        ->label('Tier Pembayaran')
+                                        ->options(fn () =>
+                                        \App\Models\PaymentTier::whereHas('eventPeriod', fn($q) =>
+                                        $q->where('is_active', true))
+                                            ->get()
+                                            ->mapWithKeys(fn ($tier) =>
+                                            [$tier->id => $tier->name . ' — Rp ' . number_format($tier->amount, 0, ',', '.')]
+                                            )
+                                        )
+                                        ->required()
+                                        ->native(false)
+                                        ->live()
+                                        ->afterStateUpdated(fn ($state, Forms\Set $set) =>
+                                        $set('payment_amount', \App\Models\PaymentTier::find($state)?->amount)
+                                        ),
+                                    Forms\Components\TextInput::make('payment_amount')
+                                        ->label('Nominal Pembayaran')
+                                        ->numeric()
+                                        ->prefix('Rp')
+                                        ->required(),
+                                    Forms\Components\Select::make('payment_status')
+                                        ->label('Status Pembayaran')
+                                        ->options([
+                                            'pending'  => 'Pending',
+                                            'verified' => 'Verified',
+                                            'rejected' => 'Rejected',
+                                        ])
+                                        ->default('pending')
+                                        ->native(false),
+                                    Forms\Components\Select::make('status')
+                                        ->label('Status Pendaftaran')
+                                        ->options([
+                                            'pending'   => 'Pending',
+                                            'confirmed' => 'Confirmed',
+                                            'cancelled' => 'Cancelled',
+                                        ])
+                                        ->default('pending')
+                                        ->native(false),
+                                ]),
+                            Forms\Components\Group::make()
+                                ->schema([
+                                    Forms\Components\FileUpload::make('payment_proof_path')
+                                        ->label('Bukti Transfer')
+                                        ->image()
+                                        ->disk('public')
+                                        ->visibility('public')
+                                        ->directory('payment-proofs')
+                                        ->nullable()
+                                        ->getUploadedFileNameForStorageUsing(function ($file, Forms\Get $get) {
+                                            $year  = \App\Models\EventPeriod::where('is_active', true)->first()?->year ?? now()->year;
+                                            $name  = \Illuminate\Support\Str::slug($get('child_full_name') ?? 'unknown');
+                                            $grade = $get('grade') ?? '0';
+                                            $ts    = now()->format('Ymd_His');
+                                            $ext   = $file->getClientOriginalExtension();
+                                            return "BUKTI-SKS-{$year}-{$name}-kelas{$grade}-{$ts}.{$ext}";
+                                        }),
+                                ]),
+                        ])->columns(2),
+                ]),
         ]);
     }
 
