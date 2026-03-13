@@ -61,10 +61,30 @@ class Registration extends Model
 // Auto-generate registration number
     protected static function booted(): void
     {
+        // Generate Registration Number after user submit the registration form
         static::creating(function ($registration) {
             $year = now()->year;
             $count = static::whereYear('created_at', $year)->count() + 1;
             $registration->registration_number = 'SKS-' . $year . '-' . str_pad($count, 4, '0', STR_PAD_LEFT);
         });
+
+        // Delete old payment proof file when replaced or nulled
+        static::updating(function ($registration) {
+            $old = $registration->getOriginal('payment_proof_path');
+            $new = $registration->payment_proof_path;
+
+            if ($old && $old !== $new) {
+                \Illuminate\Support\Facades\Storage::disk('public')->delete($old);
+            }
+        });
+
+        // Delete file when record is force deleted
+        static::forceDeleted(function ($registration) {
+            if ($registration->payment_proof_path) {
+                \Illuminate\Support\Facades\Storage::disk('public')->delete($registration->payment_proof_path);
+            }
+        });
     }
+
+
 }
