@@ -41,7 +41,14 @@ class UserResource extends Resource
                         ->nullable(),
                     Forms\Components\TextInput::make('address')
                         ->label('Alamat')
+                        ->nullable(),
+                    Forms\Components\Select::make('wilayah_id')
+                        ->label('Wilayah')
+                        ->relationship('wilayah', 'name')
                         ->nullable()
+                        ->searchable()
+                        ->preload()
+                        ->native(false),
                 ])->columns(2),
 
             Forms\Components\Section::make('Akun & Akses')
@@ -106,6 +113,11 @@ class UserResource extends Resource
                         'warning' => 'admin',
                         'gray'    => 'member',
                     ]),
+                Tables\Columns\TextColumn::make('wilayah.name')
+                    ->label('Wilayah')
+                    ->badge()
+                    ->color('indigo')
+                    ->searchable(),
                 Tables\Columns\TextColumn::make('currentAssignment.division.name')
                     ->label('Divisi (Aktif)')
                     ->badge()

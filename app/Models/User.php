@@ -18,7 +18,7 @@ class User extends Authenticatable implements FilamentUser, HasName
 {
     use HasFactory, Notifiable, SoftDeletes;
 
-    protected $fillable = ['full_name', 'nick_name', 'email', 'password', 'phone', 'role', 'photo', 'birth_date', 'address'];
+    protected $fillable = ['full_name', 'nick_name', 'email', 'password', 'phone', 'role', 'photo', 'birth_date', 'address', 'wilayah_id'];
 
     protected $hidden = ['password', 'remember_token'];
 
@@ -29,6 +29,11 @@ class User extends Authenticatable implements FilamentUser, HasName
             'password' => 'hashed',
             'birth_date' => 'date',
         ];
+    }
+
+    public function wilayah(): BelongsTo
+    {
+        return $this->belongsTo(Wilayah::class);
     }
 
     public function committeeAssignments(): HasMany
