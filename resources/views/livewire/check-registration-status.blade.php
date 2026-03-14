@@ -257,11 +257,16 @@
         @endif
 
         {{-- Footer link --}}
-        <div style="text-align:center; margin-top:1.75rem;">
+        <div style="text-align:center; margin-top:1.75rem; display:flex; flex-direction:column; align-items:center; gap:0.625rem;">
+            <a href="{{ route('home') }}"
+               style="font-size:0.8125rem; color:#c4a06a; text-decoration:none; font-style:italic; transition:color 0.2s;"
+               onmouseover="this.style.color='#d97706'" onmouseout="this.style.color='#c4a06a'">
+                ⌂ Kembali ke Halaman Utama
+            </a>
             <a href="{{ route('registration.form') }}"
                style="font-size:0.8125rem; color:#c4a06a; text-decoration:none; font-style:italic; transition:color 0.2s;"
                onmouseover="this.style.color='#d97706'" onmouseout="this.style.color='#c4a06a'">
-                ← Kembali ke Formulir Pendaftaran
+                ← Ke Formulir Pendaftaran
             </a>
         </div>
 

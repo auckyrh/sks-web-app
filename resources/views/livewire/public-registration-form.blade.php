@@ -221,17 +221,16 @@
 
                         <div style="display:flex; flex-direction:column; gap:1rem;">
 
-                            <div style="display:grid; grid-template-columns:1fr 1fr; gap:1rem;">
-                                <div>
-                                    <label class="sks-label">Nama Lengkap Anak <span style="color:#dc2626;">*</span></label>
-                                    <input wire:model="child_full_name" type="text" class="sks-input" placeholder="Nama sesuai akta lahir">
-                                    @error('child_full_name') <p class="sks-error">{{ $message }}</p> @enderror
-                                </div>
-                                <div>
-                                    <label class="sks-label">Nama Panggilan <span style="color:#dc2626;">*</span></label>
-                                    <input wire:model="nickname" type="text" class="sks-input" placeholder="Nama sehari-hari">
-                                    @error('nickname') <p class="sks-error">{{ $message }}</p> @enderror
-                                </div>
+                            <div>
+                                <label class="sks-label">Nama Lengkap Anak <span style="color:#dc2626;">*</span></label>
+                                <input wire:model="child_full_name" type="text" class="sks-input" placeholder="Nama sesuai akta lahir">
+                                @error('child_full_name') <p class="sks-error">{{ $message }}</p> @enderror
+                            </div>
+
+                            <div>
+                                <label class="sks-label">Nama Panggilan <span style="color:#dc2626;">*</span></label>
+                                <input wire:model="nickname" type="text" class="sks-input" placeholder="Nama sehari-hari">
+                                @error('nickname') <p class="sks-error">{{ $message }}</p> @enderror
                             </div>
 
                             <div style="display:grid; grid-template-columns:1fr 1fr; gap:1rem;">
@@ -412,7 +411,9 @@
                                     <span style="font-size:0.8125rem; color:#4a7ab5; font-weight:500; white-space:nowrap;">Rp</span>
                                     <input wire:model.live.debounce.1000ms="donation_amount" type="number" min="0" step="1000"
                                            style="flex:1; border:none; outline:none; padding:0.625rem 0; font-size:0.875rem; background:transparent; color:#1c1410; font-family:'DM Sans',sans-serif;"
-                                           placeholder="0">
+                                           placeholder="0"
+                                           onfocus="if(this.value==='0')this.value=''"
+                                           onblur="if(this.value==='')this.value='0'">
                                 </div>
                                 @error('donation_amount') <p class="sks-error">{{ $message }}</p> @enderror
                             </div>
