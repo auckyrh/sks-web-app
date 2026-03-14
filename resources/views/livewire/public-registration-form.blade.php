@@ -206,6 +206,34 @@
                         </div>
                     @endif
 
+                    {{-- Donasi Silang --}}
+                    <div class="bg-blue-50 border border-blue-200 rounded-xl p-4">
+                        <p class="text-sm font-semibold text-blue-800 mb-1">Donasi Silang (Sukarela)</p>
+                        <p class="text-xs text-blue-700 mb-3">Bagi orang tua yang bersedia, Anda dapat menambahkan donasi sukarela. Dana donasi ini akan digunakan sebagai subsidi silang untuk membantu peserta lain yang membutuhkan keringanan biaya pendaftaran.</p>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Nominal Donasi</label>
+                        <div class="flex items-center gap-2">
+                            <span class="text-sm text-gray-500 font-medium">Rp</span>
+                            <input wire:model.live.debounce.1000ms="donation_amount" type="number" min="0" step="1000"
+                                   class="w-full border rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-400"
+                                   placeholder="0">
+                        </div>
+                        @error('donation_amount') <p class="text-red-500 text-xs mt-1">{{ $message }}</p> @enderror
+                    </div>
+
+                    {{-- Info transfer --}}
+                    <div class="bg-yellow-50 border border-yellow-200 rounded-xl p-4 text-xs text-yellow-800">
+                        <p class="font-semibold mb-1">Informasi Transfer</p>
+                        <p>Biaya pendaftaran dan donasi (jika ada) <strong>digabung dalam 1 kali transfer</strong>. Upload satu bukti transfer yang mencakup total keduanya.</p>
+                        @if($payment_tier_id && $this->paymentTiers->isNotEmpty())
+                            @php $selectedTier = $this->paymentTiers->firstWhere('id', $payment_tier_id); @endphp
+                            @if($selectedTier)
+                                <p class="mt-2">Total transfer: <strong>Rp {{ number_format($selectedTier->amount + $donation_amount, 0, ',', '.') }}</strong>
+                                    (Pendaftaran Rp {{ number_format($selectedTier->amount, 0, ',', '.') }}, Donasi Rp {{ number_format($donation_amount, 0, ',', '.') }})
+                                </p>
+                            @endif
+                        @endif
+                    </div>
+
                     <div>
                         <label class="block text-sm font-medium text-gray-700 mb-1">Upload Bukti Transfer <span class="text-red-500">*</span></label>
                         <input wire:model="payment_proof" type="file" accept="image/*" class="w-full border rounded-lg px-3 py-2 text-sm">
@@ -232,3 +260,4 @@
     @endif
 
 </div>
+Total transfer: Rp 350.000 (Pendaftaran Rp 350.000)

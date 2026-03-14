@@ -40,6 +40,7 @@ class PublicRegistrationForm extends Component
 
     // Payment
     public ?int $payment_tier_id = null;
+    public int $donation_amount = 0;
     public $payment_proof;
 
     // State
@@ -103,6 +104,7 @@ class PublicRegistrationForm extends Component
             'parent_name' => 'required|string|max:255',
             'parent_wa' => 'required|string|max:20',
             'payment_tier_id' => 'required|exists:payment_tiers,id',
+            'donation_amount' => 'integer|min:0',
             'payment_proof' => 'required|image|max:2048',
         ], [
             'child_full_name.required' => 'Nama lengkap anak wajib diisi.',
@@ -149,6 +151,7 @@ class PublicRegistrationForm extends Component
             'parent_wa' => $this->parent_wa,
             'payment_tier_id' => $this->payment_tier_id,
             'payment_amount' => $tier->amount,
+            'donation_amount' => $this->donation_amount,
             'payment_proof_path' => $path,
             'payment_status' => 'pending',
             'status' => 'pending',

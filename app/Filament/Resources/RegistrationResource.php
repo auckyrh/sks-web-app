@@ -146,6 +146,12 @@ class RegistrationResource extends Resource
                                         ->numeric()
                                         ->prefix('Rp')
                                         ->required(),
+                                    Forms\Components\TextInput::make('donation_amount')
+                                        ->label('Donasi Silang')
+                                        ->numeric()
+                                        ->prefix('Rp')
+                                        ->default(0)
+                                        ->helperText('Donasi sukarela untuk subsidi peserta lain'),
                                     Forms\Components\Select::make('payment_status')
                                         ->label('Status Pembayaran')
                                         ->options([

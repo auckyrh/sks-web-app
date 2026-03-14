@@ -33,6 +33,7 @@ return new class extends Migration
             $table->string('payment_proof_path')->nullable();
             $table->foreignId('payment_tier_id')->nullable()->constrained('payment_tiers')->nullOnDelete();
             $table->integer('payment_amount')->nullable();
+            $table->integer('donation_amount')->default(0);
             $table->enum('payment_status', ['pending', 'verified', 'rejected'])->default('pending');
             $table->foreignId('verified_by')->nullable()->constrained('users')->nullOnDelete();
             $table->dateTime('verified_at')->nullable();
