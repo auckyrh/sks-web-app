@@ -11,7 +11,9 @@ use Filament\Pages;
 use Filament\Panel;
 use Filament\PanelProvider;
 use Filament\Support\Colors\Color;
+use Filament\View\PanelsRenderHook;
 use Filament\Widgets;
+use Illuminate\Support\HtmlString;
 use Illuminate\Cookie\Middleware\AddQueuedCookiesToResponse;
 use Illuminate\Cookie\Middleware\EncryptCookies;
 use Illuminate\Foundation\Http\Middleware\VerifyCsrfToken;
@@ -29,7 +31,13 @@ class AdminPanelProvider extends PanelProvider
             ->path('admin')
             ->login(Login::class)
             ->brandLogo(asset('images/LOGO-SKS.png'))
-            ->brandLogoHeight('12rem')
+            ->brandLogoHeight('4rem')
+            ->renderHook(
+                name: PanelsRenderHook::AUTH_LOGIN_FORM_BEFORE,
+                hook: fn () => new HtmlString(
+                    '<style>img[src*="LOGO-SKS"]{height:12rem!important;max-height:12rem!important;}</style>'
+                ),
+            )
             ->colors([
                 'primary' => Color::Amber,
             ])
