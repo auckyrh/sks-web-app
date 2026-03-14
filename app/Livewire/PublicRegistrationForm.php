@@ -49,6 +49,17 @@ class PublicRegistrationForm extends Component
     public function mount(): void
     {
         $this->activePeriod = EventPeriod::where('is_active', true)->first();
+
+        if ($this->activePeriod) {
+            $tiers = PaymentTier::where('event_period_id', $this->activePeriod->id)
+                ->whereDate('valid_from', '<=', now())
+                ->whereDate('valid_until', '>=', now())
+                ->get();
+
+            if ($tiers->count() === 1) {
+                $this->payment_tier_id = $tiers->first()->id;
+            }
+        }
     }
 
     public function getWilayahListProperty()

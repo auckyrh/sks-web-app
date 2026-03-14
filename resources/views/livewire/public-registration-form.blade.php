@@ -28,11 +28,16 @@
                 <p class="text-gray-400 text-sm mt-2">Silakan pantau informasi dari panitia SKS.</p>
             </div>
         @else
-            <div class="mb-6">
-                <h1 class="text-2xl font-bold text-gray-800">Formulir Pendaftaran</h1>
-                <p class="text-gray-500 text-sm mt-1">
-                    Sanggar Kitab Suci {{ $activePeriod->year }} — {{ $activePeriod->theme }}
-                </p>
+            <div class="mb-6 flex items-center gap-4">
+                <img src="{{ $activePeriod->event_logo ? Storage::disk('public')->url($activePeriod->event_logo) : 'https://ui-avatars.com/api/?name=S&background=random' }}"
+                     alt="Logo SKS"
+                     class="w-14 h-14 rounded-full object-cover flex-shrink-0 shadow">
+                <div>
+                    <h1 class="text-2xl font-bold text-gray-800">Formulir Pendaftaran</h1>
+                    <p class="text-gray-500 text-sm mt-1">
+                        Sanggar Kitab Suci {{ $activePeriod->year }} — {{ $activePeriod->theme }}
+                    </p>
+                </div>
             </div>
 
             <form wire:submit="submit" class="space-y-6">
