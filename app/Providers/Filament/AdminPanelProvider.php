@@ -27,6 +27,9 @@ class AdminPanelProvider extends PanelProvider
             ->id('admin')
             ->path('admin')
             ->login()
+            ->brandLogo(asset('images/LOGO-SKS.png'))
+            ->brandLogoHeight('12rem')
+            ->brandName('SKS Santo Yakobus')
             ->colors([
                 'primary' => Color::Amber,
             ])
