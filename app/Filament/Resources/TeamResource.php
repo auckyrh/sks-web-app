@@ -79,9 +79,11 @@ class TeamResource extends Resource
                     })
                     ->sortable(),
                 Tables\Columns\TextColumn::make('name')
-                    ->label('Nama Tim')
+                    ->label('Nama Kelompok')
                     ->searchable()
-                    ->sortable(),
+                    ->sortable(query: fn (Builder $query, string $direction) =>
+                        $query->orderBy('number', $direction)
+                    ),
                 Tables\Columns\TextColumn::make('facilitators_count')
                     ->label('Pendamping')
                     ->counts('facilitators')
@@ -98,7 +100,7 @@ class TeamResource extends Resource
                     ->color('gray')
                     ->sortable(),
             ])
-            ->defaultSort('name')
+            ->defaultSort('number')
             ->filters([
                 Tables\Filters\SelectFilter::make('event_period_id')
                     ->label('Tahun')
