@@ -10,6 +10,7 @@ use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
+use Filament\Notifications\Notification;
 use Illuminate\Database\Eloquent\Builder;
 
 class EventPeriodResource extends Resource
@@ -189,6 +190,79 @@ class EventPeriodResource extends Resource
                         ->icon('heroicon-o-academic-cap')
                         ->color('info')
                         ->url(fn ($record) => EventPeriodResource::getUrl('edit', ['record' => $record, 'activeRelationManager' => 0])),
+                    Tables\Actions\Action::make('generate_groups')
+                        ->label('Generate Kelompok')
+                        ->icon('heroicon-o-squares-plus')
+                        ->color('primary')
+                        ->form(function ($record) {
+                            $classes = \App\Models\EventClass::where('event_period_id', $record->id)
+                                ->orderByRaw("FIELD(level, 'kecil', 'tengah', 'besar')")
+                                ->get();
+
+                            if ($classes->isEmpty()) {
+                                return [
+                                    Forms\Components\Placeholder::make('warning')
+                                        ->label('')
+                                        ->content('⚠️ Belum ada Event Class. Tambahkan kelas terlebih dahulu.'),
+                                ];
+                            }
+
+                            return $classes->map(fn ($class) =>
+                            Forms\Components\TextInput::make('count_' . $class->id)
+                                ->label(ucfirst($class->level) . ' — ' . $class->saint_name)
+                                ->helperText('Jumlah kelompok untuk kelas ini')
+                                ->numeric()
+                                ->minValue(1)
+                                ->maxValue(50)
+                                ->default(
+                                    \App\Models\Group::where('event_class_id', $class->id)->max('number') ?? 0
+                                )
+                                ->required()
+                            )->toArray();
+                        })
+                        ->action(function ($record, array $data) {
+                            $classes = \App\Models\EventClass::where('event_period_id', $record->id)->get();
+
+                            $totalCreated = 0;
+                            $totalSkipped = 0;
+
+                            foreach ($classes as $class) {
+                                $requestedCount = (int) $data['count_' . $class->id];
+
+                                for ($i = 1; $i <= $requestedCount; $i++) {
+                                    $created = \App\Models\Group::firstOrCreate(
+                                        [
+                                            'event_class_id' => $class->id,
+                                            'number'         => $i,
+                                        ],
+                                        [
+                                            'event_period_id' => $record->id,
+                                            'name'            => $class->saint_name . ' ' . $i,
+                                        ]
+                                    );
+
+                                    $created->wasRecentlyCreated ? $totalCreated++ : $totalSkipped++;
+                                }
+                            }
+
+                            Notification::make()
+                                ->title("✅ {$totalCreated} kelompok baru dibuat, {$totalSkipped} sudah ada (dilewati).")
+                                ->success()
+                                ->send();
+                        })
+                        ->modalHeading('Generate Kelompok')
+                        ->modalDescription('Input jumlah kelompok per kelas. Kelompok yang sudah ada tidak akan dihapus atau diganti.')
+                        ->modalSubmitActionLabel('Generate')
+                        ->requiresConfirmation(false),
+                    Tables\Actions\Action::make('view_groups')
+                        ->label('Lihat Kelompok')
+                        ->icon('heroicon-o-user-group')
+                        ->color('gray')
+                        ->url(fn ($record) =>
+                        \App\Filament\Resources\GroupResource::getUrl('index', [
+                            'tableFilters[event_period_id][value]' => $record->id
+                        ])
+                        ),
                     Tables\Actions\Action::make('payment_tiers')
                         ->label('Biaya')
                         ->icon('heroicon-o-banknotes')

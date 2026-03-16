@@ -11,6 +11,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Support\Facades\Storage;
@@ -46,6 +47,12 @@ class User extends Authenticatable implements FilamentUser, HasName
     {
         return $this->hasOne(CommitteeAssignment::class)
             ->whereHas('eventPeriod', fn($q) => $q->where('is_active', true));
+    }
+
+    public function facilitatingGroups(): BelongsToMany
+    {
+        return $this->belongsToMany(Group::class, 'group_facilitators')
+            ->withTimestamps();
     }
 
     public function getFilamentName(): string

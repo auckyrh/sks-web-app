@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
+use Illuminate\Database\Eloquent\Relations\HasManyThrough;
 
 class EventPeriod extends Model
 {
@@ -26,6 +27,18 @@ class EventPeriod extends Model
     public function eventClasses(): HasMany
     {
         return $this->hasMany(EventClass::class);
+    }
+
+    public function groups(): HasManyThrough
+    {
+        return $this->hasManyThrough(
+            Group::class,
+            EventClass::class,
+            'event_period_id', // FK on event_classes
+            'event_class_id',  // FK on groups
+            'id',              // PK on event_periods
+            'id'               // PK on event_classes
+        );
     }
 
     public function paymentTiers(): HasMany

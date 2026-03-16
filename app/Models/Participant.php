@@ -12,7 +12,7 @@ class Participant extends Model
 {
     use SoftDeletes;
     protected $fillable = [
-        'registration_id', 'event_period_id', 'event_class_id',
+        'registration_id', 'event_period_id', 'event_class_id', 'group_id',
         'child_full_name', 'nickname', 'gender', 'birth_date', 'grade',
         'parent_name', 'parent_wa', 'tshirt_size', 'allergies', 'notes',
         'created_by', 'deleted_by'
@@ -33,6 +33,11 @@ class Participant extends Model
     public function eventClass(): BelongsTo
     {
         return $this->belongsTo(EventClass::class);
+    }
+
+    public function group(): BelongsTo
+    {
+        return $this->belongsTo(Group::class);
     }
 
     public function rsvps(): HasMany

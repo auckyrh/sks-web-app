@@ -4,13 +4,16 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
-use Illuminate\Database\Eloquent\Relations\HasOne;
 
-class EventClass extends Model
+class Group extends Model
 {
     protected $fillable = [
-        'event_period_id', 'level', 'saint_name', 'grade_min', 'grade_max'
+        'event_period_id',
+        'event_class_id',
+        'number',
+        'name',
     ];
 
     public function eventPeriod(): BelongsTo
@@ -18,9 +21,15 @@ class EventClass extends Model
         return $this->belongsTo(EventPeriod::class);
     }
 
-    public function groups(): HasMany
+    public function eventClass(): BelongsTo
     {
-        return $this->hasMany(Group::class);
+        return $this->belongsTo(EventClass::class);
+    }
+
+    public function facilitators(): BelongsToMany
+    {
+        return $this->belongsToMany(User::class, 'group_facilitators')
+            ->withTimestamps();
     }
 
     public function participants(): HasMany
