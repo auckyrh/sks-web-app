@@ -18,9 +18,9 @@ class EventClass extends Model
         return $this->belongsTo(EventPeriod::class);
     }
 
-    public function groups(): HasMany
+    public function teams(): HasMany
     {
-        return $this->hasMany(Group::class);
+        return $this->hasMany(Team::class);
     }
 
     public function participants(): HasMany

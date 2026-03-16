@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
-class Group extends Model
+class Team extends Model
 {
     protected $fillable = [
         'event_period_id',
@@ -28,7 +28,7 @@ class Group extends Model
 
     public function facilitators(): BelongsToMany
     {
-        return $this->belongsToMany(User::class, 'group_facilitators')
+        return $this->belongsToMany(User::class, 'team_facilitators')
             ->withTimestamps();
     }
 

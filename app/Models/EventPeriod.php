@@ -29,15 +29,15 @@ class EventPeriod extends Model
         return $this->hasMany(EventClass::class);
     }
 
-    public function groups(): HasManyThrough
+    public function teams(): HasManyThrough
     {
         return $this->hasManyThrough(
-            Group::class,
+            Team::class,
             EventClass::class,
-            'event_period_id', // FK on event_classes
-            'event_class_id',  // FK on groups
-            'id',              // PK on event_periods
-            'id'               // PK on event_classes
+            'event_period_id',
+            'event_class_id',
+            'id',
+            'id'
         );
     }
 

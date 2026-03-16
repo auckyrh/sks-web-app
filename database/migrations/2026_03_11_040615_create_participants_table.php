@@ -16,7 +16,7 @@ return new class extends Migration
             $table->foreignId('registration_id')->unique()->constrained()->cascadeOnDelete();
             $table->foreignId('event_period_id')->constrained()->cascadeOnDelete();
             $table->foreignId('event_class_id')->nullable()->constrained('event_classes')->nullOnDelete();
-            $table->foreignId('group_id')->nullable()->constrained('groups')->nullOnDelete();
+            $table->foreignId('team_id')->nullable()->constrained('teams')->nullOnDelete();
             $table->string('child_full_name');
             $table->string('nickname');
             $table->enum('gender', ['M', 'F']);

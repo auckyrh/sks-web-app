@@ -190,8 +190,8 @@ class EventPeriodResource extends Resource
                         ->icon('heroicon-o-academic-cap')
                         ->color('info')
                         ->url(fn ($record) => EventPeriodResource::getUrl('edit', ['record' => $record, 'activeRelationManager' => 0])),
-                    Tables\Actions\Action::make('generate_groups')
-                        ->label('Generate Kelompok')
+                    Tables\Actions\Action::make('generate_teams')
+                        ->label('Generate Tim')
                         ->icon('heroicon-o-squares-plus')
                         ->color('primary')
                         ->form(function ($record) {
@@ -210,58 +210,85 @@ class EventPeriodResource extends Resource
                             return $classes->map(fn ($class) =>
                             Forms\Components\TextInput::make('count_' . $class->id)
                                 ->label(ucfirst($class->level) . ' — ' . $class->saint_name)
-                                ->helperText('Jumlah kelompok untuk kelas ini')
+                                ->helperText('Jumlah tim untuk kelas ini')
                                 ->numeric()
                                 ->minValue(1)
                                 ->maxValue(50)
                                 ->default(
-                                    \App\Models\Group::where('event_class_id', $class->id)->max('number') ?? 0
+                                    \App\Models\Team::where('event_class_id', $class->id)->max('number') ?? 0
                                 )
                                 ->required()
+                                ->extraInputAttributes([
+                                    'onfocus' => "if(this.value==='0')this.value=''",
+                                    'onblur'  => "if(this.value==='')this.value='0'",
+                                ])
                             )->toArray();
                         })
                         ->action(function ($record, array $data) {
-                            $classes = \App\Models\EventClass::where('event_period_id', $record->id)->get();
+                            $classes = \App\Models\EventClass::where('event_period_id', $record->id)
+                                ->orderByRaw("FIELD(level, 'kecil', 'tengah', 'besar')")
+                                ->get();
 
                             $totalCreated = 0;
                             $totalSkipped = 0;
+                            $perClass = [];
 
                             foreach ($classes as $class) {
                                 $requestedCount = (int) $data['count_' . $class->id];
+                                $classCreated = 0;
+                                $classSkipped = 0;
 
                                 for ($i = 1; $i <= $requestedCount; $i++) {
-                                    $created = \App\Models\Group::firstOrCreate(
-                                        [
-                                            'event_class_id' => $class->id,
-                                            'number'         => $i,
-                                        ],
+                                    $team = \App\Models\Team::firstOrCreate(
+                                        ['event_class_id' => $class->id, 'number' => $i],
                                         [
                                             'event_period_id' => $record->id,
                                             'name'            => $class->saint_name . ' ' . $i,
                                         ]
                                     );
 
-                                    $created->wasRecentlyCreated ? $totalCreated++ : $totalSkipped++;
+                                    $team->wasRecentlyCreated ? $classCreated++ : $classSkipped++;
                                 }
+
+                                $totalCreated += $classCreated;
+                                $totalSkipped += $classSkipped;
+                                $perClass[] = [
+                                    'label'   => ucfirst($class->level) . ' — ' . $class->saint_name,
+                                    'created' => $classCreated,
+                                    'skipped' => $classSkipped,
+                                ];
                             }
 
+                            $rows = collect($perClass)
+                                ->map(fn ($c) =>
+                                    '<div style="display:flex;justify-content:space-between;gap:16px;padding:2px 0;">'
+                                    . '<span style="color:#374151;">• ' . $c['label'] . '</span>'
+                                    . '<span style="white-space:nowrap;color:#6b7280;">'
+                                    . '<span style="color:#16a34a;font-weight:600;">' . $c['created'] . ' baru</span>'
+                                    . ', <span>' . $c['skipped'] . ' sudah ada</span>'
+                                    . '</span>'
+                                    . '</div>'
+                                )->join('');
+
+                            $body = '<div style="font-size:13px;line-height:1.6;">' . $rows . '</div>';
+
                             Notification::make()
-                                ->title("✅ {$totalCreated} kelompok baru dibuat, {$totalSkipped} sudah ada (dilewati).")
+                                ->title("✅ {$totalCreated} tim baru dibuat, {$totalSkipped} sudah ada")
+                                ->body($body)
                                 ->success()
                                 ->send();
                         })
-                        ->modalHeading('Generate Kelompok')
-                        ->modalDescription('Input jumlah kelompok per kelas. Kelompok yang sudah ada tidak akan dihapus atau diganti.')
+                        ->modalHeading('Generate Tim / Kelompok')
+                        ->modalDescription('Input jumlah tim per kelas. Tim yang sudah ada tidak akan dihapus.')
                         ->modalSubmitActionLabel('Generate')
                         ->requiresConfirmation(false),
-                    Tables\Actions\Action::make('view_groups')
-                        ->label('Lihat Kelompok')
+                    Tables\Actions\Action::make('view_teams')
+                        ->label('Lihat Tim')
                         ->icon('heroicon-o-user-group')
                         ->color('gray')
                         ->url(fn ($record) =>
-                        \App\Filament\Resources\GroupResource::getUrl('index', [
-                            'tableFilters[event_period_id][value]' => $record->id
-                        ])
+                            \App\Filament\Resources\TeamResource::getUrl('index') .
+                            '?tableFilters[event_period_id][value]=' . $record->id
                         ),
                     Tables\Actions\Action::make('payment_tiers')
                         ->label('Biaya')

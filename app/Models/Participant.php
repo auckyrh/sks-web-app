@@ -35,9 +35,9 @@ class Participant extends Model
         return $this->belongsTo(EventClass::class);
     }
 
-    public function group(): BelongsTo
+    public function team(): BelongsTo
     {
-        return $this->belongsTo(Group::class);
+        return $this->belongsTo(Team::class);
     }
 
     public function rsvps(): HasMany

@@ -49,9 +49,9 @@ class User extends Authenticatable implements FilamentUser, HasName
             ->whereHas('eventPeriod', fn($q) => $q->where('is_active', true));
     }
 
-    public function facilitatingGroups(): BelongsToMany
+    public function facilitatingTeams(): BelongsToMany
     {
-        return $this->belongsToMany(Group::class, 'group_facilitators')
+        return $this->belongsToMany(Team::class, 'team_facilitators')
             ->withTimestamps();
     }
 
