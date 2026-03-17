@@ -302,10 +302,22 @@
                                 </div>
                                 <div>
                                     <label class="sks-label">Ukuran Kaos <span style="color:#dc2626;">*</span></label>
+                                    @php
+                                        $shirtSizes = [
+                                            'S'   => ['panjang' => 39, 'lebar' => 30],
+                                            'M'   => ['panjang' => 43, 'lebar' => 32],
+                                            'L'   => ['panjang' => 46, 'lebar' => 35],
+                                            'XL'  => ['panjang' => 50, 'lebar' => 37],
+                                            '2XL' => ['panjang' => 53, 'lebar' => 39],
+                                            '3XL' => ['panjang' => 57, 'lebar' => 42],
+                                            '4XL' => ['panjang' => 61, 'lebar' => 44],
+                                            '5XL' => ['panjang' => 65, 'lebar' => 45],
+                                        ];
+                                    @endphp
                                     <select wire:model="tshirt_size" class="sks-input">
                                         <option value="">Pilih...</option>
-                                        @foreach(['XS','S','M','L','XL','2XL','3XL','4XL'] as $size)
-                                            <option value="{{ $size }}">{{ $size }}</option>
+                                        @foreach($shirtSizes as $size => $dim)
+                                            <option value="{{ $size }}">{{ $size }} — Panjang {{ $dim['panjang'] }} cm, Lebar {{ $dim['lebar'] }} cm</option>
                                         @endforeach
                                     </select>
                                     @error('tshirt_size') <p class="sks-error">{{ $message }}</p> @enderror

@@ -25,7 +25,7 @@ return new class extends Migration
             $table->tinyInteger('grade');
             $table->enum('registration_source', ['BIAK', 'YCK', 'UMUM']);
             $table->boolean('has_joined_biak_yck')->default(false);
-            $table->enum('tshirt_size', ['XS', 'S', 'M', 'L', 'XL', '2XL', '3XL', '4XL']);
+            $table->enum('tshirt_size', ['XS', 'S', 'M', 'L', 'XL', '2XL', '3XL', '4XL', '5XL']);
             $table->string('parent_name');
             $table->string('parent_wa');
             $table->string('allergies')->nullable();

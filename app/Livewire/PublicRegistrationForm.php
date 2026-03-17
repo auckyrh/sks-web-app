@@ -100,7 +100,7 @@ class PublicRegistrationForm extends Component
             'lingkungan_id' => 'nullable|exists:lingkungans,id',
             'grade' => 'required|integer|min:1|max:6',
             'registration_source' => 'required|in:BIAK,YCK,UMUM',
-            'tshirt_size' => 'required|in:XS,S,M,L,XL,2XL,3XL,4XL',
+            'tshirt_size' => 'required|in:S,M,L,XL,2XL,3XL,4XL,5XL',
             'parent_name' => 'required|string|max:255',
             'parent_wa' => 'required|string|max:20',
             'payment_tier_id' => 'required|exists:payment_tiers,id',
