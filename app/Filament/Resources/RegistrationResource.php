@@ -170,6 +170,13 @@ class RegistrationResource extends Resource
                                         ])
                                         ->default('pending')
                                         ->native(false),
+                                    Forms\Components\Placeholder::make('verified_info')
+                                        ->label('Diverifikasi oleh')
+                                        ->content(fn ($record) => $record?->verified_at
+                                            ? ($record->verifiedBy?->name ?? '—') . ' · ' . $record->verified_at->format('d M Y, H:i')
+                                            : '—'
+                                        )
+                                        ->visibleOn('edit'),
                                 ]),
                             Forms\Components\Group::make()
                                 ->schema([
@@ -232,6 +239,14 @@ class RegistrationResource extends Resource
                         'success' => 'confirmed',
                         'danger'  => 'cancelled',
                     ]),
+                Tables\Columns\TextColumn::make('verified_info')
+                    ->label('Diverifikasi')
+                    ->getStateUsing(fn ($record) => $record->verified_at
+                        ? $record->verifiedBy?->name . "\n" . $record->verified_at->format('d M Y, H:i')
+                        : '-'
+                    )
+                    ->wrap()
+                    ->toggleable(isToggledHiddenByDefault: true),
                 Tables\Columns\TextColumn::make('created_at')
                     ->label('Tgl Daftar')
                     ->dateTime('d M Y, H:i')
@@ -277,12 +292,16 @@ class RegistrationResource extends Resource
                     ->modalHeading('Verifikasi Pembayaran')
                     ->modalDescription('Pastikan bukti transfer sudah sesuai. Setelah diverifikasi, data peserta akan otomatis dibuat.')
                     ->action(function ($record) {
-                        $record->update([
-                            'payment_status' => 'verified',
-                            'status'         => 'confirmed',
-                            'verified_by'    => auth()->id(),
-                            'verified_at'    => now(),
-                        ]);
+                        \Illuminate\Support\Facades\DB::table('registrations')
+                            ->where('id', $record->id)
+                            ->update([
+                                'payment_status' => 'verified',
+                                'status'         => 'confirmed',
+                                'verified_by'    => auth()->id(),
+                                'verified_at'    => now(),
+                                'updated_at'     => now(),
+                            ]);
+                        $record->refresh();
 
                         // Auto-create participant
                         if (!$record->participant) {
