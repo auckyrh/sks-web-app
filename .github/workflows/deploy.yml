@@ -29,6 +29,7 @@ jobs:
           host: ${{ secrets.SSH_HOST }}
           username: ${{ secrets.SSH_USERNAME }}
           key: ${{ secrets.SSH_PRIVATE_KEY }}
+          port: ${{ secrets.SSH_PORT }}
           script: |
             cd /home/u893770968/domains/sks.santoyakobus.org/public_html
             git pull origin main
@@ -44,6 +45,7 @@ jobs:
           host: ${{ secrets.SSH_HOST }}
           username: ${{ secrets.SSH_USERNAME }}
           key: ${{ secrets.SSH_PRIVATE_KEY }}
+          port: ${{ secrets.SSH_PORT }}
           source: "public/build"
           target: /home/u893770968/domains/sks.santoyakobus.org/public_html/public/
 
