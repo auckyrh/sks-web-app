@@ -207,6 +207,10 @@ class RegistrationResource extends Resource
                     ->label('Nama Anak')
                     ->searchable()
                     ->sortable(),
+                Tables\Columns\TextColumn::make('wilayah.name')
+                    ->label('Wilayah')
+                    ->searchable()
+                    ->sortable(),
                 Tables\Columns\TextColumn::make('grade')
                     ->label('Kelas')
                     ->badge()
@@ -252,6 +256,9 @@ class RegistrationResource extends Resource
                         'confirmed' => 'Confirmed',
                         'cancelled' => 'Cancelled',
                     ]),
+                Tables\Filters\SelectFilter::make('wilayah_id')
+                    ->label('Wilayah')
+                    ->relationship('wilayah', 'name'),
                 Tables\Filters\SelectFilter::make('grade')
                     ->label('Kelas')
                     ->options([
