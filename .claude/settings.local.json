@@ -1,6 +1,7 @@
 {
   "permissions": {
     "allow": [
+      "Bash(*)",
       "Bash(cd \"/Users/aucky/Documents/GEREJA/SKS IT System/sks-web-app\" && php artisan tinker --execute=\"echo \\\\App\\\\Models\\\\Wilayah::count\\(\\) . ' wilayahs, ' . \\\\App\\\\Models\\\\Lingkungan::count\\(\\) . ' lingkungans, ' . \\\\App\\\\Models\\\\PaymentTier::count\\(\\) . ' tiers, ' . \\\\App\\\\Models\\\\EventPeriod::where\\('year',2026\\)->value\\('id'\\) . ' = 2026 period id';\")",
       "Bash(cd \"/Users/aucky/Documents/GEREJA/SKS IT System/sks-web-app\" && php artisan tinker --execute=\"\n\\\\App\\\\Models\\\\PaymentTier::where\\('event_period_id', 19\\)->get\\(['id','name','amount']\\)->each\\(fn\\(\\\\$t\\) => print\\(\\\\$t->id.' '.\\\\$t->name.' '.\\\\$t->amount.PHP_EOL\\)\\);\n\")",
       "Bash(cd \"/Users/aucky/Documents/GEREJA/SKS IT System/sks-web-app\" && php artisan db:seed --class=RegistrationSeeder)"
