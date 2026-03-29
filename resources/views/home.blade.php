@@ -8,6 +8,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,600;0,700;1,400;1,600&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <style>
         *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
@@ -166,6 +167,40 @@
             0%, 100% { opacity: 1; transform: scale(1); }
             50%       { opacity: 0.5; transform: scale(0.75); }
         }
+
+        /* ── Tier badges ── */
+        .tier-badges {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+            margin-top: 1rem;
+            align-items: center;
+        }
+        .tier-badge-item {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.625rem;
+            border-radius: 12px;
+            padding: 0.5rem 1rem;
+            font-size: 0.775rem;
+            line-height: 1.4;
+            text-align: left;
+            max-width: 340px;
+            width: 100%;
+        }
+        .tier-badge-item.active {
+            background: linear-gradient(135deg, #ecfdf5, #d1fae5);
+            border: 1.5px solid #6ee7b7;
+            color: #065f46;
+        }
+        .tier-badge-item.upcoming {
+            background: linear-gradient(135deg, #fffbf0, #fff3cc);
+            border: 1.5px solid #f0d080;
+            color: #92600a;
+        }
+        .tier-badge-icon { font-size: 1rem; flex-shrink: 0; }
+        .tier-badge-label { font-weight: 600; }
+        .tier-badge-dates { font-size: 0.7rem; opacity: 0.8; margin-top: 0.1rem; }
 
         /* ── Action Cards ── */
         .actions {
@@ -349,9 +384,29 @@
             </p>
 
             @if($activePeriod && $activePeriod->is_active)
-                <div class="period-badge">
-                    <span class="period-dot"></span>
-                    Pendaftaran sedang dibuka
+                <div class="tier-badges">
+                    @if($activeTier)
+                        <div class="tier-badge-item active">
+                            <span class="tier-badge-icon">🟢</span>
+                            <div>
+                                <div class="tier-badge-label">Pendaftaran {{ $activeTier->name }} Sedang Dibuka</div>
+                                <div class="tier-badge-dates">
+                                    {{ $activeTier->valid_from->locale('id')->isoFormat('D MMM Y') }} – {{ $activeTier->valid_until->locale('id')->isoFormat('D MMM Y') }}
+                                </div>
+                            </div>
+                        </div>
+                    @endif
+                    @if($upcomingTier)
+                        <div class="tier-badge-item upcoming">
+                            <span class="tier-badge-icon">🕐</span>
+                            <div>
+                                <div class="tier-badge-label">Pendaftaran {{ $upcomingTier->name }} Akan Dibuka</div>
+                                <div class="tier-badge-dates">
+                                    {{ $upcomingTier->valid_from->locale('id')->isoFormat('D MMM Y') }} – {{ $upcomingTier->valid_until->locale('id')->isoFormat('D MMM Y') }}
+                                </div>
+                            </div>
+                        </div>
+                    @endif
                 </div>
             @endif
         </div>
@@ -361,14 +416,14 @@
 
             @if($activePeriod && $activePeriod->is_active)
                 {{-- Registration open --}}
-                <a href="{{ route('registration.form') }}" class="action-card primary">
+                <button type="button" onclick="handleDaftarClick()" class="action-card primary" style="width:100%; cursor:pointer; border:none; text-align:left;">
                     <div class="action-icon">📝</div>
                     <div class="action-body">
                         <div class="action-title">Daftar Sekarang</div>
                         <div class="action-desc">Isi formulir pendaftaran anak Anda untuk SKS {{ $activePeriod->year }}</div>
                     </div>
                     <span class="action-arrow">→</span>
-                </a>
+                </button>
             @else
                 {{-- Registration closed --}}
                 <div class="closed-notice">
@@ -402,5 +457,55 @@
     </footer>
 
 </div>
+
+<script>
+    const formUrl     = @json(route('registration.form'));
+    const upcomingTier = @json($upcomingTier ? [
+        'name'       => $upcomingTier->name,
+        'valid_from' => $upcomingTier->valid_from->locale('id')->isoFormat('D MMM Y'),
+        'valid_until'=> $upcomingTier->valid_until->locale('id')->isoFormat('D MMM Y'),
+    ] : null);
+
+    function handleDaftarClick() {
+        Swal.fire({
+            title: 'Apakah Anda umat Paroki Santo Yakobus?',
+            icon: 'question',
+            showDenyButton: true,
+            confirmButtonText: '✅ Ya, saya umat Paroki',
+            denyButtonText: '❌ Tidak',
+            confirmButtonColor: '#d97706',
+            denyButtonColor: '#6b7280',
+            reverseButtons: false,
+            customClass: { popup: 'swal-font' },
+        }).then((result) => {
+            if (result.isConfirmed) {
+                window.location.href = formUrl;
+            } else if (result.isDenied) {
+                if (upcomingTier) {
+                    Swal.fire({
+                        title: 'Pendaftaran Umum Belum Dibuka',
+                        html: `Pendaftaran untuk <strong>${upcomingTier.name}</strong> (umum) akan dibuka pada:<br><br>`
+                            + `<strong style="color:#d97706; font-size:1rem;">${upcomingTier.valid_from} – ${upcomingTier.valid_until}</strong><br><br>`
+                            + `Silakan pantau informasi dari panitia SKS Santo Yakobus.`,
+                        icon: 'info',
+                        confirmButtonText: 'Mengerti',
+                        confirmButtonColor: '#d97706',
+                    });
+                } else {
+                    Swal.fire({
+                        title: 'Pendaftaran Umum Sudah Dibuka',
+                        html: `Silakan lanjutkan pendaftaran Anda.<br><br>`
+                            + `Jika ada pertanyaan, hubungi panitia SKS Santo Yakobus.`,
+                        icon: 'info',
+                        confirmButtonText: 'Lanjut Daftar',
+                        confirmButtonColor: '#d97706',
+                    }).then((r) => {
+                        if (r.isConfirmed) window.location.href = formUrl;
+                    });
+                }
+            }
+        });
+    }
+</script>
 </body>
 </html>
