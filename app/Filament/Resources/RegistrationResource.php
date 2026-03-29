@@ -349,6 +349,45 @@ class RegistrationResource extends Resource
                             ->send();
                     }),
 
+                Tables\Actions\Action::make('generate_participant')
+                    ->label('Buat Peserta')
+                    ->icon('heroicon-o-user-plus')
+                    ->color('info')
+                    ->visible(fn ($record) => $record->payment_status === 'verified' && !$record->participant)
+                    ->requiresConfirmation()
+                    ->modalHeading('Buat Data Peserta')
+                    ->modalDescription('Buat data peserta dari registrasi ini secara manual.')
+                    ->action(function ($record) {
+                        \App\Models\Participant::create([
+                            'registration_id'  => $record->id,
+                            'event_period_id'  => $record->event_period_id,
+                            'event_class_id'   => null,
+                            'child_full_name'  => $record->child_full_name,
+                            'nickname'         => $record->nickname,
+                            'gender'           => $record->gender,
+                            'birth_date'       => $record->birth_date,
+                            'grade'            => $record->grade,
+                            'parent_name'      => $record->parent_name,
+                            'parent_wa'        => $record->parent_wa,
+                            'tshirt_size'      => $record->tshirt_size,
+                            'allergies'        => $record->allergies,
+                            'notes'            => $record->notes,
+                            'created_by'       => auth()->id(),
+                        ]);
+
+                        Notification::make()
+                            ->title('✅ Data peserta berhasil dibuat!')
+                            ->success()
+                            ->send();
+                    }),
+
+                Tables\Actions\Action::make('already_participant')
+                    ->label('Sudah Peserta')
+                    ->icon('heroicon-o-check-badge')
+                    ->color('gray')
+                    ->disabled()
+                    ->visible(fn ($record) => $record->payment_status === 'verified' && (bool) $record->participant),
+
                 Tables\Actions\ViewAction::make(),
                 Tables\Actions\EditAction::make(),
                 Tables\Actions\DeleteAction::make(),
