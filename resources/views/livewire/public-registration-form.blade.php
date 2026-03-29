@@ -487,7 +487,16 @@
                                     <span style="font-size:1rem;">🏦</span>
                                     <p style="font-size:0.8125rem; font-weight:600; color:#1e4d8c;">No. Rekening Pendaftaran SKS</p>
                                 </div>
-                                <p style="font-size:0.9rem; font-weight:700; color:#1c3a6e; font-family:'Lora',serif; letter-spacing:0.02em;">BCA 862-2056002</p>
+                                <div style="display:flex; align-items:center; gap:0.625rem;">
+                                    <p id="norek-text" style="font-size:0.9rem; font-weight:700; color:#1c3a6e; font-family:'Lora',serif; letter-spacing:0.02em;">BCA 8622056002</p>
+                                    <button type="button" onclick="copyNorek()" id="copy-btn"
+                                        style="display:inline-flex; align-items:center; gap:0.3rem; padding:0.25rem 0.625rem; border-radius:6px; border:1.5px solid #bdd7f5; background:#fff; color:#1e4d8c; font-size:0.7rem; font-weight:600; cursor:pointer; transition:all 0.15s; font-family:'DM Sans',sans-serif;">
+                                        <svg id="copy-icon" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" style="width:13px;height:13px;">
+                                            <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 17.25v3.375c0 .621-.504 1.125-1.125 1.125h-9.75a1.125 1.125 0 0 1-1.125-1.125V7.875c0-.621.504-1.125 1.125-1.125H6.75a9.06 9.06 0 0 1 1.5.124m7.5 10.376h3.375c.621 0 1.125-.504 1.125-1.125V11.25c0-4.46-3.243-8.161-7.5-8.876a9.06 9.06 0 0 0-1.5-.124H9.375c-.621 0-1.125.504-1.125 1.125v3.5m7.5 10.375H9.375a1.125 1.125 0 0 1-1.125-1.125v-9.25m12 6.625v-1.875a3.375 3.375 0 0 0-3.375-3.375h-1.5a1.125 1.125 0 0 1-1.125-1.125v-1.5a3.375 3.375 0 0 0-3.375-3.375H9.75" />
+                                        </svg>
+                                        <span id="copy-label">Salin</span>
+                                    </button>
+                                </div>
                                 <p style="font-size:0.75rem; color:#4a6fa5; margin-top:0.125rem;">a.n. BGKP Santo Yakobus</p>
                             </div>
 
@@ -521,7 +530,8 @@
                             {{-- Payer Name --}}
                             <div>
                                 <label class="sks-label">Nama Rekening Pengirim <span style="color:#dc2626;">*</span></label>
-                                <input wire:model="payer_name" type="text" class="sks-input" placeholder="Nama sesuai rekening yang digunakan untuk transfer">
+                                <p style="font-size:0.75rem; color:#92835c; margin-bottom:0.375rem;">Nama sesuai rekening yang digunakan untuk transfer</p>
+                                <input wire:model="payer_name" type="text" class="sks-input">
                                 @error('payer_name') <p class="sks-error">{{ $message }}</p> @enderror
                             </div>
 
@@ -552,4 +562,28 @@
     <style>
         @keyframes spin { to { transform: rotate(360deg); } }
     </style>
+
+    <script>
+        function copyNorek() {
+            navigator.clipboard.writeText('8622056002').then(function () {
+                const btn   = document.getElementById('copy-btn');
+                const label = document.getElementById('copy-label');
+                const icon  = document.getElementById('copy-icon');
+
+                label.textContent = 'Tersalin!';
+                btn.style.background   = '#ecfdf5';
+                btn.style.borderColor  = '#6ee7b7';
+                btn.style.color        = '#065f46';
+                icon.innerHTML = '<path stroke-linecap="round" stroke-linejoin="round" d="m4.5 12.75 6 6 9-13.5"/>';
+
+                setTimeout(function () {
+                    label.textContent = 'Salin';
+                    btn.style.background   = '#fff';
+                    btn.style.borderColor  = '#bdd7f5';
+                    btn.style.color        = '#1e4d8c';
+                    icon.innerHTML = '<path stroke-linecap="round" stroke-linejoin="round" d="M15.75 17.25v3.375c0 .621-.504 1.125-1.125 1.125h-9.75a1.125 1.125 0 0 1-1.125-1.125V7.875c0-.621.504-1.125 1.125-1.125H6.75a9.06 9.06 0 0 1 1.5.124m7.5 10.376h3.375c.621 0 1.125-.504 1.125-1.125V11.25c0-4.46-3.243-8.161-7.5-8.876a9.06 9.06 0 0 0-1.5-.124H9.375c-.621 0-1.125.504-1.125 1.125v3.5m7.5 10.375H9.375a1.125 1.125 0 0 1-1.125-1.125v-9.25m12 6.625v-1.875a3.375 3.375 0 0 0-3.375-3.375h-1.5a1.125 1.125 0 0 1-1.125-1.125v-1.5a3.375 3.375 0 0 0-3.375-3.375H9.75"/>';
+                }, 2000);
+            });
+        }
+    </script>
 </div>
