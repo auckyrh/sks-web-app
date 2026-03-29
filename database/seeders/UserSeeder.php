@@ -33,6 +33,13 @@ class UserSeeder extends Seeder
                 'role'      => 'superadmin',
             ],
             [
+                'full_name' => 'Steven Wijaya',
+                'nick_name' => 'SW',
+                'email'     => 'swrhythm@gmail.com',
+                'password'  => Hash::make('steven789'),
+                'role'      => 'superadmin',
+            ],
+            [
                 'full_name' => 'Herlina Tanaga',
                 'nick_name' => 'Herlina',
                 'email'     => 'herlinatanaga@gmail.com',

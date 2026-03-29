@@ -110,7 +110,8 @@ class PublicRegistrationForm extends Component
 
     public function submit(): void
     {
-        $this->validate([
+        try {
+            $this->validate([
             'child_full_name' => 'required|string|max:255',
             'nickname' => 'required|string|max:255',
             'gender' => 'required|in:M,F',
@@ -146,6 +147,11 @@ class PublicRegistrationForm extends Component
             'payment_proof.image' => 'File harus berupa gambar.',
             'payment_proof.max' => 'Ukuran file maksimal 2MB.',
         ]);
+        } catch (\Illuminate\Validation\ValidationException $e) {
+            $flat = collect($e->errors())->flatten()->values()->toArray();
+            $this->dispatch('showValidationErrors', errors: $flat);
+            throw $e;
+        }
 
         $tier = PaymentTier::find($this->payment_tier_id);
         $year  = $this->activePeriod->year;

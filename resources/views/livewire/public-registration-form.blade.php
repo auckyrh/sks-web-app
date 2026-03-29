@@ -551,15 +551,30 @@
                             <div>
                                 <label class="sks-label">Bukti Transfer <span style="color:#dc2626;">*</span></label>
 
-                                <div class="sks-upload-area" style="{{ $payment_proof ? 'border-color:#f59e0b; background:#fffbf0;' : '' }}">
-                                    <input wire:model="payment_proof" type="file" accept="image/*">
-                                    @if($payment_proof)
-                                        <div wire:loading.remove wire:target="payment_proof">
-                                            <img src="{{ $payment_proof->temporaryUrl() }}" style="max-height:180px; border-radius:8px; object-fit:contain; margin:0 auto; display:block;">
+                                <div x-data="{ preview: null }"
+                                     class="sks-upload-area"
+                                     :style="preview ? 'border-color:#f59e0b; background:#fffbf0;' : ''">
+                                    <input wire:model="payment_proof" type="file" accept="image/*"
+                                           x-on:change="
+                                               const f = $event.target.files[0];
+                                               if (f) { const r = new FileReader(); r.onload = e => preview = e.target.result; r.readAsDataURL(f); }
+                                           ">
+
+                                    {{-- Spinner during upload --}}
+                                    <div wire:loading wire:target="payment_proof" style="padding:1rem 0;">
+                                        <div style="display:inline-block; width:24px; height:24px; border:3px solid #f0d080; border-top-color:#f59e0b; border-radius:50%; animation:spin 0.7s linear infinite;"></div>
+                                        <p style="font-size:0.8125rem; color:#a07830; margin-top:0.5rem;">Mengupload gambar...</p>
+                                    </div>
+
+                                    {{-- Content when not uploading --}}
+                                    <div wire:loading.remove wire:target="payment_proof">
+                                        {{-- Preview --}}
+                                        <div x-show="preview !== null">
+                                            <img :src="preview" style="max-height:180px; border-radius:8px; object-fit:contain; margin:0 auto; display:block;">
                                             <p style="font-size:0.7rem; color:#a07830; margin-top:0.5rem;">Tap untuk ganti gambar</p>
                                         </div>
-                                    @else
-                                        <div wire:loading.remove wire:target="payment_proof">
+                                        {{-- Placeholder --}}
+                                        <div x-show="preview === null">
                                             {{-- Heroicon: arrow-up-tray --}}
                                             <div style="display:flex; justify-content:center; margin-bottom:0.5rem;">
                                                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="#c8a870" style="width:36px;height:36px;">
@@ -569,10 +584,6 @@
                                             <p style="font-size:0.8125rem; font-weight:500; color:#7a6248;">Tap untuk upload bukti transfer</p>
                                             <p style="font-size:0.7rem; color:#b8a070; margin-top:0.25rem;">JPG, PNG · Maks. 2MB</p>
                                         </div>
-                                    @endif
-                                    <div wire:loading wire:target="payment_proof" style="padding:1rem 0;">
-                                        <div style="display:inline-block; width:24px; height:24px; border:3px solid #f0d080; border-top-color:#f59e0b; border-radius:50%; animation:spin 0.7s linear infinite;"></div>
-                                        <p style="font-size:0.8125rem; color:#a07830; margin-top:0.5rem;">Mengupload gambar...</p>
                                     </div>
                                 </div>
 
@@ -611,6 +622,20 @@
     </div>
 
     <script>
+        document.addEventListener('livewire:initialized', () => {
+            Livewire.on('showValidationErrors', ({ errors }) => {
+                const list = errors.map(e => `<li style="text-align:left; margin:0.2rem 0;">• ${e}</li>`).join('');
+                Swal.fire({
+                    title: 'Ada yang belum lengkap',
+                    html: `<ul style="list-style:none; padding:0; margin:0; font-size:0.875rem; color:#4b3a2a;">${list}</ul>`,
+                    icon: 'warning',
+                    confirmButtonText: 'Oke, saya perbaiki',
+                    confirmButtonColor: '#d97706',
+                    customClass: { popup: 'swal-compact' },
+                });
+            });
+        });
+
         function copyNorek() {
             navigator.clipboard.writeText('8622056002').then(function () {
                 const btn   = document.getElementById('copy-btn');
