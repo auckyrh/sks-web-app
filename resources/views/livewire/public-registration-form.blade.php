@@ -12,8 +12,11 @@
                 border-radius: 20px;
                 border: 1px solid #f0e8d8;
                 box-shadow: 0 2px 16px 0 rgba(180,140,60,0.06), 0 1px 3px 0 rgba(0,0,0,0.04);
-                padding: 2rem;
+                padding: 1.5rem;
                 margin-bottom: 1.25rem;
+            }
+            @media (min-width: 480px) {
+                .sks-card { padding: 2rem; }
             }
 
             .sks-section-label {
@@ -68,6 +71,16 @@
             }
             .sks-input::placeholder { color: #b8a88a; }
             .sks-input:disabled { background: #f9f5ef; color: #a08060; cursor: not-allowed; }
+
+            /* ── Responsive 2-col grid ── */
+            .sks-grid-2 {
+                display: grid;
+                grid-template-columns: 1fr;
+                gap: 1rem;
+            }
+            @media (min-width: 480px) {
+                .sks-grid-2 { grid-template-columns: 1fr 1fr; }
+            }
 
             .sks-radio-card {
                 display: flex; align-items: center; gap: 0.875rem;
@@ -145,9 +158,20 @@
                 border-radius: 24px;
                 border: 1px solid #f0e8d8;
                 box-shadow: 0 8px 40px rgba(180,140,60,0.1);
-                padding: 3rem 2rem;
+                padding: 2.5rem 1.5rem;
                 text-align: center;
             }
+            @media (min-width: 480px) {
+                .sks-success-card { padding: 3rem 2rem; }
+            }
+
+            .sks-icon-box {
+                width: 56px; height: 56px;
+                border-radius: 16px;
+                display: flex; align-items: center; justify-content: center;
+                flex-shrink: 0;
+            }
+            .sks-icon-box svg { width: 28px; height: 28px; }
 
             @keyframes sks-fade-up {
                 from { opacity: 0; transform: translateY(16px); }
@@ -158,6 +182,8 @@
             .sks-card:nth-child(2) { animation-delay: 0.05s; }
             .sks-card:nth-child(3) { animation-delay: 0.1s; }
             .sks-card:nth-child(4) { animation-delay: 0.15s; }
+
+            @keyframes spin { to { transform: rotate(360deg); } }
         </style>
     @endonce
 
@@ -166,14 +192,19 @@
         {{-- ── SUCCESS STATE ───────────────────────────────────────────── --}}
         @if($submitted)
             <div class="sks-success-card" style="animation: sks-fade-up 0.5s ease both;">
-                <div style="font-size:3.5rem; margin-bottom:1rem;">🎉</div>
+                {{-- Heroicon: check-circle --}}
+                <div style="width:72px; height:72px; background:linear-gradient(135deg,#ecfdf5,#d1fae5); border-radius:50%; display:flex; align-items:center; justify-content:center; margin:0 auto 1.25rem; border:2px solid #6ee7b7;">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.75" stroke="#059669" style="width:36px;height:36px;">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75 11.25 15 15 9.75M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
+                    </svg>
+                </div>
                 <h1 class="sks-heading" style="font-size:1.5rem; font-weight:700; color:#1c1410; margin-bottom:0.5rem;">
                     Pendaftaran Berhasil!
                 </h1>
                 <p style="color:#7a6248; font-size:0.9rem; line-height:1.6; max-width:340px; margin: 0 auto 1.75rem;">
                     Terima kasih! Pendaftaran anak Anda telah diterima dan sedang menunggu verifikasi pembayaran oleh panitia.
                 </p>
-                <div style="background: linear-gradient(135deg,#fffbf0,#fff3cc); border:1.5px solid #f0d080; border-radius:16px; padding:1.25rem 1.5rem; margin-bottom:1.75rem; display:inline-block; min-width:240px;">
+                <div style="background:linear-gradient(135deg,#fffbf0,#fff3cc); border:1.5px solid #f0d080; border-radius:16px; padding:1.25rem 1.5rem; margin-bottom:1.75rem; display:inline-block; min-width:240px;">
                     <div style="font-size:0.7rem; color:#a07830; letter-spacing:0.08em; text-transform:uppercase; font-weight:600; margin-bottom:0.375rem;">Nomor Pendaftaran Anda</div>
                     <div style="font-family:'Lora',serif; font-size:1.75rem; font-weight:700; color:#92600a; letter-spacing:0.06em;">{{ $registrationNumber }}</div>
                     <div style="font-size:0.7rem; color:#b8a070; margin-top:0.25rem;">Simpan nomor ini untuk cek status pendaftaran</div>
@@ -189,7 +220,12 @@
         @else
             @if(!$activePeriod)
                 <div class="sks-success-card">
-                    <div style="font-size:3rem; margin-bottom:1rem;">🔒</div>
+                    {{-- Heroicon: lock-closed --}}
+                    <div style="width:64px; height:64px; background:#f5f5f5; border-radius:50%; display:flex; align-items:center; justify-content:center; margin:0 auto 1rem;">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.75" stroke="#9ca3af" style="width:32px;height:32px;">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M16.5 10.5V6.75a4.5 4.5 0 1 0-9 0v3.75m-.75 11.25h10.5a2.25 2.25 0 0 0 2.25-2.25v-6.75a2.25 2.25 0 0 0-2.25-2.25H6.75a2.25 2.25 0 0 0-2.25 2.25v6.75a2.25 2.25 0 0 0 2.25 2.25Z" />
+                        </svg>
+                    </div>
                     <h2 class="sks-heading" style="font-size:1.25rem; font-weight:700; color:#1c1410; margin-bottom:0.5rem;">Pendaftaran Belum Dibuka</h2>
                     <p style="color:#9c8060; font-size:0.875rem;">Silakan pantau informasi dari panitia SKS.</p>
                 </div>
@@ -197,11 +233,11 @@
 
                 {{-- Header --}}
                 <div style="display:flex; align-items:center; gap:1rem; margin-bottom:1.75rem;">
-                    <img src="{{ $activePeriod->event_logo ? Storage::disk('public')->url($activePeriod->event_logo) : 'https://ui-avatars.com/api/?name=S&background=random' }}"
+                    <img src="{{ $activePeriod->event_logo ? Storage::disk('public')->url($activePeriod->event_logo) : asset('images/LOGO-SKS.png') }}"
                          alt="Logo SKS"
                          style="width:56px; height:56px; border-radius:50%; object-fit:cover; flex-shrink:0; box-shadow:0 2px 12px rgba(180,140,60,0.2); border:2px solid #f0d080;">
                     <div>
-                        <h1 class="sks-heading" style="font-size:1.5rem; font-weight:700; color:#1c1410; line-height:1.2;">
+                        <h1 class="sks-heading" style="font-size:1.4rem; font-weight:700; color:#1c1410; line-height:1.2;">
                             Formulir Pendaftaran
                         </h1>
                         <p style="color:#9c7a48; font-size:0.8125rem; margin-top:0.25rem; font-style:italic;">
@@ -233,7 +269,7 @@
                                 @error('nickname') <p class="sks-error">{{ $message }}</p> @enderror
                             </div>
 
-                            <div style="display:grid; grid-template-columns:1fr 1fr; gap:1rem;">
+                            <div class="sks-grid-2">
                                 <div>
                                     <label class="sks-label">Jenis Kelamin <span style="color:#dc2626;">*</span></label>
                                     <select wire:model="gender" class="sks-input">
@@ -257,7 +293,7 @@
 
                             <div>
                                 <label class="sks-label">Tanggal Lahir <span style="color:#dc2626;">*</span></label>
-                                <input wire:model="birth_date" type="date" class="sks-input" style="max-width:100%; box-sizing:border-box;">
+                                <input wire:model="birth_date" type="date" class="sks-input">
                                 @error('birth_date') <p class="sks-error">{{ $message }}</p> @enderror
                             </div>
 
@@ -269,13 +305,13 @@
 
                             <div>
                                 <label class="sks-label">Apakah anda umat Paroki Santo Yakobus? <span style="color:#dc2626;">*</span></label>
-                                <div style="display:flex; gap:1rem; margin-top:0.375rem;">
+                                <div style="display:flex; gap:1rem; margin-top:0.375rem; flex-wrap:wrap;">
                                     <label style="display:flex; align-items:center; gap:0.5rem; font-size:0.875rem; color:#5c4a32; cursor:pointer;">
-                                        <input wire:model.live="is_paroki_member" type="radio" :value="true" value="1" style="accent-color:#f59e0b; width:15px; height:15px;">
+                                        <input wire:model.live="is_paroki_member" type="radio" value="1" style="accent-color:#f59e0b; width:15px; height:15px;">
                                         Ya, saya umat Paroki Santo Yakobus
                                     </label>
                                     <label style="display:flex; align-items:center; gap:0.5rem; font-size:0.875rem; color:#5c4a32; cursor:pointer;">
-                                        <input wire:model.live="is_paroki_member" type="radio" :value="false" value="0" style="accent-color:#f59e0b; width:15px; height:15px;">
+                                        <input wire:model.live="is_paroki_member" type="radio" value="0" style="accent-color:#f59e0b; width:15px; height:15px;">
                                         Tidak
                                     </label>
                                 </div>
@@ -283,7 +319,6 @@
                             </div>
 
                             @if($is_paroki_member)
-                            <div style="display:grid; grid-template-columns:1fr 1fr; gap:1rem;">
                                 <div>
                                     <label class="sks-label">Wilayah <span style="color:#dc2626;">*</span></label>
                                     <select wire:model.live="wilayah_id" class="sks-input">
@@ -307,10 +342,9 @@
                                     </select>
                                     <p style="font-size:0.75rem; color:#92835c; margin-top:0.25rem;">Memilih lingkungan akan otomatis mengisi wilayah.</p>
                                 </div>
-                            </div>
                             @endif
 
-                            <div style="display:grid; grid-template-columns:1fr 1fr; gap:1rem;">
+                            <div class="sks-grid-2">
                                 <div>
                                     <label class="sks-label">Daftar Lewat <span style="color:#dc2626;">*</span></label>
                                     <select wire:model="registration_source" class="sks-input">
@@ -379,7 +413,7 @@
                             <span class="sks-section-title">Data Orang Tua</span>
                         </div>
 
-                        <div style="display:grid; grid-template-columns:1fr 1fr; gap:1rem;">
+                        <div class="sks-grid-2">
                             <div>
                                 <label class="sks-label">Nama Orang Tua <span style="color:#dc2626;">*</span></label>
                                 <input wire:model="parent_name" type="text" class="sks-input" placeholder="Nama lengkap">
@@ -404,9 +438,13 @@
 
                             {{-- Tier pilihan --}}
                             @if($this->paymentTiers->isEmpty())
-                                <p style="color:#b45309; font-size:0.875rem; background:#fffbf0; border:1px solid #f0d080; border-radius:10px; padding:0.875rem;">
-                                    ⚠️ Informasi biaya belum tersedia. Hubungi panitia.
-                                </p>
+                                <div style="display:flex; align-items:flex-start; gap:0.75rem; color:#b45309; font-size:0.875rem; background:#fffbf0; border:1px solid #f0d080; border-radius:10px; padding:0.875rem;">
+                                    {{-- Heroicon: exclamation-triangle --}}
+                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.75" stroke="currentColor" style="width:20px;height:20px;flex-shrink:0;margin-top:1px;">
+                                        <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v3.75m-9.303 3.376c-.866 1.5.217 3.374 1.948 3.374h14.71c1.73 0 2.813-1.874 1.948-3.374L13.949 3.378c-.866-1.5-3.032-1.5-3.898 0L2.697 16.126ZM12 15.75h.007v.008H12v-.008Z" />
+                                    </svg>
+                                    Informasi biaya belum tersedia. Hubungi panitia.
+                                </div>
                             @else
                                 <div>
                                     <label class="sks-label" style="margin-bottom:0.625rem;">Pilih Biaya Pendaftaran <span style="color:#dc2626;">*</span></label>
@@ -432,15 +470,18 @@
 
                             {{-- Donasi Silang --}}
                             <div class="sks-donate-box">
-                                <div style="display:flex; align-items:center; gap:0.5rem; margin-bottom:0.5rem;">
-                                    <span style="font-size:1rem;">🤝</span>
+                                <div style="display:flex; align-items:center; gap:0.625rem; margin-bottom:0.5rem;">
+                                    {{-- Heroicon: heart --}}
+                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.75" stroke="#1e4d8c" style="width:18px;height:18px;flex-shrink:0;">
+                                        <path stroke-linecap="round" stroke-linejoin="round" d="M21 8.25c0-2.485-2.099-4.5-4.688-4.5-1.935 0-3.597 1.126-4.312 2.733-.715-1.607-2.377-2.733-4.313-2.733C5.1 3.75 3 5.765 3 8.25c0 7.22 9 12 9 12s9-4.78 9-12Z" />
+                                    </svg>
                                     <p style="font-size:0.875rem; font-weight:600; color:#1e4d8c;">Donasi Silang <span style="font-weight:400; color:#4a7ab5; font-size:0.75rem;">(Sukarela)</span></p>
                                 </div>
                                 <p style="font-size:0.75rem; color:#4a6fa5; line-height:1.6; margin-bottom:0.875rem;">
                                     Bagi orang tua yang bersedia, Anda dapat menambahkan donasi sukarela yang akan digunakan untuk mensubsidi biaya pendaftaran peserta lain yang membutuhkan bantuan.
                                 </p>
                                 <label class="sks-label" style="color:#2d5fa0;">Nominal Donasi</label>
-                                <div style="display:flex; align-items:center; gap:0.5rem; background:#fff; border:1.5px solid #bdd7f5; border-radius:10px; padding:0 0.75rem; transition: border-color 0.2s;">
+                                <div style="display:flex; align-items:center; gap:0.5rem; background:#fff; border:1.5px solid #bdd7f5; border-radius:10px; padding:0 0.75rem;">
                                     <span style="font-size:0.8125rem; color:#4a7ab5; font-weight:500; white-space:nowrap;">Rp</span>
                                     <input wire:model.live.debounce.1000ms="donation_amount" type="number" min="0" step="1000"
                                            style="flex:1; border:none; outline:none; padding:0.625rem 0; font-size:0.875rem; background:transparent; color:#1c1410; font-family:'DM Sans',sans-serif;"
@@ -453,8 +494,11 @@
 
                             {{-- Info Transfer --}}
                             <div class="sks-transfer-box">
-                                <div style="display:flex; align-items:center; gap:0.5rem; margin-bottom:0.5rem;">
-                                    <span style="font-size:1rem;">💳</span>
+                                <div style="display:flex; align-items:center; gap:0.625rem; margin-bottom:0.5rem;">
+                                    {{-- Heroicon: credit-card --}}
+                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.75" stroke="#92600a" style="width:18px;height:18px;flex-shrink:0;">
+                                        <path stroke-linecap="round" stroke-linejoin="round" d="M2.25 8.25h19.5M2.25 9h19.5m-16.5 5.25h6m-6 2.25h3m-3.75 3h15a2.25 2.25 0 0 0 2.25-2.25V6.75A2.25 2.25 0 0 0 19.5 4.5h-15a2.25 2.25 0 0 0-2.25 2.25v10.5A2.25 2.25 0 0 0 4.5 19.5Z" />
+                                    </svg>
                                     <p style="font-size:0.8125rem; font-weight:600; color:#92600a;">Informasi Transfer</p>
                                 </div>
                                 <p style="font-size:0.75rem; color:#a07830; line-height:1.6;">
@@ -483,8 +527,11 @@
 
                             {{-- Info Rekening --}}
                             <div style="background:#f0f7ff; border:1.5px solid #bdd7f5; border-radius:12px; padding:0.875rem 1rem;">
-                                <div style="display:flex; align-items:center; gap:0.5rem; margin-bottom:0.5rem;">
-                                    <span style="font-size:1rem;">🏦</span>
+                                <div style="display:flex; align-items:center; gap:0.625rem; margin-bottom:0.5rem;">
+                                    {{-- Heroicon: building-library --}}
+                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.75" stroke="#1e4d8c" style="width:18px;height:18px;flex-shrink:0;">
+                                        <path stroke-linecap="round" stroke-linejoin="round" d="M12 21v-8.25M15.75 21v-8.25M8.25 21v-8.25M3 9l9-6 9 6m-1.5 12V10.332A48.36 48.36 0 0 0 12 9.75c-2.551 0-5.056.2-7.5.582V21M3 21h18M12 6.75h.008v.008H12V6.75Z" />
+                                    </svg>
                                     <p style="font-size:0.8125rem; font-weight:600; color:#1e4d8c;">No. Rekening Pendaftaran SKS</p>
                                 </div>
                                 <div style="display:flex; align-items:center; gap:0.625rem;">
@@ -494,7 +541,7 @@
                                         <svg id="copy-icon" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" style="width:13px;height:13px;">
                                             <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 17.25v3.375c0 .621-.504 1.125-1.125 1.125h-9.75a1.125 1.125 0 0 1-1.125-1.125V7.875c0-.621.504-1.125 1.125-1.125H6.75a9.06 9.06 0 0 1 1.5.124m7.5 10.376h3.375c.621 0 1.125-.504 1.125-1.125V11.25c0-4.46-3.243-8.161-7.5-8.876a9.06 9.06 0 0 0-1.5-.124H9.375c-.621 0-1.125.504-1.125 1.125v3.5m7.5 10.375H9.375a1.125 1.125 0 0 1-1.125-1.125v-9.25m12 6.625v-1.875a3.375 3.375 0 0 0-3.375-3.375h-1.5a1.125 1.125 0 0 1-1.125-1.125v-1.5a3.375 3.375 0 0 0-3.375-3.375H9.75" />
                                         </svg>
-                                        <span id="copy-label">Salin</span>
+                                        <span id="copy-label">Copy</span>
                                     </button>
                                 </div>
                                 <p style="font-size:0.75rem; color:#4a6fa5; margin-top:0.125rem;">a.n. BGKP Santo Yakobus</p>
@@ -513,7 +560,12 @@
                                         </div>
                                     @else
                                         <div wire:loading.remove wire:target="payment_proof">
-                                            <div style="font-size:2rem; margin-bottom:0.5rem;">📎</div>
+                                            {{-- Heroicon: arrow-up-tray --}}
+                                            <div style="display:flex; justify-content:center; margin-bottom:0.5rem;">
+                                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="#c8a870" style="width:36px;height:36px;">
+                                                    <path stroke-linecap="round" stroke-linejoin="round" d="M3 16.5v2.25A2.25 2.25 0 0 0 5.25 21h13.5A2.25 2.25 0 0 0 21 18.75V16.5m-13.5-9L12 3m0 0 4.5 4.5M12 3v13.5" />
+                                                </svg>
+                                            </div>
                                             <p style="font-size:0.8125rem; font-weight:500; color:#7a6248;">Tap untuk upload bukti transfer</p>
                                             <p style="font-size:0.7rem; color:#b8a070; margin-top:0.25rem;">JPG, PNG · Maks. 2MB</p>
                                         </div>
@@ -546,7 +598,6 @@
                             wire:target="payment_proof,submit">
                         <span wire:loading.remove wire:target="submit">Daftar Sekarang →</span>
                         <span wire:loading wire:target="submit">Mengirim data...</span>
-                        <span wire:loading wire:target="payment_proof" style="display:none;">Menunggu upload selesai...</span>
                     </button>
 
                     <p style="text-align:center; font-size:0.7rem; color:#b8a070; margin-top:-0.5rem;">
@@ -559,10 +610,6 @@
 
     </div>
 
-    <style>
-        @keyframes spin { to { transform: rotate(360deg); } }
-    </style>
-
     <script>
         function copyNorek() {
             navigator.clipboard.writeText('8622056002').then(function () {
@@ -570,14 +617,14 @@
                 const label = document.getElementById('copy-label');
                 const icon  = document.getElementById('copy-icon');
 
-                label.textContent = 'Tersalin!';
+                label.textContent      = 'No. Rekening Tercopy!';
                 btn.style.background   = '#ecfdf5';
                 btn.style.borderColor  = '#6ee7b7';
                 btn.style.color        = '#065f46';
                 icon.innerHTML = '<path stroke-linecap="round" stroke-linejoin="round" d="m4.5 12.75 6 6 9-13.5"/>';
 
                 setTimeout(function () {
-                    label.textContent = 'Salin';
+                    label.textContent      = 'Salin';
                     btn.style.background   = '#fff';
                     btn.style.borderColor  = '#bdd7f5';
                     btn.style.color        = '#1e4d8c';
