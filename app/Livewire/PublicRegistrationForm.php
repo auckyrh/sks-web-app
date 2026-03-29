@@ -25,6 +25,7 @@ class PublicRegistrationForm extends Component
     public string $gender = '';
     public string $birth_date = '';
     public string $address = '';
+    public ?bool $is_paroki_member = null;
     public ?int $wilayah_id = null;
     public ?int $lingkungan_id = null;
     public int $grade = 0;
@@ -41,6 +42,7 @@ class PublicRegistrationForm extends Component
     // Payment
     public ?int $payment_tier_id = null;
     public int $donation_amount = 0;
+    public string $payer_name = '';
     public $payment_proof;
 
     // State
@@ -70,8 +72,10 @@ class PublicRegistrationForm extends Component
 
     public function getLingkunganListProperty()
     {
-        if (!$this->wilayah_id) return collect();
-        return Lingkungan::where('wilayah_id', $this->wilayah_id)->orderBy('name')->get();
+        if ($this->wilayah_id) {
+            return Lingkungan::where('wilayah_id', $this->wilayah_id)->orderBy('name')->get();
+        }
+        return Lingkungan::with('wilayah')->orderBy('name')->get();
     }
 
     public function getPaymentTiersProperty()
@@ -83,9 +87,25 @@ class PublicRegistrationForm extends Component
             ->get();
     }
 
+    public function updatedIsParokiMember(): void
+    {
+        $this->wilayah_id    = null;
+        $this->lingkungan_id = null;
+    }
+
     public function updatedWilayahId(): void
     {
         $this->lingkungan_id = null;
+    }
+
+    public function updatedLingkunganId(): void
+    {
+        if ($this->lingkungan_id) {
+            $lingkungan = Lingkungan::find($this->lingkungan_id);
+            if ($lingkungan) {
+                $this->wilayah_id = $lingkungan->wilayah_id;
+            }
+        }
     }
 
     public function submit(): void
@@ -96,8 +116,9 @@ class PublicRegistrationForm extends Component
             'gender' => 'required|in:M,F',
             'birth_date' => 'required|date',
             'address' => 'required|string',
-            'wilayah_id' => 'required|exists:wilayahs,id',
-            'lingkungan_id' => 'nullable|exists:lingkungans,id',
+            'is_paroki_member' => 'required|boolean',
+            'wilayah_id'      => ($this->is_paroki_member ? 'required' : 'nullable') . '|exists:wilayahs,id',
+            'lingkungan_id'   => 'nullable|exists:lingkungans,id',
             'grade' => 'required|integer|min:1|max:6',
             'registration_source' => 'required|in:BIAK,YCK,UMUM',
             'tshirt_size' => 'required|in:S,M,L,XL,2XL,3XL,4XL,5XL',
@@ -105,19 +126,22 @@ class PublicRegistrationForm extends Component
             'parent_wa' => 'required|string|max:20',
             'payment_tier_id' => 'required|exists:payment_tiers,id',
             'donation_amount' => 'integer|min:0',
-            'payment_proof' => 'required|image|max:2048',
+            'payer_name'      => 'required|string|max:255',
+            'payment_proof'   => 'required|image|max:2048',
         ], [
             'child_full_name.required' => 'Nama lengkap anak wajib diisi.',
             'gender.required' => 'Jenis kelamin wajib dipilih.',
             'birth_date.required' => 'Tanggal lahir wajib diisi.',
             'address.required' => 'Alamat wajib diisi.',
-            'wilayah_id.required' => 'Wilayah wajib dipilih.',
+            'is_paroki_member.required' => 'Silakan pilih apakah Anda umat Paroki Santo Yakobus.',
+            'wilayah_id.required'      => 'Wilayah wajib dipilih untuk umat Paroki Santo Yakobus.',
             'grade.required' => 'Kelas wajib dipilih.',
             'registration_source.required' => 'Asal pendaftaran wajib dipilih.',
             'tshirt_size.required' => 'Ukuran kaos wajib dipilih.',
             'parent_name.required' => 'Nama orang tua wajib diisi.',
             'parent_wa.required' => 'No. WhatsApp orang tua wajib diisi.',
             'payment_tier_id.required' => 'Tier pembayaran wajib dipilih.',
+            'payer_name.required'    => 'Nama rekening pengirim wajib diisi.',
             'payment_proof.required' => 'Bukti transfer wajib diupload.',
             'payment_proof.image' => 'File harus berupa gambar.',
             'payment_proof.max' => 'Ukuran file maksimal 2MB.',
@@ -152,6 +176,7 @@ class PublicRegistrationForm extends Component
             'payment_tier_id' => $this->payment_tier_id,
             'payment_amount' => $tier->amount,
             'donation_amount' => $this->donation_amount,
+            'payer_name'         => $this->payer_name,
             'payment_proof_path' => $path,
             'payment_status' => 'pending',
             'status' => 'pending',

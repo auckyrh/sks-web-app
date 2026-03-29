@@ -16,7 +16,7 @@ class Registration extends Model
         'gender', 'birth_date', 'address', 'wilayah_id', 'lingkungan_id',
         'grade', 'registration_source', 'has_joined_biak_yck', 'tshirt_size',
         'parent_name', 'parent_wa', 'allergies', 'notes',
-        'payment_proof_path', 'payment_tier_id', 'payment_amount', 'donation_amount',
+        'payment_proof_path', 'payer_name', 'payment_tier_id', 'payment_amount', 'donation_amount',
         'payment_status', 'verified_by', 'verified_at', 'status',
         'created_by', 'deleted_by'
     ];

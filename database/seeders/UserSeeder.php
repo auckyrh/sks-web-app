@@ -18,6 +18,14 @@ class UserSeeder extends Seeder
                 'password'  => Hash::make('zxcvzxcv'),
                 'role'      => 'superadmin',
             ],
+            [
+                'full_name' => 'Aucky Riman Halim',
+                'nick_name' => 'Aucky',
+                'email'     => 'auckyrh@gmail.com',
+                'password'  => Hash::make('zxcvzxcv'),
+                'role'      => 'superadmin',
+            ],
+
         ];
 
         foreach ($users as $user) {

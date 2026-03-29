@@ -71,7 +71,7 @@ class RegistrationResource extends Resource
                     Forms\Components\Select::make('wilayah_id')
                         ->label('Wilayah')
                         ->options(\App\Models\Wilayah::pluck('name', 'id'))
-                        ->required()
+                        ->nullable()
                         ->native(false)
                         ->live()
                         ->afterStateUpdated(fn (Forms\Set $set) => $set('lingkungan_id', null)),
@@ -180,6 +180,9 @@ class RegistrationResource extends Resource
                                 ]),
                             Forms\Components\Group::make()
                                 ->schema([
+                                    Forms\Components\TextInput::make('payer_name')
+                                        ->label('Nama Rekening Pengirim')
+                                        ->nullable(),
                                     Forms\Components\FileUpload::make('payment_proof_path')
                                         ->label('Bukti Transfer')
                                         ->image()
@@ -225,6 +228,10 @@ class RegistrationResource extends Resource
                 Tables\Columns\TextColumn::make('parent_wa')
                     ->label('WA Ortu')
                     ->searchable(),
+                Tables\Columns\TextColumn::make('payer_name')
+                    ->label('Nama Rekening')
+                    ->searchable()
+                    ->toggleable(isToggledHiddenByDefault: true),
                 Tables\Columns\BadgeColumn::make('payment_status')
                     ->label('Pembayaran')
                     ->colors([

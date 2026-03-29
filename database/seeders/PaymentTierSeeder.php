@@ -59,7 +59,7 @@ class PaymentTierSeeder extends Seeder
             if (! $period) continue;
 
             PaymentTier::firstOrCreate(
-                ['event_period_id' => $period->id, 'name' => 'Early Bird'],
+                ['event_period_id' => $period->id, 'name' => 'Khusus Umat Santo Yakobus'],
                 [
                     'amount'     => 350000,
                     'valid_from' => "{$year}-04-06",
@@ -68,7 +68,7 @@ class PaymentTierSeeder extends Seeder
             );
 
             PaymentTier::firstOrCreate(
-                ['event_period_id' => $period->id, 'name' => 'Regular'],
+                ['event_period_id' => $period->id, 'name' => 'Umum'],
                 [
                     'amount'     => 400000,
                     'valid_from' => "{$year}-04-21",

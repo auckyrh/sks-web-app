@@ -267,27 +267,48 @@
                                 @error('address') <p class="sks-error">{{ $message }}</p> @enderror
                             </div>
 
+                            <div>
+                                <label class="sks-label">Apakah anda umat Paroki Santo Yakobus? <span style="color:#dc2626;">*</span></label>
+                                <div style="display:flex; gap:1rem; margin-top:0.375rem;">
+                                    <label style="display:flex; align-items:center; gap:0.5rem; font-size:0.875rem; color:#5c4a32; cursor:pointer;">
+                                        <input wire:model.live="is_paroki_member" type="radio" :value="true" value="1" style="accent-color:#f59e0b; width:15px; height:15px;">
+                                        Ya, saya umat Paroki Santo Yakobus
+                                    </label>
+                                    <label style="display:flex; align-items:center; gap:0.5rem; font-size:0.875rem; color:#5c4a32; cursor:pointer;">
+                                        <input wire:model.live="is_paroki_member" type="radio" :value="false" value="0" style="accent-color:#f59e0b; width:15px; height:15px;">
+                                        Tidak
+                                    </label>
+                                </div>
+                                @error('is_paroki_member') <p class="sks-error">{{ $message }}</p> @enderror
+                            </div>
+
+                            @if($is_paroki_member)
                             <div style="display:grid; grid-template-columns:1fr 1fr; gap:1rem;">
                                 <div>
                                     <label class="sks-label">Wilayah <span style="color:#dc2626;">*</span></label>
                                     <select wire:model.live="wilayah_id" class="sks-input">
-                                        <option value="">Pilih Wilayah...</option>
+                                        <option value="">— Pilih Wilayah —</option>
                                         @foreach($this->wilayahList as $w)
                                             <option value="{{ $w->id }}">{{ $w->name }}</option>
                                         @endforeach
                                     </select>
                                     @error('wilayah_id') <p class="sks-error">{{ $message }}</p> @enderror
+                                    <p style="font-size:0.75rem; color:#92835c; margin-top:0.25rem;">Pilih wilayah untuk menyaring pilihan lingkungan, atau biarkan kosong.</p>
                                 </div>
                                 <div>
                                     <label class="sks-label">Lingkungan</label>
-                                    <select wire:model="lingkungan_id" class="sks-input" @if(!$wilayah_id) disabled @endif>
-                                        <option value="">Tidak Tahu / Pilih...</option>
+                                    <select wire:model.live="lingkungan_id" class="sks-input">
+                                        <option value="">— Pilih Lingkungan —</option>
                                         @foreach($this->lingkunganList as $l)
-                                            <option value="{{ $l->id }}">{{ $l->name }}</option>
+                                            <option value="{{ $l->id }}">
+                                                {{ $l->name }}{{ !$wilayah_id ? ' (' . $l->wilayah->name . ')' : '' }}
+                                            </option>
                                         @endforeach
                                     </select>
+                                    <p style="font-size:0.75rem; color:#92835c; margin-top:0.25rem;">Memilih lingkungan akan otomatis mengisi wilayah.</p>
                                 </div>
                             </div>
+                            @endif
 
                             <div style="display:grid; grid-template-columns:1fr 1fr; gap:1rem;">
                                 <div>
@@ -460,6 +481,16 @@
                                 @endif
                             </div>
 
+                            {{-- Info Rekening --}}
+                            <div style="background:#f0f7ff; border:1.5px solid #bdd7f5; border-radius:12px; padding:0.875rem 1rem;">
+                                <div style="display:flex; align-items:center; gap:0.5rem; margin-bottom:0.5rem;">
+                                    <span style="font-size:1rem;">🏦</span>
+                                    <p style="font-size:0.8125rem; font-weight:600; color:#1e4d8c;">No. Rekening Pendaftaran SKS</p>
+                                </div>
+                                <p style="font-size:0.9rem; font-weight:700; color:#1c3a6e; font-family:'Lora',serif; letter-spacing:0.02em;">BCA 862-2056002</p>
+                                <p style="font-size:0.75rem; color:#4a6fa5; margin-top:0.125rem;">a.n. BGKP Santo Yakobus</p>
+                            </div>
+
                             {{-- Upload Bukti --}}
                             <div>
                                 <label class="sks-label">Bukti Transfer <span style="color:#dc2626;">*</span></label>
@@ -485,6 +516,13 @@
                                 </div>
 
                                 @error('payment_proof') <p class="sks-error" style="margin-top:0.375rem;">{{ $message }}</p> @enderror
+                            </div>
+
+                            {{-- Payer Name --}}
+                            <div>
+                                <label class="sks-label">Nama Rekening Pengirim <span style="color:#dc2626;">*</span></label>
+                                <input wire:model="payer_name" type="text" class="sks-input" placeholder="Nama sesuai rekening yang digunakan untuk transfer">
+                                @error('payer_name') <p class="sks-error">{{ $message }}</p> @enderror
                             </div>
 
                         </div>
