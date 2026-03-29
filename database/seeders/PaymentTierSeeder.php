@@ -72,7 +72,7 @@ class PaymentTierSeeder extends Seeder
                 [
                     'amount'     => 400000,
                     'valid_from' => "{$year}-04-21",
-                    'valid_until'=> "{$year}-05-21",
+                    'valid_until'=> "{$year}-05-03",
                 ]
             );
             $count += 2;
