@@ -20,7 +20,6 @@
             flex-direction: column;
         }
 
-        /* ── Warm patterned background ── */
         body::before {
             content: '';
             position: fixed;
@@ -85,7 +84,7 @@
         /* ── Hero ── */
         .hero {
             text-align: center;
-            margin-bottom: 2.5rem;
+            margin-bottom: 1.75rem;
             animation: fade-up 0.5s ease both;
         }
         .hero-logo {
@@ -143,64 +142,92 @@
             margin: 0 auto;
         }
 
-        /* ── Period info badge ── */
-        .period-badge {
-            display: inline-flex;
-            align-items: center;
-            gap: 0.5rem;
-            background: linear-gradient(135deg, #fffbf0, #fff3cc);
-            border: 1.5px solid #f0d080;
-            border-radius: 99px;
-            padding: 0.35rem 1rem;
-            font-size: 0.75rem;
-            color: #92600a;
-            font-weight: 500;
-            margin-top: 1rem;
-        }
-        .period-dot {
-            width: 6px; height: 6px;
-            border-radius: 50%;
-            background: #22c55e;
-            animation: pulse-dot 2s ease-in-out infinite;
-        }
-        @keyframes pulse-dot {
-            0%, 100% { opacity: 1; transform: scale(1); }
-            50%       { opacity: 0.5; transform: scale(0.75); }
-        }
-
-        /* ── Tier badges ── */
-        .tier-badges {
+        /* ── Tier Section ── */
+        .tier-section {
             display: flex;
             flex-direction: column;
-            gap: 0.5rem;
-            margin-top: 1rem;
-            align-items: center;
+            gap: 0.75rem;
+            margin-bottom: 1.5rem;
+            animation: fade-up 0.5s ease 0.1s both;
         }
-        .tier-badge-item {
-            display: inline-flex;
+
+        .tier-card {
+            border-radius: 18px;
+            padding: 1.25rem 1.5rem;
+            display: flex;
             align-items: center;
-            gap: 0.625rem;
-            border-radius: 12px;
-            padding: 0.5rem 1rem;
-            font-size: 0.775rem;
-            line-height: 1.4;
-            text-align: left;
-            max-width: 340px;
-            width: 100%;
+            gap: 1rem;
         }
-        .tier-badge-item.active {
+        .tier-card.active {
             background: linear-gradient(135deg, #ecfdf5, #d1fae5);
-            border: 1.5px solid #6ee7b7;
-            color: #065f46;
+            border: 2px solid #34d399;
+            box-shadow: 0 4px 18px rgba(52,211,153,0.15);
         }
-        .tier-badge-item.upcoming {
+        .tier-card.upcoming {
             background: linear-gradient(135deg, #fffbf0, #fff3cc);
-            border: 1.5px solid #f0d080;
-            color: #92600a;
+            border: 2px solid #f0d080;
+            box-shadow: 0 4px 18px rgba(217,176,60,0.12);
         }
-        .tier-badge-icon { font-size: 1rem; flex-shrink: 0; }
-        .tier-badge-label { font-weight: 600; }
-        .tier-badge-dates { font-size: 0.7rem; opacity: 0.8; margin-top: 0.1rem; }
+
+        .tier-card-icon {
+            width: 44px;
+            height: 44px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+        .tier-card.active .tier-card-icon {
+            background: rgba(52,211,153,0.2);
+        }
+        .tier-card.upcoming .tier-card-icon {
+            background: rgba(217,176,60,0.18);
+        }
+        .tier-card-icon svg {
+            width: 24px;
+            height: 24px;
+        }
+        .tier-card.active .tier-card-icon svg { color: #059669; }
+        .tier-card.upcoming .tier-card-icon svg { color: #b45309; }
+
+        .tier-card-body { flex: 1; }
+        .tier-card-status {
+            font-size: 0.675rem;
+            font-weight: 700;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            margin-bottom: 0.2rem;
+        }
+        .tier-card.active .tier-card-status { color: #059669; }
+        .tier-card.upcoming .tier-card-status { color: #b45309; }
+
+        .tier-card-name {
+            font-family: 'Lora', serif;
+            font-size: 1.1rem;
+            font-weight: 700;
+            line-height: 1.2;
+        }
+        .tier-card.active .tier-card-name { color: #064e3b; }
+        .tier-card.upcoming .tier-card-name { color: #78350f; }
+
+        .tier-card-dates {
+            font-size: 0.8rem;
+            margin-top: 0.3rem;
+            font-weight: 500;
+        }
+        .tier-card.active .tier-card-dates { color: #065f46; }
+        .tier-card.upcoming .tier-card-dates { color: #92600a; }
+
+        .tier-card-amount {
+            font-family: 'Lora', serif;
+            font-size: 1.25rem;
+            font-weight: 700;
+            white-space: nowrap;
+            flex-shrink: 0;
+        }
+        .tier-card.active .tier-card-amount { color: #059669; }
+        .tier-card.upcoming .tier-card-amount { color: #b45309; }
 
         /* ── Action Cards ── */
         .actions {
@@ -221,9 +248,7 @@
             transition: transform 0.2s, box-shadow 0.2s, border-color 0.2s;
             animation: fade-up 0.5s ease both;
         }
-        .action-card:hover {
-            transform: translateY(-3px);
-        }
+        .action-card:hover { transform: translateY(-3px); }
         .action-card:active { transform: translateY(0); }
 
         .action-card.primary {
@@ -233,7 +258,6 @@
         .action-card.primary:hover {
             box-shadow: 0 10px 32px rgba(217,119,6,0.36);
         }
-
         .action-card.secondary {
             background: #fff;
             border-color: #f0e8d8;
@@ -249,16 +273,16 @@
             width: 52px; height: 52px;
             border-radius: 14px;
             display: flex; align-items: center; justify-content: center;
-            font-size: 1.5rem;
             flex-shrink: 0;
         }
-        .action-card.primary .action-icon {
-            background: rgba(255,255,255,0.2);
-        }
+        .action-icon svg { width: 26px; height: 26px; }
+        .action-card.primary .action-icon { background: rgba(255,255,255,0.2); }
+        .action-card.primary .action-icon svg { color: #fff; }
         .action-card.secondary .action-icon {
             background: linear-gradient(135deg, #fffbf0, #fff3cc);
             border: 1px solid #f0d080;
         }
+        .action-card.secondary .action-icon svg { color: #d97706; }
 
         .action-body { flex: 1; }
         .action-title {
@@ -279,12 +303,12 @@
         .action-card.secondary .action-desc { color: #a08060; }
 
         .action-arrow {
-            font-size: 1.1rem;
             flex-shrink: 0;
             transition: transform 0.2s;
         }
-        .action-card.primary .action-arrow { color: rgba(255,255,255,0.7); }
-        .action-card.secondary .action-arrow { color: #d4b070; }
+        .action-arrow svg { width: 20px; height: 20px; }
+        .action-card.primary .action-arrow svg { color: rgba(255,255,255,0.75); }
+        .action-card.secondary .action-arrow svg { color: #d4b070; }
         .action-card:hover .action-arrow { transform: translateX(4px); }
 
         /* ── Closed state ── */
@@ -304,9 +328,9 @@
             border-radius: 14px;
             background: #f5f5f5;
             display: flex; align-items: center; justify-content: center;
-            font-size: 1.5rem;
             flex-shrink: 0;
         }
+        .closed-icon svg { width: 26px; height: 26px; color: #9ca3af; }
 
         /* ── Footer ── */
         footer {
@@ -325,10 +349,7 @@
             letter-spacing: 0.02em;
         }
         .footer-admin-link:hover { color: #a08060; }
-        .footer-copy {
-            font-size: 0.7rem;
-            color: #c8b890;
-        }
+        .footer-copy { font-size: 0.7rem; color: #c8b890; }
 
         @keyframes fade-up {
             from { opacity: 0; transform: translateY(18px); }
@@ -357,11 +378,9 @@
         {{-- Hero --}}
         <div class="hero">
             @if($activePeriod?->event_logo)
-                <img src="{{ Storage::disk('public')->url($activePeriod->event_logo) }}"
-                     alt="Logo SKS" class="hero-logo">
+                <img src="{{ Storage::disk('public')->url($activePeriod->event_logo) }}" alt="Logo SKS" class="hero-logo">
             @else
-                <img src="{{ asset('images/LOGO-SKS.png') }}"
-                     alt="Logo SKS" class="hero-logo">
+                <img src="{{ asset('images/LOGO-SKS.png') }}" alt="Logo SKS" class="hero-logo">
             @endif
 
             <p class="hero-eyebrow">Gereja Katolik Santo Yakobus Surabaya</p>
@@ -380,54 +399,87 @@
             <div class="hero-divider"></div>
 
             <p class="hero-desc">
-                Program pembinaan iman anak melalui pengenalan Kitab Suci secara menyenangkan dan kreatif, untuk siswa Sekolah Dasar kelas 1 hingga 6.
+{{--                commented. DO NOT DELETE. --}}
+{{--                Program pembinaan iman anak melalui pengenalan Kitab Suci secara menyenangkan dan kreatif, untuk siswa Sekolah Dasar kelas 1 hingga 6.--}}
             </p>
-
-            @if($activePeriod && $activePeriod->is_active)
-                <div class="tier-badges">
-                    @if($activeTier)
-                        <div class="tier-badge-item active">
-                            <span class="tier-badge-icon">🟢</span>
-                            <div>
-                                <div class="tier-badge-label">Pendaftaran {{ $activeTier->name }} Sedang Dibuka</div>
-                                <div class="tier-badge-dates">
-                                    {{ $activeTier->valid_from->locale('id')->isoFormat('D MMM Y') }} – {{ $activeTier->valid_until->locale('id')->isoFormat('D MMM Y') }}
-                                </div>
-                            </div>
-                        </div>
-                    @endif
-                    @if($upcomingTier)
-                        <div class="tier-badge-item upcoming">
-                            <span class="tier-badge-icon">🕐</span>
-                            <div>
-                                <div class="tier-badge-label">Pendaftaran {{ $upcomingTier->name }} Akan Dibuka</div>
-                                <div class="tier-badge-dates">
-                                    {{ $upcomingTier->valid_from->locale('id')->isoFormat('D MMM Y') }} – {{ $upcomingTier->valid_until->locale('id')->isoFormat('D MMM Y') }}
-                                </div>
-                            </div>
-                        </div>
-                    @endif
-                </div>
-            @endif
         </div>
+
+        {{-- Payment Tier Cards --}}
+        @if($activePeriod && $activePeriod->is_active)
+            <div class="tier-section">
+
+                @if($activeTier)
+                    <div class="tier-card active">
+                        <div class="tier-card-icon">
+                            {{-- Heroicon: check-circle --}}
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.75" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75 11.25 15 15 9.75M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
+                            </svg>
+                        </div>
+                        <div class="tier-card-body">
+                            <div class="tier-card-status">Sedang Dibuka</div>
+                            <div class="tier-card-name">Pendaftaran {{ $activeTier->name }}</div>
+                            <div class="tier-card-dates">
+                                {{-- Heroicon: calendar-days (inline small) --}}
+                                {{ $activeTier->valid_from->locale('id')->isoFormat('D MMM Y') }} &ndash; {{ $activeTier->valid_until->locale('id')->isoFormat('D MMM Y') }}
+                            </div>
+                        </div>
+                        <div class="tier-card-amount">Rp {{ number_format($activeTier->amount, 0, ',', '.') }}</div>
+                    </div>
+                @endif
+
+                @if($upcomingTier)
+                    <div class="tier-card upcoming">
+                        <div class="tier-card-icon">
+                            {{-- Heroicon: clock --}}
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.75" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M12 6v6h4.5m4.5 0a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
+                            </svg>
+                        </div>
+                        <div class="tier-card-body">
+                            <div class="tier-card-status">Akan Dibuka</div>
+                            <div class="tier-card-name">Pendaftaran {{ $upcomingTier->name }}</div>
+                            <div class="tier-card-dates">
+                                {{ $upcomingTier->valid_from->locale('id')->isoFormat('D MMM Y') }} &ndash; {{ $upcomingTier->valid_until->locale('id')->isoFormat('D MMM Y') }}
+                            </div>
+                        </div>
+                        <div class="tier-card-amount">Rp {{ number_format($upcomingTier->amount, 0, ',', '.') }}</div>
+                    </div>
+                @endif
+
+            </div>
+        @endif
 
         {{-- Action Cards --}}
         <div class="actions">
 
             @if($activePeriod && $activePeriod->is_active)
-                {{-- Registration open --}}
                 <button type="button" onclick="handleDaftarClick()" class="action-card primary" style="width:100%; cursor:pointer; border:none; text-align:left;">
-                    <div class="action-icon">📝</div>
+                    <div class="action-icon">
+                        {{-- Heroicon: pencil-square --}}
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.75" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="m16.862 4.487 1.687-1.688a1.875 1.875 0 1 1 2.652 2.652L10.582 16.07a4.5 4.5 0 0 1-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 0 1 1.13-1.897l8.932-8.931Zm0 0L19.5 7.125M18 14v4.75A2.25 2.25 0 0 1 15.75 21H5.25A2.25 2.25 0 0 1 3 18.75V8.25A2.25 2.25 0 0 1 5.25 6H10" />
+                        </svg>
+                    </div>
                     <div class="action-body">
                         <div class="action-title">Daftar Sekarang</div>
                         <div class="action-desc">Isi formulir pendaftaran anak Anda untuk SKS {{ $activePeriod->year }}</div>
                     </div>
-                    <span class="action-arrow">→</span>
+                    <span class="action-arrow">
+                        {{-- Heroicon: arrow-right --}}
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5 21 12m0 0-7.5 7.5M21 12H3" />
+                        </svg>
+                    </span>
                 </button>
             @else
-                {{-- Registration closed --}}
                 <div class="closed-notice">
-                    <div class="closed-icon">🔒</div>
+                    <div class="closed-icon">
+                        {{-- Heroicon: lock-closed --}}
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.75" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M16.5 10.5V6.75a4.5 4.5 0 1 0-9 0v3.75m-.75 11.25h10.5a2.25 2.25 0 0 0 2.25-2.25v-6.75a2.25 2.25 0 0 0-2.25-2.25H6.75a2.25 2.25 0 0 0-2.25 2.25v6.75a2.25 2.25 0 0 0 2.25 2.25Z" />
+                        </svg>
+                    </div>
                     <div>
                         <div style="font-family:'Lora',serif; font-weight:700; color:#5c4032; font-size:0.9375rem;">Pendaftaran Belum Dibuka</div>
                         <div style="font-size:0.775rem; color:#a08060; margin-top:0.25rem; line-height:1.4;">Silakan pantau informasi dari panitia SKS Santo Yakobus.</div>
@@ -436,12 +488,21 @@
             @endif
 
             <a href="{{ route('registration.status') }}" class="action-card secondary">
-                <div class="action-icon">🔍</div>
+                <div class="action-icon">
+                    {{-- Heroicon: magnifying-glass --}}
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.75" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="m21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.607 10.607Z" />
+                    </svg>
+                </div>
                 <div class="action-body">
                     <div class="action-title">Cek Status Pendaftaran</div>
                     <div class="action-desc">Periksa status dan nomor pendaftaran anak Anda</div>
                 </div>
-                <span class="action-arrow">→</span>
+                <span class="action-arrow">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5 21 12m0 0-7.5 7.5M21 12H3" />
+                    </svg>
+                </span>
             </a>
 
         </div>
@@ -459,7 +520,7 @@
 </div>
 
 <script>
-    const formUrl     = @json(route('registration.form'));
+    const formUrl      = @json(route('registration.form'));
     const upcomingTier = @json($upcomingTierData);
 
     function handleDaftarClick() {
@@ -467,12 +528,11 @@
             title: 'Apakah Anda umat Paroki Santo Yakobus?',
             icon: 'question',
             showDenyButton: true,
-            confirmButtonText: '✅ Ya, saya umat Paroki',
-            denyButtonText: '❌ Tidak',
+            confirmButtonText: 'Ya, saya umat Paroki',
+            denyButtonText: 'Tidak',
             confirmButtonColor: '#d97706',
             denyButtonColor: '#6b7280',
             reverseButtons: false,
-            customClass: { popup: 'swal-font' },
         }).then((result) => {
             if (result.isConfirmed) {
                 window.location.href = formUrl;
@@ -480,8 +540,8 @@
                 if (upcomingTier) {
                     Swal.fire({
                         title: 'Pendaftaran Umum Belum Dibuka',
-                        html: `Pendaftaran untuk <strong>${upcomingTier.name}</strong> (umum) akan dibuka pada:<br><br>`
-                            + `<strong style="color:#d97706; font-size:1rem;">${upcomingTier.valid_from} – ${upcomingTier.valid_until}</strong><br><br>`
+                        html: `Pendaftaran <strong>${upcomingTier.name}</strong> untuk umum akan dibuka pada:<br><br>`
+                            + `<strong style="color:#d97706; font-size:1.05rem;">${upcomingTier.valid_from} &ndash; ${upcomingTier.valid_until}</strong><br><br>`
                             + `Silakan pantau informasi dari panitia SKS Santo Yakobus.`,
                         icon: 'info',
                         confirmButtonText: 'Mengerti',
@@ -490,8 +550,7 @@
                 } else {
                     Swal.fire({
                         title: 'Pendaftaran Umum Sudah Dibuka',
-                        html: `Silakan lanjutkan pendaftaran Anda.<br><br>`
-                            + `Jika ada pertanyaan, hubungi panitia SKS Santo Yakobus.`,
+                        html: `Silakan lanjutkan pendaftaran Anda.<br><br>Jika ada pertanyaan, hubungi panitia SKS Santo Yakobus.`,
                         icon: 'info',
                         confirmButtonText: 'Lanjut Daftar',
                         confirmButtonColor: '#d97706',
