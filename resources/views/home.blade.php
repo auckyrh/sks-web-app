@@ -460,11 +460,7 @@
 
 <script>
     const formUrl     = @json(route('registration.form'));
-    const upcomingTier = @json($upcomingTier ? [
-        'name'       => $upcomingTier->name,
-        'valid_from' => $upcomingTier->valid_from->locale('id')->isoFormat('D MMM Y'),
-        'valid_until'=> $upcomingTier->valid_until->locale('id')->isoFormat('D MMM Y'),
-    ] : null);
+    const upcomingTier = @json($upcomingTierData);
 
     function handleDaftarClick() {
         Swal.fire({

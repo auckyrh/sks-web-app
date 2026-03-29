@@ -25,7 +25,13 @@ Route::get('/', function () {
             ->first();
     }
 
-    return view('home', compact('activePeriod', 'activeTier', 'upcomingTier'));
+    $upcomingTierData = $upcomingTier ? [
+        'name'       => $upcomingTier->name,
+        'valid_from' => $upcomingTier->valid_from->locale('id')->isoFormat('D MMM Y'),
+        'valid_until'=> $upcomingTier->valid_until->locale('id')->isoFormat('D MMM Y'),
+    ] : null;
+
+    return view('home', compact('activePeriod', 'activeTier', 'upcomingTier', 'upcomingTierData'));
 })->name('home');
 Route::get('/daftar', PublicRegistrationForm::class)->name('registration.form');
 Route::get('/cek-status', \App\Livewire\CheckRegistrationStatus::class)->name('registration.status');
