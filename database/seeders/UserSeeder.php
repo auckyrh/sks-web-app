@@ -25,6 +25,20 @@ class UserSeeder extends Seeder
                 'password'  => Hash::make('zxcvzxcv'),
                 'role'      => 'superadmin',
             ],
+            [
+                'full_name' => 'Sheren Brigitta Callestya',
+                'nick_name' => 'Sheren',
+                'email'     => 'sherenbrigitta17@gmail.com',
+                'password'  => Hash::make('zxcvzxcv'),
+                'role'      => 'superadmin',
+            ],
+            [
+                'full_name' => 'Herlina Tanaga',
+                'nick_name' => 'Herlina',
+                'email'     => 'herlinatanaga@gmail.com',
+                'password'  => Hash::make('herlina789'),
+                'role'      => 'superadmin',
+            ],
 
         ];
 
