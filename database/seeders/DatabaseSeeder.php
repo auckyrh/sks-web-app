@@ -23,6 +23,7 @@ class DatabaseSeeder extends Seeder
             EventPeriodSeeder::class,
             PaymentTierSeeder::class,
             EventClassSeeder::class,
+            RegistrationSeeder::class,
         ]);
 
         // User::factory(10)->create();
