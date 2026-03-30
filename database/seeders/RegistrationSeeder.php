@@ -42,7 +42,7 @@ class RegistrationSeeder extends Seeder
         ];
 
         $parents = [
-            ['parent_name' => 'Bapak Antonius Santoso',   'parent_wa' => '08111000001'],
+            ['parent_name' => 'Bapak Antonius Santoso',    'parent_wa' => '08111000001'],
             ['parent_name' => 'Ibu Maria Wijaya',          'parent_wa' => '08111000002'],
             ['parent_name' => 'Bapak Thomas Lim',          'parent_wa' => '08111000003'],
             ['parent_name' => 'Ibu Yohana Hartono',        'parent_wa' => '08111000004'],
@@ -84,8 +84,8 @@ class RegistrationSeeder extends Seeder
             ['payment_status' => 'verified', 'status' => 'confirmed'],
             ['payment_status' => 'verified', 'status' => 'confirmed'],
             ['payment_status' => 'verified', 'status' => 'confirmed'],
-            ['payment_status' => 'rejected', 'status' => 'cancelled'],
-            ['payment_status' => 'rejected', 'status' => 'cancelled'],
+            ['payment_status' => 'rejected', 'status' => 'pending'],
+            ['payment_status' => 'rejected', 'status' => 'pending'],
             ['payment_status' => 'pending',  'status' => 'pending'],
             ['payment_status' => 'pending',  'status' => 'pending'],
             ['payment_status' => 'pending',  'status' => 'pending'],
