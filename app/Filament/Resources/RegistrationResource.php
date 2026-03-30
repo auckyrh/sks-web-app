@@ -212,6 +212,7 @@ class RegistrationResource extends Resource
                 Tables\Columns\TextColumn::make('registration_number')
                     ->label('No. Daftar')
                     ->searchable()
+                    ->sortable()
                     ->copyable(),
                 Tables\Columns\TextColumn::make('child_full_name')
                     ->label('Nama Anak')
@@ -405,7 +406,8 @@ class RegistrationResource extends Resource
                     Tables\Actions\DeleteBulkAction::make(),
                     Tables\Actions\RestoreBulkAction::make(),
                 ]),
-            ]);
+            ])
+            ->defaultPaginationPageOption(25);
     }
 
     public static function getRelations(): array

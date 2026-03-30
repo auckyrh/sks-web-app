@@ -195,6 +195,6 @@ class PublicRegistrationForm extends Component
     public function render()
     {
         return view('livewire.public-registration-form')
-            ->layout('layouts.public');
+            ->layout('components.layouts.public');
     }
 }

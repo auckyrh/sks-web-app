@@ -33,6 +33,6 @@ class CheckRegistrationStatus extends Component
     public function render()
     {
         return view('livewire.check-registration-status')
-            ->layout('layouts.public');
+            ->layout('components.layouts.public');
     }
 }

@@ -621,6 +621,51 @@
 
     </div>
 
+    @if(!$submitted)
+    <script>
+        // ── Shared leave-confirmation dialog ──────────────────────────────
+        function confirmLeave(onLeave) {
+            Swal.fire({
+                title: 'Tinggalkan halaman ini?',
+                text: 'Progres pendaftaran Anda belum tersimpan dan akan hilang.',
+                icon: 'warning',
+                confirmButtonText: 'Batal, lanjut daftar',
+                confirmButtonColor: '#d97706',
+                showCancelButton: false,
+                footer: '<button type="button" id="swal-leave-btn" style="background:none;border:none;padding:0;font-size:0.75rem;color:#9ca3af;text-decoration:underline;cursor:pointer;font-family:inherit;">Ya, tinggalkan halaman</button>',
+                didOpen: function () {
+                    document.getElementById('swal-leave-btn').addEventListener('click', function () {
+                        Swal.close();
+                        onLeave();
+                    });
+                },
+            });
+        }
+
+        // ── Header link guard ──────────────────────────────────────────────
+        document.querySelectorAll('.site-header a:not([target="_blank"])').forEach(function (link) {
+            link.addEventListener('click', function (e) {
+                e.preventDefault();
+                const dest = this.href;
+                confirmLeave(function () { window.location.href = dest; });
+            });
+        });
+
+        // ── Back button guard ──────────────────────────────────────────────
+        history.pushState(null, '', window.location.href);
+
+        function onPopState() {
+            history.pushState(null, '', window.location.href);
+            confirmLeave(function () {
+                window.removeEventListener('popstate', onPopState);
+                history.go(-2);
+            });
+        }
+
+        window.addEventListener('popstate', onPopState);
+    </script>
+    @endif
+
     <script>
         document.addEventListener('livewire:initialized', () => {
             Livewire.on('showValidationErrors', ({ errors }) => {
