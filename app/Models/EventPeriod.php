@@ -66,6 +66,11 @@ class EventPeriod extends Model
         return $this->hasMany(PublicPage::class);
     }
 
+    public function contacts(): HasMany
+    {
+        return $this->hasMany(EventContact::class);
+    }
+
     public function committeeAssignments(): HasMany
     {
         return $this->hasMany(CommitteeAssignment::class);

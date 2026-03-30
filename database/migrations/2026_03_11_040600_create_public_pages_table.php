@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('public_pages', function (Blueprint $table) {
             $table->id();
             $table->foreignId('event_period_id')->constrained()->cascadeOnDelete();
-            $table->enum('type', ['rundown', 'tata_tertib', 'info']);
+            $table->enum('type', ['rundown', 'tata_tertib', 'informasi']);
             $table->string('title');
             $table->longText('content');
             $table->boolean('is_published')->default(false);

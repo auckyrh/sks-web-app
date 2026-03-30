@@ -327,6 +327,7 @@ class EventPeriodResource extends Resource
             RelationManagers\EventClassesRelationManager::class,
             RelationManagers\PaymentTiersRelationManager::class,
             RelationManagers\GatheringsRelationManager::class,
+            RelationManagers\ContactsRelationManager::class,
         ];
     }
 
