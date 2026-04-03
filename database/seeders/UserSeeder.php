@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use App\Models\User;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
@@ -14,7 +15,7 @@ class UserSeeder extends Seeder
             [
                 'full_name' => 'Super Admin',
                 'nick_name' => 'S-Admin',
-                'email'     => 'superadmin@santoyakobus.org',
+                'email'     => 'superadmin@sks.santoyakobus.org',
                 'password'  => Hash::make('zxcvzxcv'),
                 'role'      => 'superadmin',
             ],
@@ -92,7 +93,8 @@ class UserSeeder extends Seeder
         ];
 
         foreach ($users as $user) {
-            DB::table('users')->insertOrIgnore($user);
+//            DB::table('users')->insertOrIgnore($user);
+            User::updateOrCreate($user);
         }
 
         $count = count($users);
