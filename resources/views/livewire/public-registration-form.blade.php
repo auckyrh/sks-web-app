@@ -4,6 +4,27 @@
         <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
         <link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,600;0,700;1,400&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
         <style>
+            .sks-breadcrumb {
+                display: flex;
+                align-items: center;
+                gap: 0.375rem;
+                font-size: 0.75rem;
+                color: #b49a6e;
+                margin-bottom: 1.5rem;
+            }
+            .sks-breadcrumb a {
+                color: #b49a6e;
+                text-decoration: none;
+                display: flex;
+                align-items: center;
+                gap: 0.25rem;
+                transition: color 0.15s;
+            }
+            .sks-breadcrumb a:hover { color: #d97706; }
+            .sks-breadcrumb svg { width: 13px; height: 13px; flex-shrink: 0; }
+            .sks-breadcrumb-sep { opacity: 0.5; }
+            .sks-breadcrumb-current { color: #7a6248; font-weight: 500; }
+
             .sks-form { font-family: 'DM Sans', sans-serif; }
             .sks-form h1, .sks-form h2, .sks-heading { font-family: 'Lora', serif; }
 
@@ -188,6 +209,17 @@
     @endonce
 
     <div class="sks-form">
+
+        {{-- Breadcrumb --}}
+        <nav class="sks-breadcrumb" aria-label="Breadcrumb">
+            <a href="{{ route('home') }}" class="sks-leave-guard">
+                <svg fill="none" viewBox="0 0 24 24" stroke-width="1.75" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="m2.25 12 8.954-8.955c.44-.439 1.152-.439 1.591 0L21.75 12M4.5 9.75v10.125c0 .621.504 1.125 1.125 1.125H9.75v-4.875c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125V21h4.125c.621 0 1.125-.504 1.125-1.125V9.75M8.25 21h8.25"/></svg>
+                Beranda
+            </a>
+            <span class="sks-breadcrumb-sep">/</span>
+            <span class="sks-breadcrumb-current">Formulir Pendaftaran</span>
+        </nav>
+
 
         {{-- ── SUCCESS STATE ───────────────────────────────────────────── --}}
         @if($submitted)
@@ -697,7 +729,7 @@
                 confirmButtonText: 'Ya, data sudah benar — Daftar!',
                 confirmButtonColor: '#d97706',
                 showCancelButton: false,
-                footer: '<button type="button" id="swal-back-check-btn" style="background:none;border:none;padding:0;font-size:0.75rem;color:#9ca3af;text-decoration:underline;cursor:pointer;font-family:inherit;">Kembali, saya ingin periksa ulang</button>',
+                footer: '<button type="button" id="swal-back-check-btn" style="background:none;border:none;padding:0;font-size:0.75rem;color:darkred;text-decoration:underline;cursor:pointer;font-family:inherit;">Kembali, saya ingin periksa ulang</button>',
                 didOpen: function () {
                     document.getElementById('swal-back-check-btn').addEventListener('click', function () {
                         Swal.close();
@@ -730,8 +762,8 @@
             });
         }
 
-        // ── Header link guard ──────────────────────────────────────────────
-        document.querySelectorAll('.site-header a:not([target="_blank"])').forEach(function (link) {
+        // ── Header link guard + breadcrumb ────────────────────────────────
+        document.querySelectorAll('.site-header a:not([target="_blank"]), .sks-leave-guard').forEach(function (link) {
             link.addEventListener('click', function (e) {
                 e.preventDefault();
                 const dest = this.href;

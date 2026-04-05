@@ -4,6 +4,27 @@
         <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
         <link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,600;0,700;1,400&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
         <style>
+            .sks-breadcrumb {
+                display: flex;
+                align-items: center;
+                gap: 0.375rem;
+                font-size: 0.75rem;
+                color: #b49a6e;
+                margin-bottom: 1.5rem;
+            }
+            .sks-breadcrumb a {
+                color: #b49a6e;
+                text-decoration: none;
+                display: flex;
+                align-items: center;
+                gap: 0.25rem;
+                transition: color 0.15s;
+            }
+            .sks-breadcrumb a:hover { color: #d97706; }
+            .sks-breadcrumb svg { width: 13px; height: 13px; flex-shrink: 0; }
+            .sks-breadcrumb-sep { opacity: 0.5; }
+            .sks-breadcrumb-current { color: #7a6248; font-weight: 500; }
+
             .crs-wrap { font-family: 'DM Sans', sans-serif; }
             .crs-heading { font-family: 'Lora', serif; }
 
@@ -130,6 +151,16 @@
 
     <div class="crs-wrap">
 
+        {{-- Breadcrumb --}}
+        <nav class="sks-breadcrumb" aria-label="Breadcrumb">
+            <a href="{{ route('home') }}">
+                <svg fill="none" viewBox="0 0 24 24" stroke-width="1.75" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="m2.25 12 8.954-8.955c.44-.439 1.152-.439 1.591 0L21.75 12M4.5 9.75v10.125c0 .621.504 1.125 1.125 1.125H9.75v-4.875c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125V21h4.125c.621 0 1.125-.504 1.125-1.125V9.75M8.25 21h8.25"/></svg>
+                Beranda
+            </a>
+            <span class="sks-breadcrumb-sep">/</span>
+            <span class="sks-breadcrumb-current">Cek Status Pendaftaran</span>
+        </nav>
+
         {{-- Header --}}
         <div style="margin-bottom:1.5rem;">
             <h1 class="crs-heading" style="font-size:1.5rem; font-weight:700; color:#1c1410; line-height:1.2;">
@@ -147,11 +178,13 @@
             <div style="display:flex; gap:0.5rem; margin-bottom:1rem;">
                 <button wire:click="$set('searchType', 'registration_number')"
                         class="crs-tab {{ $searchType === 'registration_number' ? 'active' : '' }}">
-                    🔖 No. Pendaftaran
+                    <svg style="width:13px;height:13px;display:inline;vertical-align:-2px;margin-right:4px;" fill="none" viewBox="0 0 24 24" stroke-width="1.75" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M5.25 8.25h15m-16.5 7.5h15m-1.8-13.5-3.9 19.5m-2.1-19.5-3.9 19.5"/></svg>
+                    No. Pendaftaran
                 </button>
                 <button wire:click="$set('searchType', 'parent_whatsapp')"
                         class="crs-tab {{ $searchType === 'parent_whatsapp' ? 'active' : '' }}">
-                    📱 No. WhatsApp
+                    <svg style="width:13px;height:13px;display:inline;vertical-align:-2px;margin-right:4px;" fill="none" viewBox="0 0 24 24" stroke-width="1.75" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M10.5 1.5H8.25A2.25 2.25 0 0 0 6 3.75v16.5a2.25 2.25 0 0 0 2.25 2.25h7.5A2.25 2.25 0 0 0 18 20.25V3.75a2.25 2.25 0 0 0-2.25-2.25H13.5m-3 0V3h3V1.5m-3 0h3m-3 8.25h3"/></svg>
+                    No. WhatsApp
                 </button>
             </div>
 

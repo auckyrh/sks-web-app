@@ -4,19 +4,33 @@
         <style>
             /* ── Hero ── */
             .hero {
+                position: relative;
                 text-align: center;
                 margin-bottom: 1.75rem;
                 animation: fade-up 0.5s ease both;
+                overflow: hidden;
+            }
+            .hero-bg-year {
+                position: absolute;
+                top: -1rem;
+                right: -0.75rem;
+                font-family: 'Lora', serif;
+                font-size: clamp(7rem, 28vw, 10rem);
+                font-weight: 700;
+                color: rgba(245,158,11,0.065);
+                line-height: 1;
+                letter-spacing: -0.04em;
+                pointer-events: none;
+                user-select: none;
             }
             .hero-logo {
-                width: 96px;
-                height: 96px;
-                border-radius: 50%;
-                object-fit: cover;
-                border: 3px solid #f0d080;
-                box-shadow: 0 8px 32px rgba(217,119,6,0.18);
-                margin: 0 auto 1.25rem;
+                width: 150px;
+                height: 150px;
+                border-radius: 16px;
+                object-fit: contain;
+                margin: 0 auto;
                 display: block;
+                filter: drop-shadow(0 8px 20px rgba(217,119,6,0.20));
             }
             .hero-eyebrow {
                 font-size: 0.7rem;
@@ -317,6 +331,9 @@
 
     {{-- Hero --}}
     <div class="hero">
+        @if($activePeriod)
+            <div class="hero-bg-year" aria-hidden="true">{{ $activePeriod->year }}</div>
+        @endif
         @if($activePeriod?->event_logo)
             <img src="{{ Storage::disk('public')->url($activePeriod->event_logo) }}" alt="Logo SKS" class="hero-logo">
         @else
