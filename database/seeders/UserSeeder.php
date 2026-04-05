@@ -15,7 +15,7 @@ class UserSeeder extends Seeder
             [
                 'full_name' => 'Super Admin',
                 'nick_name' => 'S-Admin',
-                'email'     => 'superadmin@sks.santoyakobus.org',
+                'email'     => 'superadmin@santoyakobus.org',
                 'password'  => Hash::make('zxcvzxcv'),
                 'role'      => 'superadmin',
             ],
