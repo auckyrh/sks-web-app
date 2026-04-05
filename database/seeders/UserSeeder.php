@@ -41,6 +41,13 @@ class UserSeeder extends Seeder
                 'role'      => 'superadmin',
             ],
             [
+                'full_name' => 'Sri Naja Widiati ',
+                'nick_name' => 'Naya',
+                'email'     => 'claudgbu1969@gmail.com ',
+                'password'  => Hash::make('naya789'),
+                'role'      => 'superadmin',
+            ],
+            [
                 'full_name' => 'Wynne Arisandi',
                 'nick_name' => 'Wynne',
                 'email'     => 'w9679940@gmail.com',
