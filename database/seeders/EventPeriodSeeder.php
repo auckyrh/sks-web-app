@@ -53,6 +53,7 @@ class EventPeriodSeeder extends Seeder
                     'event_end_date'        => $endDate,
                     'registration_open_at'  => "{$year}-04-01 00:00:00",
                     'registration_close_at' => "{$year}-05-31 23:59:59",
+                    'max_participants'      => 350,
                 ]
             );
 

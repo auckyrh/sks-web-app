@@ -25,7 +25,7 @@ return new class extends Migration
             $table->tinyInteger('grade');
             $table->enum('registration_source', ['BIAK', 'YCK', 'UMUM']);
             $table->boolean('has_joined_biak_yck')->default(false);
-            $table->enum('tshirt_size', ['XS', 'S', 'M', 'L', 'XL', '2XL', '3XL', '4XL', '5XL']);
+            $table->string('tshirt_size');
             $table->string('parent_name');
             $table->string('parent_whatsapp');
             $table->string('allergies')->nullable();
@@ -41,6 +41,7 @@ return new class extends Migration
             $table->dateTime('payment_verified_at')->nullable();
             $table->foreignId('registration_verified_by')->nullable()->constrained('users')->nullOnDelete();
             $table->dateTime('registration_verified_at')->nullable();
+            $table->text('rejection_reason')->nullable();
             $table->enum('status', ['pending', 'confirmed', 'cancelled'])->default('pending');
             $table->foreignId('created_by')->nullable()->constrained('users')->nullOnDelete();
             $table->foreignId('deleted_by')->nullable()->constrained('users')->nullOnDelete();

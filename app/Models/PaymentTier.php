@@ -12,7 +12,7 @@ class PaymentTier extends Model
     use LogsActivity;
 
     protected $fillable = [
-        'event_period_id', 'name', 'amount', 'valid_from', 'valid_until'
+        'event_period_id', 'name', 'description', 'amount', 'valid_from', 'valid_until'
     ];
 
     protected $casts = [

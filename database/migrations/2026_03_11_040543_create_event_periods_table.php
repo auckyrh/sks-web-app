@@ -21,6 +21,7 @@ return new class extends Migration
             $table->date('event_end_date')->nullable();
             $table->dateTime('registration_open_at')->nullable();
             $table->dateTime('registration_close_at')->nullable();
+            $table->integer('max_participants')->default(350);
             $table->timestamps();
         });
     }

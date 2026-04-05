@@ -24,6 +24,7 @@ return new class extends Migration
             $table->date('birth_date')->nullable();
             $table->string('address')->nullable();
             $table->foreignId('wilayah_id')->nullable()->constrained('wilayahs')->nullOnDelete();
+            $table->foreignId('lingkungan_id')->nullable()->constrained('lingkungans')->nullOnDelete();
             $table->rememberToken();
             $table->softDeletes();
             $table->timestamps();

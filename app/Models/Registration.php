@@ -41,6 +41,7 @@ class Registration extends Model
         'parent_name', 'parent_whatsapp', 'allergies', 'notes',
         'payment_proof_path', 'payer_name', 'payment_date', 'payment_tier_id', 'payment_amount', 'donation_amount',
         'payment_status', 'payment_verified_by', 'payment_verified_at',
+        'rejection_reason',
         'status', 'registration_verified_by', 'registration_verified_at',
         'created_by', 'deleted_by'
     ];

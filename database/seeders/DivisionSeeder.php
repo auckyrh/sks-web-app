@@ -18,6 +18,7 @@ class DivisionSeeder extends Seeder
             ['name' => 'Wakil',                      'access_level' => 'upper'],
             ['name' => 'Sekretaris',                 'access_level' => 'upper'],
             ['name' => 'Bendahara',                  'access_level' => 'upper'],
+            ['name' => 'IT',                         'access_level' => 'upper'],
             ['name' => 'Dana',                       'access_level' => 'upper'],
             ['name' => 'Pendaftaran',                'access_level' => 'upper'],
             ['name' => 'Acara',                      'access_level' => 'upper'],
@@ -40,7 +41,10 @@ class DivisionSeeder extends Seeder
         ];
 
         foreach ($divisions as $division) {
-            Division::create($division);
+            Division::updateOrCreate(
+                ['name' => $division['name']],   // find by
+                $division                          // create or update with
+            );
         }
 
         $count = count($divisions);

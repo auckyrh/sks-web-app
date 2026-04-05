@@ -15,6 +15,7 @@ return new class extends Migration
             $table->id();
             $table->foreignId('event_period_id')->constrained()->cascadeOnDelete();
             $table->string('name'); // e.g. "Early Bird", "Normal"
+            $table->string('description')->nullable();
             $table->integer('amount');
             $table->date('valid_from');
             $table->date('valid_until');

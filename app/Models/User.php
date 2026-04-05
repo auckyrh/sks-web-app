@@ -26,12 +26,12 @@ class User extends Authenticatable implements FilamentUser, HasName
     {
         return LogOptions::defaults()
             ->useLogName('Pengguna')
-            ->logOnly(['full_name', 'nick_name', 'email', 'role', 'phone', 'wilayah_id'])
+            ->logOnly(['full_name', 'nick_name', 'email', 'role', 'phone', 'wilayah_id', 'lingkungan_id'])
             ->logOnlyDirty()
             ->dontSubmitEmptyLogs();
     }
 
-    protected $fillable = ['full_name', 'nick_name', 'email', 'password', 'phone', 'role', 'photo', 'birth_date', 'address', 'wilayah_id'];
+    protected $fillable = ['full_name', 'nick_name', 'email', 'password', 'phone', 'role', 'photo', 'birth_date', 'address', 'wilayah_id', 'lingkungan_id'];
 
     protected $hidden = ['password', 'remember_token'];
 
@@ -47,6 +47,11 @@ class User extends Authenticatable implements FilamentUser, HasName
     public function wilayah(): BelongsTo
     {
         return $this->belongsTo(Wilayah::class);
+    }
+
+    public function lingkungan(): BelongsTo
+    {
+        return $this->belongsTo(Lingkungan::class);
     }
 
     public function committeeAssignments(): HasMany

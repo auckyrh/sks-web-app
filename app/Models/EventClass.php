@@ -21,7 +21,7 @@ class EventClass extends Model
             ->dontSubmitEmptyLogs();
     }
     protected $fillable = [
-        'event_period_id', 'level', 'saint_name', 'grade_min', 'grade_max'
+        'event_period_id', 'level', 'saint_name', 'grade_min', 'grade_max', 'logo'
     ];
 
     public function eventPeriod(): BelongsTo

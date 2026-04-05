@@ -29,7 +29,8 @@ class EventPeriod extends Model
     protected $fillable = [
         'year', 'theme', 'event_logo', 'is_active',
         'event_start_date', 'event_end_date',
-        'registration_open_at', 'registration_close_at'
+        'registration_open_at', 'registration_close_at',
+        'max_participants'
     ];
 
     protected $casts = [

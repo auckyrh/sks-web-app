@@ -18,6 +18,7 @@ return new class extends Migration
             $table->string('saint_name');
             $table->tinyInteger('grade_min');
             $table->tinyInteger('grade_max');
+            $table->string('logo')->nullable();
             $table->timestamps();
         });
     }
