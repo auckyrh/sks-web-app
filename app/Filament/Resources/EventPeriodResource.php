@@ -19,7 +19,7 @@ class EventPeriodResource extends Resource
 
     protected static ?string $navigationIcon = 'heroicon-o-calendar';
     protected static ?string $navigationGroup = 'Event Management';
-    protected static ?string $navigationLabel = 'Event Period';
+    protected static ?string $navigationLabel = 'SKS Event Period';
     protected static ?int $navigationSort = 1;
 
     public static function form(Form $form): Form

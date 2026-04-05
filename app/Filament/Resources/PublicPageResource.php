@@ -18,8 +18,8 @@ class PublicPageResource extends Resource
     protected static ?string $model = PublicPage::class;
     protected static ?string $navigationIcon = 'heroicon-o-document-text';
     protected static ?string $navigationGroup = 'Event Management';
-    protected static ?string $navigationLabel = 'Public Page Information';
-    protected static ?int $navigationSort = 3;
+    protected static ?string $navigationLabel = 'Event\'s Public Page Info';
+    protected static ?int $navigationSort = 5;
 
     public static function form(Form $form): Form
     {

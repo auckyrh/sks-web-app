@@ -18,7 +18,7 @@ class RegistrationResource extends Resource
 {
     protected static ?string $model = Registration::class;
     protected static ?string $navigationIcon = 'heroicon-o-clipboard-document-list';
-    protected static ?string $navigationGroup = 'Pendaftaran';
+    protected static ?string $navigationGroup = 'Data Pendaftaran / Peserta';
     protected static ?string $navigationLabel = 'Registrasi';
     protected static ?int $navigationSort = 1;
 
@@ -230,6 +230,7 @@ class RegistrationResource extends Resource
                 Tables\Columns\TextColumn::make('child_full_name')
                     ->label('Nama Anak')
                     ->searchable()
+                    ->copyable()
                     ->sortable(),
                 Tables\Columns\TextColumn::make('wilayah.name')
                     ->label('Wilayah')
@@ -241,6 +242,7 @@ class RegistrationResource extends Resource
                     ->formatStateUsing(fn ($state) => 'Kelas ' . $state),
                 Tables\Columns\TextColumn::make('parent_whatsapp')
                     ->label('WA Ortu')
+                    ->copyable()
                     ->searchable(),
                 Tables\Columns\TextColumn::make('payer_name')
                     ->label('Nama Rekening')

@@ -18,7 +18,7 @@ class TeamResource extends Resource
     protected static ?string $model = Team::class;
 
     protected static ?string $navigationIcon = 'heroicon-o-user-group';
-    protected static ?string $navigationGroup = 'Pendaftaran';
+    protected static ?string $navigationGroup = 'Data Pendaftaran / Peserta';
     protected static ?string $navigationLabel = 'Tim / Kelompok';
     protected static ?int $navigationSort = 3;
 

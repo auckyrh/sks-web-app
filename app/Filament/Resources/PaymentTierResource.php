@@ -17,7 +17,10 @@ class PaymentTierResource extends Resource
 {
     protected static ?string $model = PaymentTier::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
+    protected static ?string $navigationIcon = 'heroicon-o-banknotes';
+    protected static ?string $navigationGroup = 'Event Management';
+    protected static ?string $navigationLabel = 'Event\'s Payment Tier';
+    protected static ?int $navigationSort = 3;
 
     public static function form(Form $form): Form
     {

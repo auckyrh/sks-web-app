@@ -20,8 +20,8 @@ class GatheringResource extends Resource
 
     protected static ?string $navigationIcon = 'heroicon-o-calendar-days';
     protected static ?string $navigationGroup = 'Event Management';
-    protected static ?string $navigationLabel = 'Gathering';
-    protected static ?int $navigationSort = 2;
+    protected static ?string $navigationLabel = 'Event\'s Gatherings';
+    protected static ?int $navigationSort = 4;
 
     public static function form(Form $form): Form
     {
