@@ -23,7 +23,7 @@ class CheckRegistrationStatus extends Component
         if ($this->searchType === 'registration_number') {
             $query->where('registration_number', $this->search);
         } else {
-            $query->where('parent_wa', $this->search);
+            $query->where('parent_whatsapp', $this->search);
         }
 
         $this->results = $query->latest()->get();

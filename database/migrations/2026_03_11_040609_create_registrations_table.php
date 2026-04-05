@@ -27,7 +27,7 @@ return new class extends Migration
             $table->boolean('has_joined_biak_yck')->default(false);
             $table->enum('tshirt_size', ['XS', 'S', 'M', 'L', 'XL', '2XL', '3XL', '4XL', '5XL']);
             $table->string('parent_name');
-            $table->string('parent_wa');
+            $table->string('parent_whatsapp');
             $table->string('allergies')->nullable();
             $table->text('notes')->nullable();
             $table->string('payment_proof_path')->nullable();
@@ -37,8 +37,10 @@ return new class extends Migration
             $table->integer('payment_amount')->nullable();
             $table->integer('donation_amount')->default(0);
             $table->enum('payment_status', ['pending', 'verified', 'rejected'])->default('pending');
-            $table->foreignId('verified_by')->nullable()->constrained('users')->nullOnDelete();
-            $table->dateTime('verified_at')->nullable();
+            $table->foreignId('payment_verified_by')->nullable()->constrained('users')->nullOnDelete();
+            $table->dateTime('payment_verified_at')->nullable();
+            $table->foreignId('registration_verified_by')->nullable()->constrained('users')->nullOnDelete();
+            $table->dateTime('registration_verified_at')->nullable();
             $table->enum('status', ['pending', 'confirmed', 'cancelled'])->default('pending');
             $table->foreignId('created_by')->nullable()->constrained('users')->nullOnDelete();
             $table->foreignId('deleted_by')->nullable()->constrained('users')->nullOnDelete();

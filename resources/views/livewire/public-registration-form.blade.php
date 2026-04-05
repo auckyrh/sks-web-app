@@ -421,8 +421,8 @@
                             </div>
                             <div>
                                 <label class="sks-label">No. WhatsApp <span style="color:#dc2626;">*</span></label>
-                                <input wire:model="parent_wa" type="tel" class="sks-input" placeholder="08xxxxxxxxxx">
-                                @error('parent_wa') <p class="sks-error">{{ $message }}</p> @enderror
+                                <input wire:model="parent_whatsapp" type="tel" class="sks-input" placeholder="08xxxxxxxxxx">
+                                @error('parent_whatsapp') <p class="sks-error">{{ $message }}</p> @enderror
                             </div>
                         </div>
                     </div>

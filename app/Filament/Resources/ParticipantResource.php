@@ -47,7 +47,7 @@ class ParticipantResource extends Resource
                 Forms\Components\TextInput::make('parent_name')
                     ->required()
                     ->maxLength(255),
-                Forms\Components\TextInput::make('parent_wa')
+                Forms\Components\TextInput::make('parent_whatsapp')
                     ->required()
                     ->maxLength(255),
                 Forms\Components\TextInput::make('tshirt_size')
@@ -90,7 +90,7 @@ class ParticipantResource extends Resource
                     ->sortable(),
                 Tables\Columns\TextColumn::make('parent_name')
                     ->searchable(),
-                Tables\Columns\TextColumn::make('parent_wa')
+                Tables\Columns\TextColumn::make('parent_whatsapp')
                     ->searchable(),
                 Tables\Columns\TextColumn::make('tshirt_size')
                     ->searchable(),

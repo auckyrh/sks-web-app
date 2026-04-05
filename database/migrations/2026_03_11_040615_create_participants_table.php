@@ -23,7 +23,7 @@ return new class extends Migration
             $table->date('birth_date');
             $table->tinyInteger('grade');
             $table->string('parent_name');
-            $table->string('parent_wa');
+            $table->string('parent_whatsapp');
             $table->string('tshirt_size');
             $table->string('allergies')->nullable();
             $table->text('notes')->nullable();

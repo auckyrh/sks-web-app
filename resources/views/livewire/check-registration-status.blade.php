@@ -149,8 +149,8 @@
                         class="crs-tab {{ $searchType === 'registration_number' ? 'active' : '' }}">
                     🔖 No. Pendaftaran
                 </button>
-                <button wire:click="$set('searchType', 'parent_wa')"
-                        class="crs-tab {{ $searchType === 'parent_wa' ? 'active' : '' }}">
+                <button wire:click="$set('searchType', 'parent_whatsapp')"
+                        class="crs-tab {{ $searchType === 'parent_whatsapp' ? 'active' : '' }}">
                     📱 No. WhatsApp
                 </button>
             </div>

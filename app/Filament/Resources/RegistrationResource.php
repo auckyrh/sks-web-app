@@ -113,7 +113,7 @@ class RegistrationResource extends Resource
                     Forms\Components\TextInput::make('parent_name')
                         ->label('Nama Orang Tua')
                         ->required(),
-                    Forms\Components\TextInput::make('parent_wa')
+                    Forms\Components\TextInput::make('parent_whatsapp')
                         ->label('No. WhatsApp Orang Tua')
                         ->tel()
                         ->required(),
@@ -170,10 +170,17 @@ class RegistrationResource extends Resource
                                         ])
                                         ->default('pending')
                                         ->native(false),
-                                    Forms\Components\Placeholder::make('verified_info')
-                                        ->label('Diverifikasi oleh')
-                                        ->content(fn ($record) => $record?->verified_at
-                                            ? ($record->verifiedBy?->name ?? '—') . ' · ' . $record->verified_at->format('d M Y, H:i')
+                                    Forms\Components\Placeholder::make('payment_verified_info')
+                                        ->label('Pembayaran diverifikasi oleh')
+                                        ->content(fn ($record) => $record?->payment_verified_at
+                                            ? ($record->paymentVerifiedBy?->name ?? '—') . ' · ' . $record->payment_verified_at->format('d M Y, H:i')
+                                            : '—'
+                                        )
+                                        ->visibleOn('edit'),
+                                    Forms\Components\Placeholder::make('registration_verified_info')
+                                        ->label('Registrasi dikonfirmasi oleh')
+                                        ->content(fn ($record) => $record?->registration_verified_at
+                                            ? ($record->registrationVerifiedBy?->name ?? '—') . ' · ' . $record->registration_verified_at->format('d M Y, H:i')
                                             : '—'
                                         )
                                         ->visibleOn('edit'),
@@ -232,7 +239,7 @@ class RegistrationResource extends Resource
                     ->label('Kelas')
                     ->badge()
                     ->formatStateUsing(fn ($state) => 'Kelas ' . $state),
-                Tables\Columns\TextColumn::make('parent_wa')
+                Tables\Columns\TextColumn::make('parent_whatsapp')
                     ->label('WA Ortu')
                     ->searchable(),
                 Tables\Columns\TextColumn::make('payer_name')
@@ -258,11 +265,19 @@ class RegistrationResource extends Resource
                         'success' => 'confirmed',
                         'danger'  => 'cancelled',
                     ]),
-                Tables\Columns\TextColumn::make('verified_info')
-                    ->label('Diverifikasi')
-                    ->getStateUsing(fn ($record) => $record->verified_at
-                        ? $record->verifiedBy?->name . "\n" . $record->verified_at->format('d M Y, H:i')
-                        : '-'
+                Tables\Columns\TextColumn::make('payment_verified_info')
+                    ->label('Verif. Pembayaran')
+                    ->getStateUsing(fn ($record) => $record->payment_verified_at
+                        ? ($record->paymentVerifiedBy?->name ?? '—') . "\n" . $record->payment_verified_at->format('d M Y, H:i')
+                        : '—'
+                    )
+                    ->wrap()
+                    ->toggleable(isToggledHiddenByDefault: true),
+                Tables\Columns\TextColumn::make('registration_verified_info')
+                    ->label('Konfirmasi Registrasi')
+                    ->getStateUsing(fn ($record) => $record->registration_verified_at
+                        ? ($record->registrationVerifiedBy?->name ?? '—') . "\n" . $record->registration_verified_at->format('d M Y, H:i')
+                        : '—'
                     )
                     ->wrap()
                     ->toggleable(isToggledHiddenByDefault: true),
@@ -314,11 +329,13 @@ class RegistrationResource extends Resource
                         \Illuminate\Support\Facades\DB::table('registrations')
                             ->where('id', $record->id)
                             ->update([
-                                'payment_status' => 'verified',
-                                'status'         => 'confirmed',
-                                'verified_by'    => auth()->id(),
-                                'verified_at'    => now(),
-                                'updated_at'     => now(),
+                                'payment_status'           => 'verified',
+                                'payment_verified_by'      => auth()->id(),
+                                'payment_verified_at'      => now(),
+                                'status'                   => 'confirmed',
+                                'registration_verified_by' => auth()->id(),
+                                'registration_verified_at' => now(),
+                                'updated_at'               => now(),
                             ]);
                         $record->refresh();
 
@@ -334,7 +351,7 @@ class RegistrationResource extends Resource
                                 'birth_date'       => $record->birth_date,
                                 'grade'            => $record->grade,
                                 'parent_name'      => $record->parent_name,
-                                'parent_wa'        => $record->parent_wa,
+                                'parent_whatsapp'        => $record->parent_whatsapp,
                                 'tshirt_size'      => $record->tshirt_size,
                                 'allergies'        => $record->allergies,
                                 'notes'            => $record->notes,
@@ -387,7 +404,7 @@ class RegistrationResource extends Resource
                             'birth_date'       => $record->birth_date,
                             'grade'            => $record->grade,
                             'parent_name'      => $record->parent_name,
-                            'parent_wa'        => $record->parent_wa,
+                            'parent_whatsapp'        => $record->parent_whatsapp,
                             'tshirt_size'      => $record->tshirt_size,
                             'allergies'        => $record->allergies,
                             'notes'            => $record->notes,

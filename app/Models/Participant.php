@@ -14,7 +14,7 @@ class Participant extends Model
     protected $fillable = [
         'registration_id', 'event_period_id', 'event_class_id', 'group_id',
         'child_full_name', 'nickname', 'gender', 'birth_date', 'grade',
-        'parent_name', 'parent_wa', 'tshirt_size', 'allergies', 'notes',
+        'parent_name', 'parent_whatsapp', 'tshirt_size', 'allergies', 'notes',
         'created_by', 'deleted_by'
     ];
 

@@ -50,7 +50,7 @@ class ParticipantsRelationManager extends RelationManager
                 Tables\Columns\TextColumn::make('gender')
                     ->label('L/P')
                     ->formatStateUsing(fn ($state) => $state === 'M' ? '👦 L' : '👧 P'),
-                Tables\Columns\TextColumn::make('parent_wa')
+                Tables\Columns\TextColumn::make('parent_whatsapp')
                     ->label('WA Ortu'),
                 Tables\Columns\TextColumn::make('allergies')
                     ->label('Alergi')
