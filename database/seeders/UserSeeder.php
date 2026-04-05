@@ -93,8 +93,10 @@ class UserSeeder extends Seeder
         ];
 
         foreach ($users as $user) {
-//            DB::table('users')->insertOrIgnore($user);
-            User::updateOrCreate($user);
+            User::updateOrCreate(
+                ['email' => $user['email']],   // find by
+                $user                          // create or update with
+            );
         }
 
         $count = count($users);
