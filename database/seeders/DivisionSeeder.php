@@ -42,7 +42,7 @@ class DivisionSeeder extends Seeder
 
         foreach ($divisions as $division) {
             Division::updateOrCreate(
-                ['name' => $division['name']],   // find by
+                ['name' => $division['name']],    // find by
                 $division                          // create or update with
             );
         }
