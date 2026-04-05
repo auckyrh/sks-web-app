@@ -26,8 +26,7 @@ class Registration extends Model
                 'registration_verified_by', 'registration_verified_at',
                 'tshirt_size', 'grade', 'wilayah_id', 'lingkungan_id',
             ])
-            ->logOnlyDirty()
-            ->dontSubmitEmptyLogs();
+            ->logOnlyDirty();
     }
 
     public function activities(): \Illuminate\Database\Eloquent\Relations\MorphMany

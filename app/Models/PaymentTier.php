@@ -25,8 +25,7 @@ class PaymentTier extends Model
         return LogOptions::defaults()
             ->useLogName('Tier Pembayaran')
             ->logOnly(['name', 'amount', 'valid_from', 'valid_until'])
-            ->logOnlyDirty()
-            ->dontSubmitEmptyLogs();
+            ->logOnlyDirty();
     }
 
     public function eventPeriod(): BelongsTo

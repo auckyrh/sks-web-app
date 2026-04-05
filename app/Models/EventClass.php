@@ -17,8 +17,7 @@ class EventClass extends Model
         return LogOptions::defaults()
             ->useLogName('Kelas Event')
             ->logOnly(['level', 'saint_name', 'grade_min', 'grade_max'])
-            ->logOnlyDirty()
-            ->dontSubmitEmptyLogs();
+            ->logOnlyDirty();
     }
     protected $fillable = [
         'event_period_id', 'level', 'saint_name', 'grade_min', 'grade_max', 'logo'

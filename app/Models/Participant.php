@@ -19,8 +19,7 @@ class Participant extends Model
         return LogOptions::defaults()
             ->useLogName('Peserta')
             ->logOnly(['event_class_id', 'team_id', 'grade', 'tshirt_size'])
-            ->logOnlyDirty()
-            ->dontSubmitEmptyLogs();
+            ->logOnlyDirty();
     }
     protected $fillable = [
         'registration_id', 'event_period_id', 'event_class_id', 'group_id',

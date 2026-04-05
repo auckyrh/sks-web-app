@@ -17,8 +17,7 @@ class Gathering extends Model
         return LogOptions::defaults()
             ->useLogName('Pertemuan')
             ->logOnly(['name', 'date', 'location', 'notes', 'gathering_type_id'])
-            ->logOnlyDirty()
-            ->dontSubmitEmptyLogs();
+            ->logOnlyDirty();
     }
     protected $fillable = [
         'event_period_id', 'gathering_type_id', 'name', 'date', 'location', 'notes'

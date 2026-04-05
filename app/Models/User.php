@@ -27,8 +27,7 @@ class User extends Authenticatable implements FilamentUser, HasName
         return LogOptions::defaults()
             ->useLogName('Pengguna')
             ->logOnly(['full_name', 'nick_name', 'email', 'role', 'phone', 'wilayah_id', 'lingkungan_id'])
-            ->logOnlyDirty()
-            ->dontSubmitEmptyLogs();
+            ->logOnlyDirty();
     }
 
     protected $fillable = ['full_name', 'nick_name', 'email', 'password', 'phone', 'role', 'photo', 'birth_date', 'address', 'wilayah_id', 'lingkungan_id'];

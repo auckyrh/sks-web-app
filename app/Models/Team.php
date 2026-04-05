@@ -18,8 +18,7 @@ class Team extends Model
         return LogOptions::defaults()
             ->useLogName('Tim')
             ->logOnly(['number', 'name', 'event_class_id'])
-            ->logOnlyDirty()
-            ->dontSubmitEmptyLogs();
+            ->logOnlyDirty();
     }
     protected $fillable = [
         'event_period_id',

@@ -23,8 +23,7 @@ class EventPeriod extends Model
                 'event_start_date', 'event_end_date',
                 'registration_open_at', 'registration_close_at',
             ])
-            ->logOnlyDirty()
-            ->dontSubmitEmptyLogs();
+            ->logOnlyDirty();
     }
     protected $fillable = [
         'year', 'theme', 'event_logo', 'is_active',

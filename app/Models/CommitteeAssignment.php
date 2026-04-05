@@ -16,8 +16,7 @@ class CommitteeAssignment extends Model
         return LogOptions::defaults()
             ->useLogName('Penugasan Komite')
             ->logOnly(['user_id', 'division_id', 'position', 'is_active'])
-            ->logOnlyDirty()
-            ->dontSubmitEmptyLogs();
+            ->logOnlyDirty();
     }
     protected $table = 'committee_assignments';
 
