@@ -43,6 +43,7 @@ class PublicRegistrationForm extends Component
     public ?int $payment_tier_id = null;
     public int $donation_amount = 0;
     public string $payer_name = '';
+    public string $payment_date = '';
     public $payment_proof;
 
     // State
@@ -128,6 +129,7 @@ class PublicRegistrationForm extends Component
             'payment_tier_id' => 'required|exists:payment_tiers,id',
             'donation_amount' => 'integer|min:0',
             'payer_name'      => 'required|string|max:255',
+            'payment_date'    => 'required|date|before_or_equal:today',
             'payment_proof'   => 'required|image|max:2048',
         ], [
             'child_full_name.required' => 'Nama lengkap anak wajib diisi.',
@@ -142,8 +144,10 @@ class PublicRegistrationForm extends Component
             'parent_name.required' => 'Nama orang tua wajib diisi.',
             'parent_wa.required' => 'No. WhatsApp orang tua wajib diisi.',
             'payment_tier_id.required' => 'Tier pembayaran wajib dipilih.',
-            'payer_name.required'    => 'Nama rekening pengirim wajib diisi.',
-            'payment_proof.required' => 'Bukti transfer wajib diupload.',
+            'payer_name.required'       => 'Nama rekening pengirim wajib diisi.',
+            'payment_date.required'     => 'Tanggal transfer wajib diisi.',
+            'payment_date.before_or_equal' => 'Tanggal transfer tidak boleh lebih dari hari ini.',
+            'payment_proof.required'    => 'Bukti transfer wajib diupload.',
             'payment_proof.image' => 'File harus berupa gambar.',
             'payment_proof.max' => 'Ukuran file maksimal 2MB.',
         ]);
@@ -183,6 +187,7 @@ class PublicRegistrationForm extends Component
             'payment_amount' => $tier->amount,
             'donation_amount' => $this->donation_amount,
             'payer_name'         => ucwords(strtolower(trim($this->payer_name))),
+            'payment_date'       => $this->payment_date,
             'payment_proof_path' => $path,
             'payment_status' => 'pending',
             'status' => 'pending',

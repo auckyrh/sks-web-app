@@ -183,6 +183,12 @@ class RegistrationResource extends Resource
                                     Forms\Components\TextInput::make('payer_name')
                                         ->label('Nama Rekening Pengirim')
                                         ->nullable(),
+                                    Forms\Components\DatePicker::make('payment_date')
+                                        ->label('Tanggal Transfer')
+                                        ->native(false)
+                                        ->displayFormat('d M Y')
+                                        ->maxDate(now())
+                                        ->nullable(),
                                     Forms\Components\FileUpload::make('payment_proof_path')
                                         ->label('Bukti Transfer')
                                         ->image()
@@ -232,6 +238,11 @@ class RegistrationResource extends Resource
                 Tables\Columns\TextColumn::make('payer_name')
                     ->label('Nama Rekening')
                     ->searchable()
+                    ->toggleable(isToggledHiddenByDefault: true),
+                Tables\Columns\TextColumn::make('payment_date')
+                    ->label('Tgl Transfer')
+                    ->date('d M Y')
+                    ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
                 Tables\Columns\BadgeColumn::make('payment_status')
                     ->label('Pembayaran')

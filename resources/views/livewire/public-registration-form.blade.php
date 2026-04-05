@@ -593,9 +593,17 @@
                             {{-- Payer Name --}}
                             <div>
                                 <label class="sks-label">Nama Rekening Pengirim <span style="color:#dc2626;">*</span></label>
-                                <p style="font-size:0.75rem; font-weight:700; color:#b91c1c; margin-bottom:0.375rem;">⚠ WAJIB diisi sesuai nama pemilik rekening yang melakukan transfer. Data yang tidak sesuai akan ditolak oleh panitia.</p>
+                                <p style="font-size:0.75rem; font-weight:700; color:#b91c1c; margin-bottom:0.375rem;">⚠ WAJIB sesuai dengan NAMA PEMILIK REKENING yang melakukan transfer. Data yang tidak sesuai akan ditolak oleh panitia.</p>
                                 <input wire:model="payer_name" type="text" class="sks-input">
                                 @error('payer_name') <p class="sks-error">{{ $message }}</p> @enderror
+                            </div>
+
+                            {{-- Payment Date --}}
+                            <div>
+                                <label class="sks-label">Tanggal Transfer <span style="color:#dc2626;">*</span></label>
+                                <p style="font-size:0.75rem; color:#92835c; margin-bottom:0.375rem;">Tanggal saat Anda melakukan transfer pembayaran</p>
+                                <input wire:model="payment_date" type="date" class="sks-input" max="{{ date('Y-m-d') }}">
+                                @error('payment_date') <p class="sks-error">{{ $message }}</p> @enderror
                             </div>
 
                         </div>

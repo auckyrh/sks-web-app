@@ -62,7 +62,7 @@ class PaymentTierSeeder extends Seeder
                 ['event_period_id' => $period->id, 'name' => 'Khusus Umat Santo Yakobus'],
                 [
                     'amount'     => 350000,
-                    'valid_from' => "{$year}-03-06",
+                    'valid_from' => "{$year}-04-06",
                     'valid_until'=> "{$year}-04-20",
                 ]
             );

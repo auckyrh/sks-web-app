@@ -32,6 +32,7 @@ return new class extends Migration
             $table->text('notes')->nullable();
             $table->string('payment_proof_path')->nullable();
             $table->string('payer_name')->nullable();
+            $table->date('payment_date')->nullable();
             $table->foreignId('payment_tier_id')->nullable()->constrained('payment_tiers')->nullOnDelete();
             $table->integer('payment_amount')->nullable();
             $table->integer('donation_amount')->default(0);
