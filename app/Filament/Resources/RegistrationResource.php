@@ -441,7 +441,7 @@ class RegistrationResource extends Resource
     public static function getRelations(): array
     {
         return [
-            //
+            RelationManagers\ActivityLogRelationManager::class,
         ];
     }
 

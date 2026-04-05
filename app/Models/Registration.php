@@ -7,10 +7,33 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Spatie\Activitylog\Support\LogOptions;
+use Spatie\Activitylog\Models\Concerns\LogsActivity;
 
 class Registration extends Model
 {
-    use SoftDeletes;
+    use SoftDeletes, LogsActivity;
+
+    public function getActivitylogOptions(): LogOptions
+    {
+        return LogOptions::defaults()
+            ->useLogName('Registrasi')
+            ->logOnly([
+                'payment_status', 'status',
+                'payment_tier_id', 'payment_amount', 'donation_amount',
+                'payment_date', 'payer_name', 'payment_proof_path',
+                'payment_verified_by', 'payment_verified_at',
+                'registration_verified_by', 'registration_verified_at',
+                'tshirt_size', 'grade', 'wilayah_id', 'lingkungan_id',
+            ])
+            ->logOnlyDirty()
+            ->dontSubmitEmptyLogs();
+    }
+
+    public function activities(): \Illuminate\Database\Eloquent\Relations\MorphMany
+    {
+        return $this->morphMany(\Spatie\Activitylog\Models\Activity::class, 'subject');
+    }
     protected $fillable = [
         'event_period_id', 'registration_number', 'child_full_name', 'nickname',
         'gender', 'birth_date', 'address', 'wilayah_id', 'lingkungan_id',

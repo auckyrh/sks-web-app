@@ -379,7 +379,7 @@
                             >
                                 <label class="sks-label">Ukuran Kaos <span style="color:#dc2626;">*</span></label>
                                 <p style="font-size:0.75rem; font-weight:700; color:#b91c1c; margin-bottom:0.5rem;">
-                                    ⚠ Pastikan ukuran dipilih berdasarkan SIZE CHART di atas — sesuaikan dengan tubuh anak, bukan usia. <span style="text-decoration:underline;">Penukaran ukuran kaos TIDAK dapat dilakukan</span> setelah pendaftaran.
+                                    ⚠ Pastikan ukuran yang dipilih berdasarkan SIZE CHART tertera — sesuaikan dengan tubuh anak, bukan usia. <span style="text-decoration:underline;">Penukaran ukuran kaos TIDAK dapat dilakukan</span> setelah pendaftaran.
                                 </p>
                                 <select
                                     x-ref="sizeSelect"
