@@ -303,14 +303,14 @@
                                 @error('address') <p class="sks-error">{{ $message }}</p> @enderror
                             </div>
 
-                            <div>
-                                <label class="sks-label">Apakah anda umat Paroki Santo Yakobus? <span style="color:#dc2626;">*</span></label>
-                                <div style="display:flex; gap:1rem; margin-top:0.375rem; flex-wrap:wrap;">
-                                    <label style="display:flex; align-items:center; gap:0.5rem; font-size:0.875rem; color:#5c4a32; cursor:pointer;">
+                            <div style="border: 2px solid #dc2626; border-radius: 12px; padding: 1rem 1.125rem; background: #fff8f8;">
+                                <label class="sks-label" style="font-weight: 700; font-size: 0.9rem; color: #b91c1c;">Apakah anda umat Paroki Santo Yakobus? <span style="color:#dc2626;">*</span></label>
+                                <div style="display:flex; gap:1rem; margin-top:0.5rem; flex-wrap:wrap;">
+                                    <label style="display:flex; align-items:center; gap:0.5rem; font-size:0.875rem; font-weight:600; color:#5c4a32; cursor:pointer;">
                                         <input wire:model.live="is_paroki_member" type="radio" value="1" style="accent-color:#f59e0b; width:15px; height:15px;">
                                         Ya, saya umat Paroki Santo Yakobus
                                     </label>
-                                    <label style="display:flex; align-items:center; gap:0.5rem; font-size:0.875rem; color:#5c4a32; cursor:pointer;">
+                                    <label style="display:flex; align-items:center; gap:0.5rem; font-size:0.875rem; font-weight:600; color:#5c4a32; cursor:pointer;">
                                         <input wire:model.live="is_paroki_member" type="radio" value="0" style="accent-color:#f59e0b; width:15px; height:15px;">
                                         Tidak
                                     </label>
@@ -593,7 +593,7 @@
                             {{-- Payer Name --}}
                             <div>
                                 <label class="sks-label">Nama Rekening Pengirim <span style="color:#dc2626;">*</span></label>
-                                <p style="font-size:0.75rem; color:#92835c; margin-bottom:0.375rem;">Nama sesuai rekening yang digunakan untuk transfer</p>
+                                <p style="font-size:0.75rem; font-weight:700; color:#b91c1c; margin-bottom:0.375rem;">⚠ WAJIB diisi sesuai nama pemilik rekening yang melakukan transfer. Data yang tidak sesuai akan ditolak oleh panitia.</p>
                                 <input wire:model="payer_name" type="text" class="sks-input">
                                 @error('payer_name') <p class="sks-error">{{ $message }}</p> @enderror
                             </div>
@@ -602,7 +602,8 @@
                     </div>
 
                     {{-- ── Submit ───────────────────────────────────────── --}}
-                    <button type="submit"
+                    <button type="button"
+                            id="sks-submit-btn"
                             class="sks-submit-btn"
                             wire:loading.attr="disabled"
                             wire:loading.class="opacity-75"
@@ -623,6 +624,41 @@
 
     @if(!$submitted)
     <script>
+        // ── Submit confirmation dialog ─────────────────────────────────────
+        document.getElementById('sks-submit-btn').addEventListener('click', function () {
+            Swal.fire({
+                title: 'Konfirmasi Pendaftaran',
+                html: `
+                    <p style="font-size:0.9rem;color:#374151;line-height:1.6;">
+                        Pastikan semua data yang Anda isi sudah <strong>benar dan lengkap</strong>, terutama:
+                    </p>
+                    <ul style="text-align:left;font-size:0.85rem;color:#374151;margin-top:0.75rem;line-height:1.8;padding-left:1.25rem;">
+                        <li>✅ Data anak &amp; orang tua sudah sesuai</li>
+                        <li>✅ Bukti pembayaran sudah diunggah</li>
+                        <li>⚠️ <strong>Nama rekening pengirim wajib sesuai</strong> dengan nama yang melakukan transfer</li>
+                    </ul>
+                    <p style="font-size:0.8rem;color:#dc2626;margin-top:0.875rem;font-weight:600;">
+                        Data pembayaran yang tidak sesuai dapat menyebabkan registrasi Anda ditolak oleh panitia.
+                    </p>
+                `,
+                icon: 'question',
+                confirmButtonText: 'Ya, data sudah benar — Daftar!',
+                confirmButtonColor: '#d97706',
+                showCancelButton: false,
+                footer: '<button type="button" id="swal-back-check-btn" style="background:none;border:none;padding:0;font-size:0.75rem;color:#9ca3af;text-decoration:underline;cursor:pointer;font-family:inherit;">Kembali, saya ingin periksa ulang</button>',
+                didOpen: function () {
+                    document.getElementById('swal-back-check-btn').addEventListener('click', function () {
+                        Swal.close();
+                    });
+                },
+            }).then(function (result) {
+                if (result.isConfirmed) {
+                    const form = document.querySelector('form[wire\\:submit]');
+                    if (form) form.requestSubmit();
+                }
+            });
+        });
+
         // ── Shared leave-confirmation dialog ──────────────────────────────
         function confirmLeave(onLeave) {
             Swal.fire({
