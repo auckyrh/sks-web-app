@@ -344,39 +344,83 @@
                                 </div>
                             @endif
 
-                            <div class="sks-grid-2">
-                                <div>
-                                    <label class="sks-label">Daftar Lewat <span style="color:#dc2626;">*</span></label>
-                                    <select wire:model="registration_source" class="sks-input">
-                                        <option value="">Pilih...</option>
-                                        <option value="BIAK">BIAK</option>
-                                        <option value="YCK">YCK</option>
-                                        <option value="UMUM">Umum</option>
-                                    </select>
-                                    @error('registration_source') <p class="sks-error">{{ $message }}</p> @enderror
-                                </div>
-                                <div>
-                                    <label class="sks-label">Ukuran Kaos <span style="color:#dc2626;">*</span></label>
-                                    @php
-                                        $shirtSizes = [
-                                            'S'   => ['panjang' => 39, 'lebar' => 30],
-                                            'M'   => ['panjang' => 43, 'lebar' => 32],
-                                            'L'   => ['panjang' => 46, 'lebar' => 35],
-                                            'XL'  => ['panjang' => 50, 'lebar' => 37],
-                                            '2XL' => ['panjang' => 53, 'lebar' => 39],
-                                            '3XL' => ['panjang' => 57, 'lebar' => 42],
-                                            '4XL' => ['panjang' => 61, 'lebar' => 44],
-                                            '5XL' => ['panjang' => 65, 'lebar' => 45],
-                                        ];
-                                    @endphp
-                                    <select wire:model="tshirt_size" class="sks-input">
-                                        <option value="">Pilih...</option>
-                                        @foreach($shirtSizes as $size => $dim)
-                                            <option value="{{ $size }}">{{ $size }} — Panjang {{ $dim['panjang'] }} cm, Lebar {{ $dim['lebar'] }} cm</option>
-                                        @endforeach
-                                    </select>
-                                    @error('tshirt_size') <p class="sks-error">{{ $message }}</p> @enderror
-                                </div>
+                            <div>
+                                <label class="sks-label">Daftar Lewat <span style="color:#dc2626;">*</span></label>
+                                <select wire:model="registration_source" class="sks-input">
+                                    <option value="">Pilih...</option>
+                                    <option value="BIAK">BIAK</option>
+                                    <option value="YCK">YCK</option>
+                                    <option value="UMUM">Umum</option>
+                                </select>
+                                @error('registration_source') <p class="sks-error">{{ $message }}</p> @enderror
+                            </div>
+
+                            {{-- Ukuran Kaos — full width so warning text has room --}}
+                            @php
+                                $shirtSizes = [
+                                    'S'          => ['panjang' => 39, 'lebar' => 30],
+                                    'M'          => ['panjang' => 43, 'lebar' => 32],
+                                    'L'          => ['panjang' => 46, 'lebar' => 35],
+                                    'XL'         => ['panjang' => 50, 'lebar' => 37],
+                                    '2XL'        => ['panjang' => 53, 'lebar' => 39],
+                                    '3XL'        => ['panjang' => 57, 'lebar' => 42],
+                                    '4XL'        => ['panjang' => 61, 'lebar' => 44],
+                                    '5XL'        => ['panjang' => 65, 'lebar' => 45],
+                                    'M-Dewasa'   => ['panjang' => 66, 'lebar' => 47],
+                                    'L-Dewasa'   => ['panjang' => 68, 'lebar' => 49],
+                                    'XL-Dewasa'  => ['panjang' => 70, 'lebar' => 51],
+                                    '2XL-Dewasa' => ['panjang' => 72, 'lebar' => 55],
+                                    '3XL-Dewasa' => ['panjang' => 74, 'lebar' => 59],
+                                    '4XL-Dewasa' => ['panjang' => 76, 'lebar' => 63],
+                                ];
+                            @endphp
+                            <div
+                                x-data="{ confirmed: @js($tshirt_size ?? '') }"
+                            >
+                                <label class="sks-label">Ukuran Kaos <span style="color:#dc2626;">*</span></label>
+                                <p style="font-size:0.75rem; font-weight:700; color:#b91c1c; margin-bottom:0.5rem;">
+                                    ⚠ Pastikan ukuran dipilih berdasarkan SIZE CHART di atas — sesuaikan dengan tubuh anak, bukan usia. <span style="text-decoration:underline;">Penukaran ukuran kaos TIDAK dapat dilakukan</span> setelah pendaftaran.
+                                </p>
+                                <select
+                                    x-ref="sizeSelect"
+                                    class="sks-input"
+                                    @change="
+                                        const val = $event.target.value;
+                                        if (!val) { confirmed = ''; $wire.set('tshirt_size', ''); return; }
+                                        $refs.sizeSelect.value = confirmed;
+                                        const wire = $wire;
+                                        const refs = $refs;
+                                        const comp = this;
+                                        Swal.fire({
+                                            title: 'Konfirmasi Ukuran Kaos',
+                                            html: 'Apakah ukuran <strong>' + val + '</strong> sudah tepat untuk anak Anda?<br><span style=\'font-size:0.8rem;color:#9ca3af;margin-top:0.25rem;display:block;\'>Penukaran ukuran tidak dapat dilakukan setelah pendaftaran.</span>',
+                                            icon: 'question',
+                                            confirmButtonText: 'Ya, ukuran sudah tepat',
+                                            confirmButtonColor: '#d97706',
+                                            showCancelButton: false,
+                                            footer: '<button type=\'button\' id=\'swal-reselect-size\' style=\'background:none;border:none;padding:0;font-size:0.75rem;color:#9ca3af;text-decoration:underline;cursor:pointer;font-family:inherit;\'>Pilih ulang ukuran</button>',
+                                            didOpen: function() {
+                                                document.getElementById('swal-reselect-size').addEventListener('click', function() {
+                                                    Swal.close();
+                                                });
+                                            }
+                                        }).then(function(result) {
+                                            if (result.isConfirmed) {
+                                                comp.confirmed = val;
+                                                refs.sizeSelect.value = val;
+                                                wire.set('tshirt_size', val);
+                                            }
+                                        });
+                                    "
+                                >
+                                    <option value="">Pilih ukuran...</option>
+                                    @foreach($shirtSizes as $size => $dim)
+                                        <option value="{{ $size }}" {{ $tshirt_size === $size ? 'selected' : '' }}>
+                                            {{ $size }} — Panjang {{ $dim['panjang'] }} cm, Lebar {{ $dim['lebar'] }} cm
+                                        </option>
+                                    @endforeach
+                                </select>
+                                @error('tshirt_size') <p class="sks-error">{{ $message }}</p> @enderror
                             </div>
 
                             <div>
