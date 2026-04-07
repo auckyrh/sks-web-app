@@ -13,7 +13,7 @@ class RegistrationsChartWidget extends ChartWidget
     protected static ?int $sort = 2;
     protected static ?string $maxHeight = '280px';
 
-    public ?string $filter = '30';
+    public ?string $filter = '7';
 
     protected function getFilters(): ?array
     {
