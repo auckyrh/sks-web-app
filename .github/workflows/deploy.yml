@@ -33,7 +33,6 @@ jobs:
           script: |
             cd /home/u893770968/domains/sks.santoyakobus.org/public_html
             /opt/alt/php84/usr/bin/php artisan down
-            git clean -fd
             git pull origin main
             /opt/alt/php84/usr/bin/php /usr/local/bin/composer install --optimize-autoloader --no-dev
             /opt/alt/php84/usr/bin/php artisan migrate --force
