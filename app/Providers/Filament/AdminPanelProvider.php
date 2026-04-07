@@ -7,6 +7,7 @@ use Filament\Http\Middleware\AuthenticateSession;
 use Filament\Http\Middleware\DisableBladeIconComponents;
 use Filament\Http\Middleware\DispatchServingFilamentEvent;
 use App\Filament\Pages\Auth\Login;
+use App\Filament\Auth\EditProfile;
 use Filament\Pages;
 use Filament\Panel;
 use Filament\PanelProvider;
@@ -30,6 +31,7 @@ class AdminPanelProvider extends PanelProvider
             ->id('admin')
             ->path('admin')
             ->login(Login::class)
+            ->profile(EditProfile::class, isSimple: false)
             ->brandLogo(asset('images/LOGO-SKS.png'))
             ->brandLogoHeight('4rem')
             ->renderHook(

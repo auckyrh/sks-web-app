@@ -4,6 +4,7 @@ namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Filament\Models\Contracts\FilamentUser;
+use Filament\Models\Contracts\HasAvatar;
 use Filament\Models\Contracts\HasName;
 use Filament\Panel;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -18,7 +19,7 @@ use Illuminate\Support\Facades\Storage;
 use Spatie\Activitylog\Support\LogOptions;
 use Spatie\Activitylog\Models\Concerns\LogsActivity;
 
-class User extends Authenticatable implements FilamentUser, HasName
+class User extends Authenticatable implements FilamentUser, HasAvatar, HasName
 {
     use HasFactory, Notifiable, SoftDeletes, LogsActivity;
 
@@ -73,6 +74,11 @@ class User extends Authenticatable implements FilamentUser, HasName
     public function getFilamentName(): string
     {
         return $this->full_name;
+    }
+
+    public function getFilamentAvatarUrl(): ?string
+    {
+        return $this->photo ? Storage::disk('public')->url($this->photo) : null;
     }
 
     public function canAccessPanel(Panel $panel): bool
