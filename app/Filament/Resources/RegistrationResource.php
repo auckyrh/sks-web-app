@@ -257,10 +257,26 @@ class RegistrationResource extends Resource
                     ->label('Wilayah')
                     ->searchable()
                     ->sortable(),
+                Tables\Columns\TextColumn::make('registration_source')
+                    ->label('Daftar Lewat')
+                    ->badge()
+                    ->formatStateUsing(fn ($state) => match ($state) {
+                        'BIAK'  => 'BIAK',
+                        'YCK'   => 'YCK',
+                        'UMUM'  => 'Umum',
+                        default => $state,
+                    })
+                    ->color(fn ($state) => match ($state) {
+                        'BIAK'  => 'info',
+                        'YCK'   => 'warning',
+                        'UMUM'  => 'gray',
+                        default => 'gray',
+                    })
+                    ->toggleable(isToggledHiddenByDefault: false),
                 Tables\Columns\TextColumn::make('tshirt_size')
                     ->label('Size')
                     ->sortable()
-                    ->toggleable(isToggledHiddenByDefault: true),
+                    ->toggleable(isToggledHiddenByDefault: false),
                 Tables\Columns\TextColumn::make('grade')
                     ->label('Kelas')
                     ->badge()
@@ -336,6 +352,9 @@ class RegistrationResource extends Resource
                 Tables\Filters\SelectFilter::make('wilayah_id')
                     ->label('Wilayah')
                     ->relationship('wilayah', 'name'),
+                Tables\Filters\SelectFilter::make('registration_source')
+                    ->label('Daftar Lewat')
+                    ->options(['BIAK' => 'BIAK', 'YCK' => 'YCK', 'UMUM' => 'Umum']),
                 Tables\Filters\SelectFilter::make('grade')
                     ->label('Kelas')
                     ->options([
