@@ -70,8 +70,9 @@ class ActivityLogResource extends Resource
 
                 Tables\Columns\TextColumn::make('changes_count')
                     ->label('Perubahan')
-                    ->getStateUsing(fn (Activity $record) =>
-                        count($record->properties->get('old', []))
+                    ->getStateUsing(fn (Activity $record) => $record->description === 'created'
+                        ? count($record->attribute_changes?->get('attributes', []) ?? [])
+                        : count($record->attribute_changes?->get('old', []) ?? [])
                     )
                     ->suffix(' field')
                     ->color('gray'),
@@ -110,8 +111,9 @@ class ActivityLogResource extends Resource
                     ->icon('heroicon-o-magnifying-glass')
                     ->color('gray')
                     ->visible(fn (Activity $record) =>
-                        $record->description === 'updated' &&
-                        ! empty($record->properties->get('old', []))
+                        ! empty($record->attribute_changes?->get(
+                            $record->description === 'created' ? 'attributes' : 'old', []
+                        ) ?? [])
                     )
                     ->modalHeading(fn (Activity $record) =>
                         'Perubahan — ' . $record->log_name . ' #' . $record->subject_id

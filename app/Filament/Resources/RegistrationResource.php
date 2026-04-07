@@ -94,8 +94,21 @@ class RegistrationResource extends Resource
                     Forms\Components\Select::make('tshirt_size')
                         ->label('Ukuran Kaos')
                         ->options([
-                            'XS' => 'XS', 'S' => 'S', 'M' => 'M', 'L' => 'L',
-                            'XL' => 'XL', '2XL' => '2XL', '3XL' => '3XL', '4XL' => '4XL',
+                            'S'          => 'S',
+                            'M'          => 'M',
+                            'L'          => 'L',
+                            'XL'         => 'XL',
+                            '2XL'        => '2XL',
+                            '3XL'        => '3XL',
+                            '4XL'        => '4XL',
+                            '5XL'        => '5XL',
+                            'M-Dewasa'   => 'M-Dewasa',
+                            'L-Dewasa'   => 'L-Dewasa',
+                            'XL-Dewasa'  => 'XL-Dewasa',
+                            '2XL-Dewasa' => '2XL-Dewasa',
+                            '3XL-Dewasa' => '3XL-Dewasa',
+                            '4XL-Dewasa' => '4XL-Dewasa',
+                            '5XL-Dewasa' => '5XL-Dewasa',
                         ])
                         ->required()
                         ->native(false),
@@ -160,7 +173,8 @@ class RegistrationResource extends Resource
                                             'rejected' => 'Rejected',
                                         ])
                                         ->default('pending')
-                                        ->native(false),
+                                        ->native(false)
+                                        ->live(),
                                     Forms\Components\Select::make('status')
                                         ->label('Status Pendaftaran')
                                         ->options([
@@ -170,17 +184,23 @@ class RegistrationResource extends Resource
                                         ])
                                         ->default('pending')
                                         ->native(false),
+                                    Forms\Components\Textarea::make('rejection_reason')
+                                        ->label('Alasan Penolakan')
+                                        ->nullable()
+                                        ->rows(2)
+                                        ->visible(fn (Forms\Get $get) => $get('payment_status') === 'rejected')
+                                        ->columnSpanFull(),
                                     Forms\Components\Placeholder::make('payment_verified_info')
                                         ->label('Pembayaran diverifikasi oleh')
                                         ->content(fn ($record) => $record?->payment_verified_at
-                                            ? ($record->paymentVerifiedBy?->name ?? '—') . ' · ' . $record->payment_verified_at->format('d M Y, H:i')
+                                            ? ($record->paymentVerifiedBy?->full_name ?? '—') . ' · ' . $record->payment_verified_at->format('d M Y, H:i')
                                             : '—'
                                         )
                                         ->visibleOn('edit'),
                                     Forms\Components\Placeholder::make('registration_verified_info')
                                         ->label('Registrasi dikonfirmasi oleh')
                                         ->content(fn ($record) => $record?->registration_verified_at
-                                            ? ($record->registrationVerifiedBy?->name ?? '—') . ' · ' . $record->registration_verified_at->format('d M Y, H:i')
+                                            ? ($record->registrationVerifiedBy?->full_name ?? '—') . ' · ' . $record->registration_verified_at->format('d M Y, H:i')
                                             : '—'
                                         )
                                         ->visibleOn('edit'),
@@ -221,6 +241,7 @@ class RegistrationResource extends Resource
     public static function table(Table $table): Table
     {
         return $table
+            ->modifyQueryUsing(fn ($query) => $query->with(['paymentVerifiedBy', 'registrationVerifiedBy']))
             ->columns([
                 Tables\Columns\TextColumn::make('registration_number')
                     ->label('No. Daftar')
@@ -240,6 +261,10 @@ class RegistrationResource extends Resource
                     ->label('Kelas')
                     ->badge()
                     ->formatStateUsing(fn ($state) => 'Kelas ' . $state),
+                Tables\Columns\TextColumn::make('tshirt_size')
+                    ->label('Size')
+                    ->sortable()
+                    ->toggleable(isToggledHiddenByDefault: true),
                 Tables\Columns\TextColumn::make('parent_whatsapp')
                     ->label('WA Ortu')
                     ->copyable()
@@ -267,18 +292,18 @@ class RegistrationResource extends Resource
                         'success' => 'confirmed',
                         'danger'  => 'cancelled',
                     ]),
-                Tables\Columns\TextColumn::make('payment_verified_info')
+                Tables\Columns\TextColumn::make('payment_verified_at')
                     ->label('Verif. Pembayaran')
-                    ->getStateUsing(fn ($record) => $record->payment_verified_at
-                        ? ($record->paymentVerifiedBy?->name ?? '—') . "\n" . $record->payment_verified_at->format('d M Y, H:i')
+                    ->formatStateUsing(fn ($state, $record) => $state
+                        ? ($record->paymentVerifiedBy->full_name ?? '—') . " • " . $state->format('d M Y, H:i')
                         : '—'
                     )
                     ->wrap()
                     ->toggleable(isToggledHiddenByDefault: true),
-                Tables\Columns\TextColumn::make('registration_verified_info')
+                Tables\Columns\TextColumn::make('registration_verified_at')
                     ->label('Konfirmasi Registrasi')
-                    ->getStateUsing(fn ($record) => $record->registration_verified_at
-                        ? ($record->registrationVerifiedBy?->name ?? '—') . "\n" . $record->registration_verified_at->format('d M Y, H:i')
+                    ->formatStateUsing(fn ($state, $record) => $state
+                        ? ($record->registrationVerifiedBy->full_name ?? '—') . " • " . $state->format('d M Y, H:i')
                         : '—'
                     )
                     ->wrap()
@@ -319,72 +344,60 @@ class RegistrationResource extends Resource
                 Tables\Filters\TrashedFilter::make(),
             ])
             ->actions([
-                Tables\Actions\Action::make('verify')
-                    ->label('Verifikasi')
-                    ->icon('heroicon-o-check-circle')
-                    ->color('success')
+                Tables\Actions\Action::make('check_payment')
+                    ->label('Cek Pembayaran')
+                    ->icon('heroicon-o-banknotes')
+                    ->color('info')
                     ->visible(fn ($record) => $record->payment_status === 'pending')
-                    ->requiresConfirmation()
-                    ->modalHeading('Verifikasi Pembayaran')
-                    ->modalDescription('Pastikan bukti transfer sudah sesuai. Setelah diverifikasi, data peserta akan otomatis dibuat.')
-                    ->action(function ($record) {
-                        \Illuminate\Support\Facades\DB::table('registrations')
-                            ->where('id', $record->id)
-                            ->update([
+                    ->modalHeading('Cek Pembayaran')
+                    ->modalWidth('2xl')
+                    ->modalContent(fn ($record) => view(
+                        'filament.registrations.payment-check',
+                        ['record' => $record->load(['wilayah', 'lingkungan', 'paymentTier', 'paymentVerifiedBy'])]
+                    ))
+                    ->form([
+                        Forms\Components\Radio::make('action_type')
+                            ->label('Keputusan')
+                            ->options([
+                                'verified' => 'Verifikasi Pembayaran',
+                                'rejected' => 'Tolak Pembayaran (Berikan Alasan)',
+                            ])
+                            ->required()
+                            ->live(),
+                        Forms\Components\Textarea::make('rejection_reason')
+                            ->label('Alasan Penolakan')
+                            ->rows(2)
+                            ->nullable()
+                            ->visible(fn (Forms\Get $get) => $get('action_type') === 'rejected'),
+                    ])
+                    ->modalSubmitActionLabel('Proses')
+                    ->action(function ($record, array $data) {
+                        if ($data['action_type'] === 'verified') {
+                            $record->update([
                                 'payment_status'           => 'verified',
                                 'payment_verified_by'      => auth()->id(),
                                 'payment_verified_at'      => now(),
                                 'status'                   => 'confirmed',
                                 'registration_verified_by' => auth()->id(),
                                 'registration_verified_at' => now(),
-                                'updated_at'               => now(),
                             ]);
-                        $record->refresh();
 
-                        // Auto-create participant
-                        if (!$record->participant) {
-                            \App\Models\Participant::create([
-                                'registration_id'  => $record->id,
-                                'event_period_id'  => $record->event_period_id,
-                                'event_class_id'   => null, // assigned later
-                                'child_full_name'  => $record->child_full_name,
-                                'nickname'         => $record->nickname,
-                                'gender'           => $record->gender,
-                                'birth_date'       => $record->birth_date,
-                                'grade'            => $record->grade,
-                                'parent_name'      => $record->parent_name,
-                                'parent_whatsapp'        => $record->parent_whatsapp,
-                                'tshirt_size'      => $record->tshirt_size,
-                                'allergies'        => $record->allergies,
-                                'notes'            => $record->notes,
-                                'created_by'       => auth()->id(),
+                            Notification::make()
+                                ->title('✅ Pembayaran terverifikasi!')
+                                ->success()
+                                ->send();
+                        } else {
+                            $record->update([
+                                'payment_status'   => 'rejected',
+                                'status'           => 'cancelled',
+                                'rejection_reason' => $data['rejection_reason'] ?? null,
                             ]);
+
+                            Notification::make()
+                                ->title('Pembayaran ditolak.')
+                                ->warning()
+                                ->send();
                         }
-
-                        Notification::make()
-                            ->title('✅ Pembayaran terverifikasi, data peserta berhasil dibuat!')
-                            ->success()
-                            ->send();
-                    }),
-
-                Tables\Actions\Action::make('reject')
-                    ->label('Tolak')
-                    ->icon('heroicon-o-x-circle')
-                    ->color('danger')
-                    ->visible(fn ($record) => $record->payment_status === 'pending')
-                    ->requiresConfirmation()
-                    ->modalHeading('Tolak Pembayaran')
-                    ->modalDescription('Pendaftaran akan ditandai sebagai ditolak.')
-                    ->action(function ($record) {
-                        $record->update([
-                            'payment_status' => 'rejected',
-                            'status'         => 'cancelled',
-                        ]);
-
-                        Notification::make()
-                            ->title('Pembayaran ditolak.')
-                            ->warning()
-                            ->send();
                     }),
 
                 Tables\Actions\Action::make('generate_participant')

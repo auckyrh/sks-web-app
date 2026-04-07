@@ -404,6 +404,7 @@
                                     '2XL-Dewasa' => ['panjang' => 72, 'lebar' => 55],
                                     '3XL-Dewasa' => ['panjang' => 74, 'lebar' => 59],
                                     '4XL-Dewasa' => ['panjang' => 76, 'lebar' => 63],
+                                    '5XL-Dewasa' => ['panjang' => 78, 'lebar' => 67],
                                 ];
                             @endphp
                             <div

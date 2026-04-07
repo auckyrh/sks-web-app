@@ -1,7 +1,8 @@
 @php
-    $old  = $activity->properties->get('old', []);
-    $new  = $activity->properties->get('attributes', []);
-    $keys = array_keys($old);
+    $isCreated = $activity->description === 'created';
+    $old  = $isCreated ? [] : ($activity->attribute_changes?->get('old', []) ?? []);
+    $new  = $activity->attribute_changes?->get('attributes', []) ?? [];
+    $keys = $isCreated ? array_keys($new) : array_keys($old);
 @endphp
 
 <div style="font-size:0.875rem;">

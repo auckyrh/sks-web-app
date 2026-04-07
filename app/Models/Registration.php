@@ -19,16 +19,21 @@ class Registration extends Model
         return LogOptions::defaults()
             ->useLogName('Registrasi')
             ->logOnly([
-                'payment_status', 'status',
+                // Data anak
+                'child_full_name', 'nickname', 'gender', 'birth_date', 'address',
+                'grade', 'tshirt_size', 'allergies', 'notes',
+                'wilayah_id', 'lingkungan_id', 'registration_source', 'has_joined_biak_yck',
+                // Data orang tua
+                'parent_name', 'parent_whatsapp',
+                // Pembayaran
                 'payment_tier_id', 'payment_amount', 'donation_amount',
                 'payment_date', 'payer_name', 'payment_proof_path',
-                'payment_verified_by', 'payment_verified_at',
-                'registration_verified_by', 'registration_verified_at',
-                'tshirt_size', 'grade', 'wilayah_id', 'lingkungan_id',
+                'payment_status', 'payment_verified_by', 'payment_verified_at', 'rejection_reason',
+                // Status registrasi
+                'status', 'registration_verified_by', 'registration_verified_at',
             ])
             ->logOnlyDirty();
     }
-
     public function activities(): \Illuminate\Database\Eloquent\Relations\MorphMany
     {
         return $this->morphMany(\Spatie\Activitylog\Models\Activity::class, 'subject');
@@ -107,6 +112,27 @@ class Registration extends Model
 
             if ($old && $old !== $new) {
                 \Illuminate\Support\Facades\Storage::disk('public')->delete($old);
+            }
+
+            // Auto-stamp or clear verified_by / verified_at when status changes
+            if ($registration->isDirty('payment_status')) {
+                if ($registration->payment_status === 'verified' && ! $registration->payment_verified_at) {
+                    $registration->payment_verified_by = auth()->id();
+                    $registration->payment_verified_at = now();
+                } elseif ($registration->payment_status !== 'verified') {
+                    $registration->payment_verified_by = null;
+                    $registration->payment_verified_at = null;
+                }
+            }
+
+            if ($registration->isDirty('status')) {
+                if ($registration->status === 'confirmed' && ! $registration->registration_verified_at) {
+                    $registration->registration_verified_by = auth()->id();
+                    $registration->registration_verified_at = now();
+                } elseif ($registration->status !== 'confirmed') {
+                    $registration->registration_verified_by = null;
+                    $registration->registration_verified_at = null;
+                }
             }
         });
 

@@ -18,7 +18,12 @@ class Participant extends Model
     {
         return LogOptions::defaults()
             ->useLogName('Peserta')
-            ->logOnly(['event_class_id', 'team_id', 'grade', 'tshirt_size'])
+            ->logOnly([
+                'child_full_name', 'nickname', 'gender', 'birth_date',
+                'grade', 'tshirt_size', 'allergies', 'notes',
+                'parent_name', 'parent_whatsapp',
+                'event_class_id', 'group_id',
+            ])
             ->logOnlyDirty();
     }
     protected $fillable = [

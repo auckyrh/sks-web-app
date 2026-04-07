@@ -51,8 +51,9 @@ class ActivityLogRelationManager extends RelationManager
 
                 Tables\Columns\TextColumn::make('changes_count')
                     ->label('Field Berubah')
-                    ->getStateUsing(fn (Activity $record) =>
-                        count($record->properties->get('old', []))
+                    ->getStateUsing(fn (Activity $record) => $record->description === 'created'
+                        ? count($record->attribute_changes?->get('attributes', []) ?? [])
+                        : count($record->attribute_changes?->get('old', []) ?? [])
                     )
                     ->suffix(' field')
                     ->color('gray'),
@@ -63,8 +64,9 @@ class ActivityLogRelationManager extends RelationManager
                     ->icon('heroicon-o-magnifying-glass')
                     ->color('gray')
                     ->visible(fn (Activity $record) =>
-                        $record->description === 'updated' &&
-                        ! empty($record->properties->get('old', []))
+                        ! empty($record->attribute_changes?->get(
+                            $record->description === 'created' ? 'attributes' : 'old', []
+                        ) ?? [])
                     )
                     ->modalHeading('Detail Perubahan')
                     ->modalContent(fn (Activity $record) => view(
