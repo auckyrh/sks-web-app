@@ -178,7 +178,6 @@
             <div style="display:flex; gap:0.5rem; margin-bottom:1rem;">
                 <button wire:click="$set('searchType', 'registration_number')"
                         class="crs-tab {{ $searchType === 'registration_number' ? 'active' : '' }}">
-                    <svg style="width:13px;height:13px;display:inline;vertical-align:-2px;margin-right:4px;" fill="none" viewBox="0 0 24 24" stroke-width="1.75" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M5.25 8.25h15m-16.5 7.5h15m-1.8-13.5-3.9 19.5m-2.1-19.5-3.9 19.5"/></svg>
                     No. Pendaftaran
                 </button>
                 <button wire:click="$set('searchType', 'parent_whatsapp')"
@@ -279,8 +278,14 @@
                                 </div>
                                 <div class="crs-row">
                                     <span class="crs-row-label">Tanggal Daftar</span>
-                                    <span class="crs-row-val">{{ $reg->created_at->format('d M Y') }}</span>
+                                    <span class="crs-row-val">{{ $reg->created_at->format('d M Y - h:i:s') }}</span>
                                 </div>
+                                @if($reg->payment_status === 'rejected' && $reg->rejection_reason)
+                                    <div style="padding:0.75rem 1.25rem; background:#fff5f5; border-top:1px solid #fecaca;">
+                                        <div style="font-size:0.7rem; color:#dc2626; font-weight:600; margin-bottom:0.25rem; text-transform:uppercase; letter-spacing:0.04em;">Alasan Penolakan</div>
+                                        <div style="font-size:0.8125rem; color:#7f1d1d; line-height:1.5;">{{ $reg->rejection_reason }}</div>
+                                    </div>
+                                @endif
                             </div>
 
                         </div>
