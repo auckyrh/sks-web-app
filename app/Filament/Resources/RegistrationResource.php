@@ -257,14 +257,15 @@ class RegistrationResource extends Resource
                     ->label('Wilayah')
                     ->searchable()
                     ->sortable(),
-                Tables\Columns\TextColumn::make('grade')
-                    ->label('Kelas')
-                    ->badge()
-                    ->formatStateUsing(fn ($state) => 'Kelas ' . $state),
                 Tables\Columns\TextColumn::make('tshirt_size')
                     ->label('Size')
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
+                Tables\Columns\TextColumn::make('grade')
+                    ->label('Kelas')
+                    ->badge()
+                    ->toggleable(isToggledHiddenByDefault: true)
+                    ->formatStateUsing(fn ($state) => 'Kelas ' . $state),
                 Tables\Columns\TextColumn::make('parent_whatsapp')
                     ->label('WA Ortu')
                     ->copyable()
