@@ -13,8 +13,8 @@
             <thead>
                 <tr style="border-bottom:2px solid #e5e7eb;">
                     <th style="text-align:left; padding:0.5rem 0.75rem; color:#6b7280; font-weight:600; width:35%;">Field</th>
-                    <th style="text-align:left; padding:0.5rem 0.75rem; color:#dc2626; font-weight:600; width:32.5%;">Sebelum</th>
-                    <th style="text-align:left; padding:0.5rem 0.75rem; color:#16a34a; font-weight:600; width:32.5%;">Sesudah</th>
+                    <th style="text-align:left; padding:0.5rem 0.75rem; color:#dc2626; font-weight:600; width:32.5%;">Before</th>
+                    <th style="text-align:left; padding:0.5rem 0.75rem; color:#16a34a; font-weight:600; width:32.5%;">After</th>
                 </tr>
             </thead>
             <tbody>

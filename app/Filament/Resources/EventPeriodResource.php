@@ -39,6 +39,12 @@ class EventPeriodResource extends Resource
                             ->label('Tema')
                             ->required()
                             ->maxLength(255),
+                        Forms\Components\TextInput::make('max_participants')
+                            ->label('Maks. Peserta')
+                            ->numeric()
+                            ->minValue(1)
+                            ->nullable()
+                            ->helperText('Kosongkan jika tidak ada batas'),
                         Forms\Components\Toggle::make('is_active')
                             ->label('Aktif (Tahun Berjalan)')
                             ->helperText('Hanya 1 event yang bisa aktif dalam satu waktu bersamaan')
@@ -109,6 +115,10 @@ class EventPeriodResource extends Resource
                 Tables\Columns\IconColumn::make('is_active')
                     ->label('Aktif')
                     ->boolean(),
+                Tables\Columns\TextColumn::make('max_participants')
+                    ->label('Maks. Peserta')
+                    ->formatStateUsing(fn ($state) => $state ? number_format($state, 0, ',', '.') : '∞')
+                    ->sortable(),
                 Tables\Columns\TextColumn::make('event_date')
                     ->label('Tanggal Event')
                     ->getStateUsing(function ($record) {

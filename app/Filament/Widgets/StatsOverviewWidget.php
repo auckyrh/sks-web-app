@@ -46,7 +46,10 @@ class StatsOverviewWidget extends BaseWidget
 
         return [
             Stat::make('Total Pendaftaran', $total)
-                ->description('7 hari terakhir')
+                ->description($period->max_participants
+                    ? 'Maksimum ' . number_format($period->max_participants, 0, ',', '.') . ' pendaftar'
+                    : 'Semua pendaftaran periode aktif'
+                )
                 ->descriptionIcon('heroicon-m-clipboard-document-list')
                 ->chart($last7)
                 ->color('primary'),
@@ -72,7 +75,7 @@ class StatsOverviewWidget extends BaseWidget
                 ->color('success'),
 
             Stat::make('Total Pembayaran', 'Rp ' . number_format($totalPayment, 0, ',', '.'))
-                ->description('Donasi: Rp ' . number_format($totalDonation, 0, ',', '.'))
+                ->description('Donasi: Rp ' . number_format($totalDonation, 0, ',', '.') . ' · verified only')
                 ->descriptionIcon('heroicon-m-banknotes')
                 ->color('primary'),
         ];

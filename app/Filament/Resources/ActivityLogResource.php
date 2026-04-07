@@ -32,13 +32,13 @@ class ActivityLogResource extends Resource
             ->query(Activity::query()->with('causer')->latest())
             ->columns([
                 Tables\Columns\TextColumn::make('created_at')
-                    ->label('Waktu')
+                    ->label('Timestamp')
                     ->dateTime('d M Y, H:i')
                     ->sortable()
                     ->width('140px'),
 
                 Tables\Columns\TextColumn::make('causer.full_name')
-                    ->label('Oleh')
+                    ->label('Causer')
                     ->default('— Sistem —')
                     ->searchable()
                     ->width('140px'),
@@ -48,12 +48,12 @@ class ActivityLogResource extends Resource
                     ->color('primary'),
 
                 Tables\Columns\BadgeColumn::make('description')
-                    ->label('Aksi')
+                    ->label('Action')
                     ->formatStateUsing(fn ($state) => match ($state) {
-                        'created' => 'Dibuat',
-                        'updated' => 'Diperbarui',
-                        'deleted' => 'Dihapus',
-                        'restored' => 'Dipulihkan',
+                        'created' => 'created',
+                        'updated' => 'updated',
+                        'deleted' => 'deleted',
+                        'restored' => 'restored',
                         default   => $state,
                     })
                     ->color(fn ($state) => match ($state) {
@@ -69,7 +69,7 @@ class ActivityLogResource extends Resource
                     ->width('80px'),
 
                 Tables\Columns\TextColumn::make('changes_count')
-                    ->label('Perubahan')
+                    ->label('Changes/Perubahan')
                     ->getStateUsing(fn (Activity $record) => $record->description === 'created'
                         ? count($record->attribute_changes?->get('attributes', []) ?? [])
                         : count($record->attribute_changes?->get('old', []) ?? [])
@@ -87,17 +87,17 @@ class ActivityLogResource extends Resource
                             ->toArray()
                     ),
                 Tables\Filters\SelectFilter::make('description')
-                    ->label('Aksi')
+                    ->label('Action')
                     ->options([
-                        'created'  => 'Dibuat',
-                        'updated'  => 'Diperbarui',
-                        'deleted'  => 'Dihapus',
-                        'restored' => 'Dipulihkan',
+                        'created'  => 'created',
+                        'updated'  => 'updated',
+                        'deleted'  => 'deleted',
+                        'restored' => 'restored',
                     ]),
                 Tables\Filters\Filter::make('created_at')
                     ->form([
-                        \Filament\Forms\Components\DatePicker::make('from')->label('Dari'),
-                        \Filament\Forms\Components\DatePicker::make('until')->label('Sampai'),
+                        \Filament\Forms\Components\DatePicker::make('from')->label('from'),
+                        \Filament\Forms\Components\DatePicker::make('until')->label('until'),
                     ])
                     ->query(function ($query, array $data) {
                         return $query
@@ -123,7 +123,7 @@ class ActivityLogResource extends Resource
                         ['activity' => $record]
                     ))
                     ->modalSubmitAction(false)
-                    ->modalCancelActionLabel('Tutup'),
+                    ->modalCancelActionLabel('Close'),
             ])
             ->defaultSort('created_at', 'desc')
             ->defaultPaginationPageOption(25)
