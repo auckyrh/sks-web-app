@@ -126,7 +126,7 @@ class ActivityLogResource extends Resource
                     ->modalCancelActionLabel('Close'),
             ])
             ->defaultSort('created_at', 'desc')
-            ->defaultPaginationPageOption(25)
+            ->defaultPaginationPageOption(50)
             ->striped();
     }
 

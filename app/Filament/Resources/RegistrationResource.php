@@ -470,7 +470,7 @@ class RegistrationResource extends Resource
                     Tables\Actions\RestoreBulkAction::make(),
                 ]),
             ])
-            ->defaultPaginationPageOption(25);
+            ->defaultPaginationPageOption(50);
     }
 
     public static function getRelations(): array

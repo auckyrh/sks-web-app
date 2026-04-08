@@ -323,7 +323,8 @@ class EventPeriodResource extends Resource
                 Tables\Actions\BulkActionGroup::make([
                     Tables\Actions\DeleteBulkAction::make(),
                 ]),
-            ]);
+            ])
+            ->defaultPaginationPageOption(50);
     }
 
     public static function getEloquentQuery(): Builder

@@ -157,7 +157,8 @@ class UserResource extends Resource
                     Tables\Actions\DeleteBulkAction::make(),
                     Tables\Actions\RestoreBulkAction::make(),
                 ]),
-            ]);
+            ])
+            ->defaultPaginationPageOption(50);
     }
 
     public static function getRelations(): array
