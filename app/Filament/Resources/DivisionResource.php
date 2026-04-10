@@ -28,7 +28,8 @@ class DivisionResource extends Resource
             Forms\Components\TextInput::make('name')
                 ->label('Nama Divisi')
                 ->required()
-                ->maxLength(255),
+                ->maxLength(255)
+                ->helperText('Misal: Acara, Konsumsi, Perlengkapan, Dokumentasi'),
             Forms\Components\Select::make('access_level')
                 ->label('Level Akses')
                 ->options([
@@ -36,7 +37,8 @@ class DivisionResource extends Resource
                     'lower' => 'Lower — Read Only',
                 ])
                 ->required()
-                ->native(false),
+                ->native(false)
+                ->helperText('Upper: dapat mengelola data. Lower: hanya bisa melihat.'),
         ]);
     }
 
@@ -44,9 +46,6 @@ class DivisionResource extends Resource
     {
         return $table
             ->columns([
-                Tables\Columns\TextColumn::make('id')
-                    ->label('ID')
-                    ->sortable(),
                 Tables\Columns\TextColumn::make('name')
                     ->label('Nama Divisi')
                     ->searchable()
@@ -58,6 +57,12 @@ class DivisionResource extends Resource
                         'danger'  => 'lower',
                     ])
                     ->formatStateUsing(fn ($state) => $state === 'upper' ? 'Upper' : 'Lower'),
+                Tables\Columns\TextColumn::make('committee_assignments_count')
+                    ->label('Panitia')
+                    ->counts('committeeAssignments')
+                    ->badge()
+                    ->color('gray')
+                    ->sortable(),
                 Tables\Columns\TextColumn::make('created_at')
                     ->label('Dibuat')
                     ->dateTime('d M Y')

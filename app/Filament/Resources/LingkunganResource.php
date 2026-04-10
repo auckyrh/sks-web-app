@@ -43,6 +43,8 @@ class LingkunganResource extends Resource
             ->columns([
                 Tables\Columns\TextColumn::make('wilayah.name')
                     ->label('Wilayah')
+                    ->badge()
+                    ->color('primary')
                     ->searchable()
                     ->sortable(),
                 Tables\Columns\TextColumn::make('name')
@@ -55,6 +57,7 @@ class LingkunganResource extends Resource
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
             ])
+            ->defaultSort('name')
             ->filters([
                 Tables\Filters\SelectFilter::make('wilayah')
                     ->relationship('wilayah', 'name')
