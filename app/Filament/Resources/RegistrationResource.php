@@ -394,12 +394,9 @@ class RegistrationResource extends Resource
                     ->action(function ($record, array $data) {
                         if ($data['action_type'] === 'verified') {
                             $record->update([
-                                'payment_status'           => 'verified',
-                                'payment_verified_by'      => auth()->id(),
-                                'payment_verified_at'      => now(),
-                                'status'                   => 'confirmed',
-                                'registration_verified_by' => auth()->id(),
-                                'registration_verified_at' => now(),
+                                'payment_status'      => 'verified',
+                                'payment_verified_by' => auth()->id(),
+                                'payment_verified_at' => now(),
                             ]);
 
                             Notification::make()
@@ -409,7 +406,6 @@ class RegistrationResource extends Resource
                         } else {
                             $record->update([
                                 'payment_status'   => 'rejected',
-                                'status'           => 'cancelled',
                                 'rejection_reason' => $data['rejection_reason'] ?? null,
                             ]);
 
