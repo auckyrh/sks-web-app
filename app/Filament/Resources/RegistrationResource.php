@@ -361,6 +361,25 @@ class RegistrationResource extends Resource
                         1 => 'Kelas 1', 2 => 'Kelas 2', 3 => 'Kelas 3',
                         4 => 'Kelas 4', 5 => 'Kelas 5', 6 => 'Kelas 6',
                     ]),
+                Tables\Filters\SelectFilter::make('tshirt_size')
+                    ->label('Ukuran Kaos')
+                    ->options([
+                        'S'          => 'S',
+                        'M'          => 'M',
+                        'L'          => 'L',
+                        'XL'         => 'XL',
+                        '2XL'        => '2XL',
+                        '3XL'        => '3XL',
+                        '4XL'        => '4XL',
+                        '5XL'        => '5XL',
+                        'M-Dewasa'   => 'M-Dewasa',
+                        'L-Dewasa'   => 'L-Dewasa',
+                        'XL-Dewasa'  => 'XL-Dewasa',
+                        '2XL-Dewasa' => '2XL-Dewasa',
+                        '3XL-Dewasa' => '3XL-Dewasa',
+                        '4XL-Dewasa' => '4XL-Dewasa',
+                        '5XL-Dewasa' => '5XL-Dewasa',
+                    ]),
                 Tables\Filters\TrashedFilter::make(),
             ])
             ->actions([
