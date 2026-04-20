@@ -10,7 +10,7 @@ use Filament\Widgets\ChartWidget;
 class CommitteeByDivisionWidget extends ChartWidget
 {
     protected static ?string $heading = 'Komite per Divisi';
-    protected static ?int $sort = 4;
+    protected static ?int $sort = 5;
     protected static ?string $maxHeight = '300px';
 
     protected function getData(): array
