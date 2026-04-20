@@ -481,10 +481,18 @@
 
     <x-slot:scripts>
         <script>
-            const formUrl      = @json(route('registration.form'));
-            const upcomingTier = @json($upcomingTierData);
+            const formUrl         = @json(route('registration.form'));
+            const upcomingTier    = @json($upcomingTierData);
+            const skipParokiCheck = @json($skipParokiCheck);
 
             function handleDaftarClick() {
+                // When all tiers (including Umum) are already open, skip the paroki check
+                // and go directly to the registration form.
+                if (skipParokiCheck) {
+                    window.location.href = formUrl;
+                    return;
+                }
+
                 Swal.fire({
                     title: 'Apakah Anda umat Paroki Santo Yakobus?',
                     icon: 'question',
