@@ -253,6 +253,11 @@ class RegistrationResource extends Resource
                     ->searchable()
                     ->copyable()
                     ->sortable(),
+                Tables\Columns\TextColumn::make('parent_name')
+                    ->label('Nama Ortu')
+                    ->searchable()
+                    ->copyable()
+                    ->toggleable(isToggledHiddenByDefault: true),
                 Tables\Columns\TextColumn::make('wilayah.name')
                     ->label('Wilayah')
                     ->searchable()
