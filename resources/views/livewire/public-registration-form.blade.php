@@ -398,6 +398,7 @@
                                     '3XL'        => ['panjang' => 57, 'lebar' => 42],
                                     '4XL'        => ['panjang' => 61, 'lebar' => 44],
                                     '5XL'        => ['panjang' => 65, 'lebar' => 45],
+                                    'S-Dewasa'   => ['panjang' => 64, 'lebar' => 45],
                                     'M-Dewasa'   => ['panjang' => 66, 'lebar' => 47],
                                     'L-Dewasa'   => ['panjang' => 68, 'lebar' => 49],
                                     'XL-Dewasa'  => ['panjang' => 70, 'lebar' => 51],

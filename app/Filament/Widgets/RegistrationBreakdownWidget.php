@@ -31,7 +31,7 @@ class RegistrationBreakdownWidget extends Widget
 
         $sizeOptions = [
             'S', 'M', 'L', 'XL', '2XL', '3XL', '4XL', '5XL',
-            'M-Dewasa', 'L-Dewasa', 'XL-Dewasa',
+            'S-Dewasa', 'M-Dewasa', 'L-Dewasa', 'XL-Dewasa',
             '2XL-Dewasa', '3XL-Dewasa', '4XL-Dewasa', '5XL-Dewasa',
         ];
 
