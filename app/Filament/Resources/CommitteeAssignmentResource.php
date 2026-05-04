@@ -24,7 +24,7 @@ class CommitteeAssignmentResource extends Resource
     public static function form(Form $form): Form
     {
         return $form->schema([
-            Forms\Components\Section::make()->schema([
+            Forms\Components\Section::make('Data Penugasan')->schema([
 
                 Forms\Components\Select::make('user_id')
                     ->label('Panitia')
@@ -103,6 +103,10 @@ class CommitteeAssignmentResource extends Resource
                         'coordinator' => 'Coordinator',
                         'regular'     => 'Regular',
                     ]),
+                Tables\Filters\TernaryFilter::make('is_active')
+                    ->label('Status Aktif')
+                    ->trueLabel('Aktif')
+                    ->falseLabel('Tidak Aktif'),
             ])
             ->actions([
                 Tables\Actions\EditAction::make(),

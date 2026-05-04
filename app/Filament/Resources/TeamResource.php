@@ -25,7 +25,7 @@ class TeamResource extends Resource
     public static function form(Form $form): Form
     {
         return $form->schema([
-            Forms\Components\Section::make()->schema([
+            Forms\Components\Section::make('Informasi Tim')->schema([
                 Forms\Components\Select::make('event_period_id')
                     ->label('Event Period')
                     ->relationship('eventPeriod', 'year')

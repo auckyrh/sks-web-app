@@ -26,7 +26,7 @@ class GatheringResource extends Resource
     public static function form(Form $form): Form
     {
         return $form->schema([
-            Forms\Components\Section::make()->schema([
+            Forms\Components\Section::make('Informasi Pertemuan')->schema([
                 Forms\Components\Select::make('event_period_id')
                     ->label('Event Period')
                     ->relationship('eventPeriod', 'year')
@@ -85,6 +85,23 @@ class GatheringResource extends Resource
                 Tables\Columns\TextColumn::make('location')
                     ->label('Lokasi')
                     ->searchable(),
+                Tables\Columns\TextColumn::make('rsvps_count')
+                    ->label('RSVP')
+                    ->counts('rsvps')
+                    ->badge()
+                    ->color('info')
+                    ->sortable(),
+                Tables\Columns\TextColumn::make('attendances_count')
+                    ->label('Hadir')
+                    ->counts('attendances')
+                    ->badge()
+                    ->color('success')
+                    ->sortable(),
+                Tables\Columns\TextColumn::make('notes')
+                    ->label('Catatan')
+                    ->limit(40)
+                    ->default('—')
+                    ->toggleable(isToggledHiddenByDefault: true),
             ])
             ->defaultSort('date', 'asc')
             ->filters([
