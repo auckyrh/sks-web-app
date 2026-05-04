@@ -27,13 +27,25 @@ class Participant extends Model
             ->logOnlyDirty();
     }
     protected $fillable = [
-        'registration_id', 'event_period_id', 'event_class_id', 'group_id',
+        'registration_id', 'event_period_id', 'event_class_id', 'team_id', 'group_id',
         'child_full_name', 'nickname', 'gender', 'birth_date', 'grade',
-        'parent_name', 'parent_whatsapp', 'tshirt_size', 'allergies', 'notes',
+        'parent_name', 'parent_whatsapp', 'tshirt_size', 'tshirt_size_id', 'allergies', 'notes',
         'created_by', 'deleted_by'
     ];
 
     protected $casts = ['birth_date' => 'date'];
+
+    protected static function booted(): void
+    {
+        // Sync tshirt_size_id whenever tshirt_size string is set
+        static::saving(function ($participant) {
+            if ($participant->isDirty('tshirt_size') && $participant->event_period_id && $participant->tshirt_size) {
+                $participant->tshirt_size_id = TshirtSize::where('event_period_id', $participant->event_period_id)
+                    ->where('code', $participant->tshirt_size)
+                    ->value('id');
+            }
+        });
+    }
 
     public function registration(): BelongsTo
     {
@@ -53,6 +65,11 @@ class Participant extends Model
     public function team(): BelongsTo
     {
         return $this->belongsTo(Team::class);
+    }
+
+    public function tshirtSize(): BelongsTo
+    {
+        return $this->belongsTo(TshirtSize::class);
     }
 
     public function rsvps(): HasMany

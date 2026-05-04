@@ -21,7 +21,8 @@ class CommitteeAssignment extends Model
     protected $table = 'committee_assignments';
 
     protected $fillable = [
-        'user_id', 'event_period_id', 'division_id', 'position', 'is_active'
+        'user_id', 'event_period_id', 'division_id', 'position', 'is_active',
+        'tshirt_size_id', 'notes',
     ];
 
     protected $casts = ['is_active' => 'boolean'];
@@ -39,6 +40,11 @@ class CommitteeAssignment extends Model
     public function division(): BelongsTo
     {
         return $this->belongsTo(Division::class);
+    }
+
+    public function tshirtSize(): BelongsTo
+    {
+        return $this->belongsTo(TshirtSize::class);
     }
 
     public function isUpperDivision(): bool

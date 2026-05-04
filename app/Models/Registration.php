@@ -41,7 +41,7 @@ class Registration extends Model
     protected $fillable = [
         'event_period_id', 'registration_number', 'child_full_name', 'nickname',
         'gender', 'birth_date', 'address', 'wilayah_id', 'lingkungan_id',
-        'grade', 'registration_source', 'has_joined_biak_yck', 'tshirt_size',
+        'grade', 'registration_source', 'has_joined_biak_yck', 'tshirt_size', 'tshirt_size_id',
         'parent_name', 'parent_whatsapp', 'allergies', 'notes',
         'payment_proof_path', 'payer_name', 'payment_date', 'payment_tier_id', 'payment_amount', 'donation_amount',
         'payment_status', 'payment_verified_by', 'payment_verified_at',
@@ -90,6 +90,11 @@ class Registration extends Model
         return $this->belongsTo(User::class, 'registration_verified_by');
     }
 
+    public function tshirtSize(): BelongsTo
+    {
+        return $this->belongsTo(TshirtSize::class);
+    }
+
     public function participant(): HasOne
     {
         return $this->hasOne(Participant::class);
@@ -98,6 +103,15 @@ class Registration extends Model
 // Auto-generate registration number
     protected static function booted(): void
     {
+        // Sync tshirt_size_id whenever tshirt_size string is set
+        static::saving(function ($registration) {
+            if ($registration->isDirty('tshirt_size') && $registration->event_period_id && $registration->tshirt_size) {
+                $registration->tshirt_size_id = TshirtSize::where('event_period_id', $registration->event_period_id)
+                    ->where('code', $registration->tshirt_size)
+                    ->value('id');
+            }
+        });
+
         // Generate Registration Number after user submit the registration form
         static::creating(function ($registration) {
             $year = now()->year;
