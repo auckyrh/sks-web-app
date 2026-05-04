@@ -6,6 +6,7 @@ use App\Models\EventPeriod;
 use App\Models\Lingkungan;
 use App\Models\PaymentTier;
 use App\Models\Registration;
+use App\Models\TshirtSize;
 use App\Models\Wilayah;
 use Illuminate\Support\Str;
 use Livewire\Component;
@@ -88,6 +89,15 @@ class PublicRegistrationForm extends Component
             ->get();
     }
 
+    public function getTshirtSizesProperty()
+    {
+        if (!$this->activePeriod) return collect();
+        return TshirtSize::where('event_period_id', $this->activePeriod->id)
+            ->where('is_active', true)
+            ->orderBy('sort_order')
+            ->get();
+    }
+
     public function updatedIsParokiMember(): void
     {
         $this->wilayah_id    = null;
@@ -123,7 +133,7 @@ class PublicRegistrationForm extends Component
             'lingkungan_id'   => 'nullable|exists:lingkungans,id',
             'grade' => 'required|integer|min:1|max:6',
             'registration_source' => 'required|in:BIAK,YCK,UMUM',
-            'tshirt_size' => 'required|in:XS,S,M,L,XL,2XL,3XL,4XL,5XL,S-Dewasa,M-Dewasa,L-Dewasa,XL-Dewasa,2XL-Dewasa,3XL-Dewasa,4XL-Dewasa',
+            'tshirt_size' => ['required', 'in:' . TshirtSize::where('event_period_id', $this->activePeriod?->id)->where('is_active', true)->pluck('code')->implode(',')],
             'parent_name' => 'required|string|max:255',
             'parent_whatsapp' => 'required|string|max:20',
             'payment_tier_id' => 'required|exists:payment_tiers,id',

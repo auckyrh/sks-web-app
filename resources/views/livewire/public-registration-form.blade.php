@@ -388,26 +388,6 @@
                             </div>
 
                             {{-- Ukuran Kaos — full width so warning text has room --}}
-                            @php
-                                $shirtSizes = [
-                                    'S'          => ['panjang' => 39, 'lebar' => 30],
-                                    'M'          => ['panjang' => 43, 'lebar' => 32],
-                                    'L'          => ['panjang' => 46, 'lebar' => 35],
-                                    'XL'         => ['panjang' => 50, 'lebar' => 37],
-                                    '2XL'        => ['panjang' => 53, 'lebar' => 39],
-                                    '3XL'        => ['panjang' => 57, 'lebar' => 42],
-                                    '4XL'        => ['panjang' => 61, 'lebar' => 44],
-                                    '5XL'        => ['panjang' => 65, 'lebar' => 45],
-                                    'S-Dewasa'   => ['panjang' => 64, 'lebar' => 45],
-                                    'M-Dewasa'   => ['panjang' => 66, 'lebar' => 47],
-                                    'L-Dewasa'   => ['panjang' => 68, 'lebar' => 49],
-                                    'XL-Dewasa'  => ['panjang' => 70, 'lebar' => 51],
-                                    '2XL-Dewasa' => ['panjang' => 72, 'lebar' => 55],
-                                    '3XL-Dewasa' => ['panjang' => 74, 'lebar' => 59],
-                                    '4XL-Dewasa' => ['panjang' => 76, 'lebar' => 63],
-                                    '5XL-Dewasa' => ['panjang' => 78, 'lebar' => 67],
-                                ];
-                            @endphp
                             <div
                                 x-data="{ confirmed: @js($tshirt_size ?? '') }"
                             >
@@ -448,9 +428,9 @@
                                     "
                                 >
                                     <option value="">Pilih ukuran...</option>
-                                    @foreach($shirtSizes as $size => $dim)
-                                        <option value="{{ $size }}" {{ $tshirt_size === $size ? 'selected' : '' }}>
-                                            {{ $size }} — Panjang {{ $dim['panjang'] }} cm, Lebar {{ $dim['lebar'] }} cm
+                                    @foreach($this->tshirtSizes as $size)
+                                        <option value="{{ $size->code }}" {{ $tshirt_size === $size->code ? 'selected' : '' }}>
+                                            {{ $size->label }} — Panjang {{ $size->panjang }} cm, Lebar {{ $size->lebar }} cm
                                         </option>
                                     @endforeach
                                 </select>

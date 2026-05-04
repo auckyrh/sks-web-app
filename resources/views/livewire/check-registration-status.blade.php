@@ -273,6 +273,17 @@
                                     </span>
                                 </div>
                                 <div class="crs-row">
+                                    <span class="crs-row-label">Ukuran Kaos</span>
+                                    <span class="crs-row-val" style="display:flex; align-items:center; gap:0.5rem;">
+                                        <span style="font-weight:700; font-size:0.9375rem;">{{ $reg->tshirt_size }}</span>
+                                        @if($reg->tshirtSize)
+                                            <span style="font-size:0.7rem; color:#b8a070; font-weight:400;">
+                                                panjang {{ $reg->tshirtSize->panjang }} cm &bull; lebar {{ $reg->tshirtSize->lebar }} cm
+                                            </span>
+                                        @endif
+                                    </span>
+                                </div>
+                                <div class="crs-row">
                                     <span class="crs-row-label">Pembayaran</span>
                                     <span class="{{ $payClass }}" style="font-size:0.8125rem;">{{ $payLabel }}</span>
                                 </div>
