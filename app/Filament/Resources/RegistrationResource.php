@@ -4,7 +4,9 @@ namespace App\Filament\Resources;
 
 use App\Filament\Resources\RegistrationResource\Pages;
 use App\Filament\Resources\RegistrationResource\RelationManagers;
+use App\Models\EventPeriod;
 use App\Models\Registration;
+use App\Models\TshirtSize;
 use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
@@ -93,26 +95,13 @@ class RegistrationResource extends Resource
                         ->label('Sudah ikut BIAK/YCK?'),
                     Forms\Components\Select::make('tshirt_size')
                         ->label('Ukuran Kaos')
-                        ->options([
-                            'S'          => 'S',
-                            'M'          => 'M',
-                            'L'          => 'L',
-                            'XL'         => 'XL',
-                            '2XL'        => '2XL',
-                            '3XL'        => '3XL',
-                            '4XL'        => '4XL',
-                            '5XL'        => '5XL',
-                            'S-Dewasa'   => 'S-Dewasa',
-                            'M-Dewasa'   => 'M-Dewasa',
-                            'L-Dewasa'   => 'L-Dewasa',
-                            'XL-Dewasa'  => 'XL-Dewasa',
-                            '2XL-Dewasa' => '2XL-Dewasa',
-                            '3XL-Dewasa' => '3XL-Dewasa',
-                            '4XL-Dewasa' => '4XL-Dewasa',
-                            '5XL-Dewasa' => '5XL-Dewasa',
-                        ])
+                        ->options(fn (Forms\Get $get) => TshirtSize::where('event_period_id', $get('event_period_id') ?? EventPeriod::where('is_active', true)->value('id'))
+                            ->orderBy('sort_order')
+                            ->get()
+                            ->mapWithKeys(fn ($s) => [$s->code => "{$s->label} — {$s->panjang}×{$s->lebar} cm"]))
                         ->required()
-                        ->native(false),
+                        ->native(false)
+                        ->searchable(),
                     Forms\Components\TextInput::make('allergies')
                         ->label('Alergi')
                         ->nullable(),
@@ -369,24 +358,7 @@ class RegistrationResource extends Resource
                     ]),
                 Tables\Filters\SelectFilter::make('tshirt_size')
                     ->label('Ukuran Kaos')
-                    ->options([
-                        'S'          => 'S',
-                        'M'          => 'M',
-                        'L'          => 'L',
-                        'XL'         => 'XL',
-                        '2XL'        => '2XL',
-                        '3XL'        => '3XL',
-                        '4XL'        => '4XL',
-                        '5XL'        => '5XL',
-                        'S-Dewasa'   => 'S-Dewasa',
-                        'M-Dewasa'   => 'M-Dewasa',
-                        'L-Dewasa'   => 'L-Dewasa',
-                        'XL-Dewasa'  => 'XL-Dewasa',
-                        '2XL-Dewasa' => '2XL-Dewasa',
-                        '3XL-Dewasa' => '3XL-Dewasa',
-                        '4XL-Dewasa' => '4XL-Dewasa',
-                        '5XL-Dewasa' => '5XL-Dewasa',
-                    ]),
+                    ->options(fn () => TshirtSize::orderBy('sort_order')->pluck('code', 'code')),
                 Tables\Filters\TrashedFilter::make(),
             ])
             ->actions([

@@ -7,6 +7,7 @@ use App\Models\EventClass;
 use App\Models\EventPeriod;
 use App\Models\Participant;
 use App\Models\Team;
+use App\Models\TshirtSize;
 use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
@@ -96,9 +97,13 @@ class ParticipantResource extends Resource
                         ->native(false),
                     Forms\Components\Select::make('tshirt_size')
                         ->label('Ukuran Kaos')
-                        ->options(['S' => 'S', 'M' => 'M', 'L' => 'L', 'XL' => 'XL', '2XL' => '2XL'])
+                        ->options(fn (Forms\Get $get) => TshirtSize::where('event_period_id', $get('event_period_id') ?? EventPeriod::where('is_active', true)->value('id'))
+                            ->orderBy('sort_order')
+                            ->get()
+                            ->mapWithKeys(fn ($s) => [$s->code => "{$s->label} — {$s->panjang}×{$s->lebar} cm"]))
                         ->required()
-                        ->native(false),
+                        ->native(false)
+                        ->searchable(),
                     Forms\Components\TextInput::make('allergies')
                         ->label('Alergi')
                         ->nullable()
@@ -219,7 +224,7 @@ class ParticipantResource extends Resource
                     ->options(['M' => 'Laki-laki', 'F' => 'Perempuan']),
                 Tables\Filters\SelectFilter::make('tshirt_size')
                     ->label('Ukuran Kaos')
-                    ->options(['S' => 'S', 'M' => 'M', 'L' => 'L', 'XL' => 'XL', '2XL' => '2XL']),
+                    ->options(fn () => TshirtSize::orderBy('sort_order')->pluck('code', 'code')),
                 Tables\Filters\TrashedFilter::make(),
             ])
             ->actions([

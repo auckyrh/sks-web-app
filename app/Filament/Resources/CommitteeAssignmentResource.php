@@ -5,6 +5,8 @@ namespace App\Filament\Resources;
 use App\Filament\Resources\CommitteeAssignmentResource\Pages;
 use App\Filament\Resources\CommitteeAssignmentResource\RelationManagers;
 use App\Models\CommitteeAssignment;
+use App\Models\EventPeriod;
+use App\Models\TshirtSize;
 use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
@@ -57,6 +59,20 @@ class CommitteeAssignmentResource extends Resource
                 Forms\Components\Toggle::make('is_active')
                     ->label('Aktif')
                     ->default(true),
+                Forms\Components\Select::make('tshirt_size_id')
+                    ->label('Ukuran Kaos')
+                    ->options(fn (Forms\Get $get) => TshirtSize::where('event_period_id', $get('event_period_id') ?? EventPeriod::where('is_active', true)->value('id'))
+                        ->where('is_active', true)
+                        ->orderBy('sort_order')
+                        ->get()
+                        ->mapWithKeys(fn ($s) => [$s->id => "{$s->label} — {$s->panjang}×{$s->lebar} cm"]))
+                    ->nullable()
+                    ->native(false)
+                    ->searchable(),
+                Forms\Components\Textarea::make('notes')
+                    ->label('Catatan')
+                    ->nullable()
+                    ->columnSpanFull(),
             ])->columns(2),
         ]);
     }
