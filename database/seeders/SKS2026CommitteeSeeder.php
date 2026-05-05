@@ -57,7 +57,7 @@ class SKS2026CommitteeSeeder extends Seeder
             }
 
             // Resolve foreign keys
-            $wilayahId   = ($wilayah !== '' && $wilayah !== 'LUAR_PAROKI') ? ($wilayahMap[$wilayah] ?? null) : null;
+            $wilayahId   = ($wilayah !== '') ? ($wilayahMap[$wilayah] ?? null) : null;
             $divisionId  = $divisionMap[$division] ?? null;
             $tshirtSizeId = $sizeMap[$tshirtSize] ?? null;
 
