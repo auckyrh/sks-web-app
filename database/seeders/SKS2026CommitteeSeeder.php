@@ -71,11 +71,17 @@ class SKS2026CommitteeSeeder extends Seeder
             $existingUser = User::where('email', $email)->first();
 
             if ($existingUser === null) {
+                // Password = ddmmyyyy from birth date, fallback to 'sks2026' if no birth date
+                $passwordRaw = 'sks2026';
+                if (!empty($birthDate) && preg_match('/^(\d{4})-(\d{2})-(\d{2})$/', $birthDate, $m)) {
+                    $passwordRaw = $m[3] . $m[2] . $m[1]; // ddmmyyyy
+                }
+
                 $existingUser = User::create([
                     'full_name'  => $fullName  ?: $email,
                     'nick_name'  => $nickName  ?: null,
                     'email'      => $email,
-                    'password'   => Hash::make('sks2026'),
+                    'password'   => Hash::make($passwordRaw),
                     'role'       => 'member',
                     'phone'      => $phone     ?: null,
                     'birth_date' => $birthDate ?: null,
