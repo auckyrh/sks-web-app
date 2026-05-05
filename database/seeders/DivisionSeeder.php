@@ -12,8 +12,9 @@ class DivisionSeeder extends Seeder
     {
         $divisions = [
             // Upper access
-            ['name' => 'Romo',                      'access_level' => 'upper'],
+            ['name' => 'Romo',                       'access_level' => 'upper'],
             ['name' => 'Frater',                     'access_level' => 'upper'],
+            ['name' => 'Suster',                     'access_level' => 'upper'],
             ['name' => 'Ketua',                      'access_level' => 'upper'],
             ['name' => 'Wakil',                      'access_level' => 'upper'],
             ['name' => 'Sekretaris',                 'access_level' => 'upper'],
