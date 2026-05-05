@@ -1,4 +1,12 @@
 <x-filament-widgets::widget>
+    @php
+        $period   = \App\Models\EventPeriod::where('is_active', true)->first();
+        $daysLeft = null;
+        if ($period?->event_start_date) {
+            $daysLeft = (int) now('Asia/Jakarta')->startOfDay()
+                ->diffInDays($period->event_start_date->startOfDay(), false);
+        }
+    @endphp
     <a href="/internal"
        style="display:flex; align-items:center; justify-content:space-between;
               background: linear-gradient(135deg, #92400e 0%, #d97706 55%, #fbbf24 100%);
@@ -17,7 +25,15 @@
                     Go to Internal Panel
                 </p>
                 <p style="font-size:0.75rem; color:rgba(255,255,255,0.75); margin:0;">
-                    Internal Panitia portal — profile, t-shirt size & assignments
+                    @if($daysLeft !== null && $daysLeft > 0)
+                        SKS {{ $period->year }} — {{ $daysLeft }} days to go
+                    @elseif($daysLeft !== null && $daysLeft === 0)
+                        SKS {{ $period->year }} — Today is the day! 🎉
+                    @elseif($daysLeft !== null && $daysLeft < 0)
+                        SKS {{ $period->year }} — Event in progress
+                    @else
+                        Internal Panitia portal — profile, t-shirt size & assignments
+                    @endif
                 </p>
             </div>
         </div>

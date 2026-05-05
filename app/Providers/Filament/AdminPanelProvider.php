@@ -60,6 +60,7 @@ class AdminPanelProvider extends PanelProvider
             ->widgets([
                 \App\Filament\Widgets\InternalPortalWidget::class,
                 Widgets\AccountWidget::class,
+                \App\Filament\Widgets\TshirtSizeStatsWidget::class,
                 // Widgets\FilamentInfoWidget::class, // DO NOT REMOVE THIS, Just keep it commented
             ])
             ->middleware([
