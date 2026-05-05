@@ -152,7 +152,13 @@
                         </div>
                         <div>
                             <p class="pp-section-title">T-shirt Size</p>
-                            <p class="pp-section-sub">For your SKS committee t-shirt</p>
+                            <p class="pp-section-sub">
+                                For your SKS committee t-shirt &nbsp;·&nbsp;
+                                <a href="/images/SKS_2026_Size_Chart.pdf" target="_blank"
+                                   style="color:#d97706; font-weight:600; text-decoration:underline; text-underline-offset:2px;">
+                                    Size Chart ↗
+                                </a>
+                            </p>
                         </div>
                     </div>
 

@@ -50,12 +50,19 @@ class Dashboard extends Page implements HasActions, HasForms
 
         $activePeriod = EventPeriod::where('is_active', true)->first();
 
+        $daysLeft = null;
+        if ($activePeriod?->event_start_date) {
+            $daysLeft = (int) now('Asia/Jakarta')->startOfDay()
+                ->diffInDays($activePeriod->event_start_date->startOfDay(), false);
+        }
+
         return [
             'user'         => $user,
             'assignment'   => $assignment,
             'greeting'     => $greeting,
             'isAdmin'      => $user->isAdmin() || $user->isSuperAdmin(),
             'activePeriod' => $activePeriod,
+            'daysLeft'     => $daysLeft,
         ];
     }
 

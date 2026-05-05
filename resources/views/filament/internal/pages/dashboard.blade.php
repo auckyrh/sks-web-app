@@ -249,6 +249,16 @@
                                     Koordinator
                                 </span>
                             @endif
+                            @if($daysLeft !== null && $daysLeft > 0)
+                                <span class="ip-chip">
+                                    <x-heroicon-s-clock style="width:0.875rem;height:0.875rem;flex-shrink:0;" />
+                                    {{ $daysLeft }} days to go
+                                </span>
+                            @elseif($daysLeft !== null && $daysLeft === 0)
+                                <span class="ip-chip ip-chip-coord">🎉 Today is the day!</span>
+                            @elseif($daysLeft !== null && $daysLeft < 0)
+                                <span class="ip-chip">Event in progress</span>
+                            @endif
                         </div>
                     @else
                         <p style="margin-top:0.5rem; font-size:0.875rem; color:rgba(255,255,255,0.65);">
@@ -330,6 +340,14 @@
                             @endif
                         </div>
                     </div>
+                </div>
+                <div style="margin-top:1rem; padding-top:0.875rem; border-top:1px solid #fef3c7;">
+                    <a href="/internal/my-division"
+                       style="display:inline-flex; align-items:center; gap:0.375rem; font-size:0.8125rem; font-weight:600; color:#b45309; text-decoration:none;">
+                        <x-heroicon-s-user-group style="width:0.875rem;height:0.875rem;" />
+                        View My Division
+                        <x-heroicon-s-arrow-right style="width:0.75rem;height:0.75rem;" />
+                    </a>
                 </div>
             </div>
             @endif
