@@ -111,9 +111,14 @@ class UserResource extends Resource
                     ->searchable(),
                 Tables\Columns\TextColumn::make('email')
                     ->label('Email')
+                    ->toggleable(isToggledHiddenByDefault: true)
                     ->searchable(),
                 Tables\Columns\TextColumn::make('phone')
                     ->label('WhatsApp'),
+                Tables\Columns\TextColumn::make('currentAssignment.division.name')
+                    ->label('Divisi (Aktif)')
+                    ->badge()
+                    ->color('primary'),
                 Tables\Columns\BadgeColumn::make('role')
                     ->label('Role')
                     ->colors([
@@ -125,18 +130,20 @@ class UserResource extends Resource
                     ->label('Wilayah')
                     ->badge()
                     ->color('indigo')
+                    ->toggleable(isToggledHiddenByDefault: true)
                     ->searchable(),
-                Tables\Columns\TextColumn::make('currentAssignment.division.name')
-                    ->label('Divisi (Aktif)')
-                    ->badge()
-                    ->color('primary'),
+                Tables\Columns\TextColumn::make('updated_at')
+                    ->label('Last Update')
+                    ->dateTime("d M Y h:i:s")
+                    ->sortable()
+                    ->toggleable(isToggledHiddenByDefault: true),
                 Tables\Columns\TextColumn::make('deleted_at')
-                    ->label('Dihapus')
+                    ->label('Deleted At')
                     ->dateTime('d M Y')
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
             ])
-            ->defaultSort('full_name')
+            ->defaultSort('updated_at', 'desc')
             ->filters([
                 Tables\Filters\SelectFilter::make('role')
                     ->label('Role')
