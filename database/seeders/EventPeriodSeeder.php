@@ -31,7 +31,7 @@ class EventPeriodSeeder extends Seeder
             ['year' => 2023, 'theme' => 'Jesus is My Anchor', 'start' => '2023-06-20', 'end' => '2023-06-22', 'event_logo' => 'event-logos/LOGO-SKS-2023.jpeg'],
             ['year' => 2024, 'theme' => '-'],
             ['year' => 2025, 'theme' => 'Messenger of Joy & Love','start' => '2025-06-24', 'end' => '2025-06-26' , 'event_logo' => 'event-logos/LOGO-SKS-2025.png'],
-            ['year' => 2026, 'theme' => 'Yeeess Lord!','start' => '2026-06-24', 'end' => '2026-06-26', 'event_logo' => 'event-logos/LOGO-SKS-2026.png'],
+            ['year' => 2026, 'theme' => 'Yeeess Lord!','start' => '2026-06-23', 'end' => '2026-06-25', 'event_logo' => 'event-logos/LOGO-SKS-2026.png'],
         ];
 
         $count = 0;
