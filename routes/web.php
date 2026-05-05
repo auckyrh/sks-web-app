@@ -44,3 +44,6 @@ Route::get('/{year}/tata-tertib', \App\Livewire\PublicPage::class)->name('public
 Route::get('/{year}/informasi', \App\Livewire\PublicPage::class)->name('public.informasi');
 Route::get('/{year}/kontak', \App\Livewire\PublicKontak::class)->name('public.kontak');
 Route::get('/{year}/kelompok', \App\Livewire\PublicKelompok::class)->name('public.kelompok');
+
+// Friendly login redirect — panitia can go to /login instead of /admin/login
+Route::redirect('/login', '/internal/login')->name('login');

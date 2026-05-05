@@ -138,7 +138,7 @@
     {{-- Footer --}}
     <footer>
         <div>
-            <a href="/admin/login" class="footer-admin-link">Masuk sebagai Panitia</a>
+            <a href="/login" class="footer-admin-link">Masuk sebagai Panitia</a>
         </div>
         <p class="footer-copy">© {{ date('Y') }} Sanggar Kitab Suci — Gereja Katolik Santo Yakobus Surabaya</p>
     </footer>
