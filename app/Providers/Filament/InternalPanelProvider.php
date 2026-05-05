@@ -4,6 +4,7 @@ namespace App\Providers\Filament;
 
 use App\Filament\Internal\Pages\Auth\Login as InternalLogin;
 use App\Filament\Internal\Pages\Dashboard as InternalDashboard;
+use App\Filament\Internal\Pages\MyDivision as InternalMyDivision;
 use App\Filament\Internal\Pages\Profile as InternalProfile;
 use Filament\Http\Middleware\Authenticate;
 use Filament\Http\Middleware\AuthenticateSession;
@@ -13,6 +14,8 @@ use Filament\Navigation\NavigationItem;
 use Filament\Panel;
 use Filament\PanelProvider;
 use Filament\Support\Colors\Color;
+use Filament\View\PanelsRenderHook;
+use Illuminate\Support\HtmlString;
 use Illuminate\Cookie\Middleware\AddQueuedCookiesToResponse;
 use Illuminate\Cookie\Middleware\EncryptCookies;
 use Illuminate\Foundation\Http\Middleware\VerifyCsrfToken;
@@ -36,9 +39,14 @@ class InternalPanelProvider extends PanelProvider
             ])
             ->favicon(asset('images/LOGO-SKS.png'))
             ->sidebarCollapsibleOnDesktop()
+            ->renderHook(
+                name: PanelsRenderHook::BODY_END,
+                hook: fn () => new HtmlString(view('filament.internal.bottom-nav')->render()),
+            )
             ->pages([
                 InternalDashboard::class,
                 InternalProfile::class,
+                InternalMyDivision::class,
             ])
             ->navigationItems([
                 NavigationItem::make('Admin Panel')
