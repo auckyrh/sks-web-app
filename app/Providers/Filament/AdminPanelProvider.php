@@ -8,6 +8,7 @@ use Filament\Http\Middleware\DisableBladeIconComponents;
 use Filament\Http\Middleware\DispatchServingFilamentEvent;
 use App\Filament\Pages\Auth\Login;
 use App\Filament\Auth\EditProfile;
+use Filament\Navigation\NavigationItem;
 use Filament\Pages;
 use Filament\Panel;
 use Filament\PanelProvider;
@@ -43,6 +44,13 @@ class AdminPanelProvider extends PanelProvider
             ->colors([
                 'primary' => Color::Amber,
             ])
+            ->navigationItems([
+                NavigationItem::make('Internal Portal')
+                    ->url('/internal')
+                    ->icon('heroicon-o-arrow-top-right-on-square')
+                    ->group('Portal')
+                    ->sort(99),
+            ])
             ->discoverResources(in: app_path('Filament/Resources'), for: 'App\\Filament\\Resources')
             ->discoverPages(in: app_path('Filament/Pages'), for: 'App\\Filament\\Pages')
             ->pages([
@@ -50,6 +58,7 @@ class AdminPanelProvider extends PanelProvider
             ])
             ->discoverWidgets(in: app_path('Filament/Widgets'), for: 'App\\Filament\\Widgets')
             ->widgets([
+                \App\Filament\Widgets\InternalPortalWidget::class,
                 Widgets\AccountWidget::class,
                 // Widgets\FilamentInfoWidget::class, // DO NOT REMOVE THIS, Just keep it commented
             ])
