@@ -8,11 +8,21 @@ class Login extends BaseLogin
 {
     public function getHeading(): string
     {
-        return 'SKS Santo Yakobus'; // atur heading di admin Login Page
+        return 'SKS Santo Yakobus';
     }
 
     public function getSubheading(): ?string
     {
-        return 'Sign in to your account'; // atur subheading di admin Login Page
+        return 'Admin & superadmin access only';
+    }
+
+    protected function getRedirectUrl(): string
+    {
+        // Members who land on /admin/login get sent to /internal instead
+        if (auth()->user()?->isMember()) {
+            return '/internal';
+        }
+
+        return parent::getRedirectUrl();
     }
 }
