@@ -101,28 +101,70 @@ class CommitteeAssignmentResource extends Resource
                         'primary' => 'coordinator',
                         'gray'    => 'regular',
                     ]),
+                Tables\Columns\TextColumn::make('tshirtSize.label')
+                    ->label('T-shirt Size')
+                    ->badge()
+                    ->color('warning')
+                    ->placeholder('—')
+                    ->description(fn ($record) => $record->tshirtSize
+                        ? "{$record->tshirtSize->panjang} × {$record->tshirtSize->lebar} cm"
+                        : null)
+                    ->sortable(),
                 Tables\Columns\IconColumn::make('is_active')
-                    ->label('Aktif')
+                    ->label('Active')
                     ->boolean(),
             ])
             ->defaultSort('eventPeriod.year', 'desc')
             ->filters([
                 Tables\Filters\SelectFilter::make('event_period_id')
-                    ->label('Tahun')
+                    ->label('Year')
                     ->relationship('eventPeriod', 'year'),
                 Tables\Filters\SelectFilter::make('division_id')
-                    ->label('Divisi')
+                    ->label('Division')
                     ->relationship('division', 'name'),
                 Tables\Filters\SelectFilter::make('position')
-                    ->label('Posisi')
+                    ->label('Position')
                     ->options([
                         'coordinator' => 'Coordinator',
                         'regular'     => 'Regular',
                     ]),
                 Tables\Filters\TernaryFilter::make('is_active')
-                    ->label('Status Aktif')
-                    ->trueLabel('Aktif')
-                    ->falseLabel('Tidak Aktif'),
+                    ->label('Active Status')
+                    ->trueLabel('Active')
+                    ->falseLabel('Inactive'),
+                Tables\Filters\Filter::make('ukuran_kaos')
+                    ->label('T-shirt Size')
+                    ->form([
+                        Forms\Components\Select::make('size')
+                            ->label('T-shirt Size')
+                            ->placeholder('All sizes')
+                            ->native(false)
+                            ->options(function () {
+                                $activePeriodId = EventPeriod::where('is_active', true)->value('id');
+                                $sizes = $activePeriodId
+                                    ? TshirtSize::where('event_period_id', $activePeriodId)
+                                        ->where('is_active', true)
+                                        ->orderBy('sort_order')
+                                        ->get()
+                                        ->mapWithKeys(fn ($s) => [$s->id => $s->label])
+                                        ->toArray()
+                                    : [];
+                                return ['__none__' => '— Not set'] + $sizes;
+                            }),
+                    ])
+                    ->query(function (Builder $query, array $data): Builder {
+                        $val = $data['size'] ?? null;
+                        if ($val === '__none__') return $query->whereNull('committee_assignments.tshirt_size_id');
+                        if ($val)                return $query->where('committee_assignments.tshirt_size_id', (int) $val);
+                        return $query;
+                    })
+                    ->indicateUsing(function (array $data): ?string {
+                        $val = $data['size'] ?? null;
+                        if (! $val) return null;
+                        if ($val === '__none__') return 'T-shirt Size: Not set';
+                        $size = TshirtSize::find($val);
+                        return $size ? 'T-shirt Size: ' . $size->label : null;
+                    }),
             ])
             ->actions([
                 Tables\Actions\EditAction::make(),
