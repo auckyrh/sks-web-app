@@ -50,20 +50,34 @@ class PublicRegistrationForm extends Component
     // State
     public bool $submitted = false;
     public string $registrationNumber = '';
+    public bool $isSuperAdmin = false;
 
     public function mount(): void
     {
+        $this->isSuperAdmin = auth()->check() && auth()->user()->isSuperAdmin();
+
         $this->activePeriod = EventPeriod::where('is_active', true)->first();
 
-        if ($this->activePeriod) {
-            $tiers = PaymentTier::where('event_period_id', $this->activePeriod->id)
-                ->whereDate('valid_from', '<=', now())
-                ->whereDate('valid_until', '>=', now())
-                ->get();
+        if (!$this->activePeriod) {
+            session()->flash('registration_closed', true);
+            $this->redirect(route('home'));
+            return;
+        }
 
-            if ($tiers->count() === 1) {
-                $this->payment_tier_id = $tiers->first()->id;
-            }
+        $hasActiveTier = PaymentTier::where('event_period_id', $this->activePeriod->id)
+            ->whereDate('valid_from', '<=', now())
+            ->whereDate('valid_until', '>=', now())
+            ->exists();
+
+        if (!$hasActiveTier && !$this->isSuperAdmin) {
+            session()->flash('registration_closed', true);
+            $this->redirect(route('home'));
+            return;
+        }
+
+        $tiers = $this->paymentTiers;
+        if ($tiers->count() === 1) {
+            $this->payment_tier_id = $tiers->first()->id;
         }
     }
 
@@ -83,10 +97,15 @@ class PublicRegistrationForm extends Component
     public function getPaymentTiersProperty()
     {
         if (!$this->activePeriod) return collect();
-        return PaymentTier::where('event_period_id', $this->activePeriod->id)
-            ->whereDate('valid_from', '<=', now())
-            ->whereDate('valid_until', '>=', now())
-            ->get();
+
+        $query = PaymentTier::where('event_period_id', $this->activePeriod->id);
+
+        if (!$this->isSuperAdmin) {
+            $query->whereDate('valid_from', '<=', now())
+                  ->whereDate('valid_until', '>=', now());
+        }
+
+        return $query->orderBy('valid_from')->get();
     }
 
     public function getTshirtSizesProperty()

@@ -35,7 +35,9 @@ Route::get('/', function () {
     // meaning all tiers (including Umum) are already open — everyone can register directly.
     $skipParokiCheck = $upcomingTier === null;
 
-    return view('home', compact('activePeriod', 'activeTier', 'upcomingTier', 'upcomingTierData', 'skipParokiCheck'));
+    $registrationClosed = session()->pull('registration_closed', false);
+
+    return view('home', compact('activePeriod', 'activeTier', 'upcomingTier', 'upcomingTierData', 'skipParokiCheck', 'registrationClosed'));
 })->name('home');
 Route::get('/daftar', PublicRegistrationForm::class)->name('registration.form');
 Route::get('/cek-status', \App\Livewire\CheckRegistrationStatus::class)->name('registration.status');
