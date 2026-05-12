@@ -22,6 +22,11 @@
                 letter-spacing: -0.04em;
                 pointer-events: none;
                 user-select: none;
+                animation: year-drift 9s ease-in-out infinite;
+            }
+            @keyframes year-drift {
+                0%, 100% { transform: translateX(0px); }
+                50%       { transform: translateX(18px); }
             }
             .hero-logo {
                 width: 150px;
@@ -399,6 +404,37 @@
                 from { opacity: 0; transform: translateY(18px); }
                 to   { opacity: 1; transform: translateY(0); }
             }
+
+            /* ── Ambient particles ── */
+            .hero-particle {
+                position: absolute;
+                width: 5px; height: 5px;
+                border-radius: 50%;
+                background: rgba(245,158,11,0.38);
+                animation: particle-float linear infinite;
+                pointer-events: none;
+            }
+            @keyframes particle-float {
+                0%   { transform: translateY(0) scale(1);    opacity: 0; }
+                8%   { opacity: 0.9; }
+                85%  { opacity: 0.5; }
+                100% { transform: translateY(-90px) scale(0.4); opacity: 0; }
+            }
+
+            /* ── Twinkling sparkles ── */
+            .hero-sparkle {
+                position: absolute;
+                color: rgba(245,158,11,0.55);
+                font-style: normal;
+                line-height: 1;
+                animation: sparkle-twinkle ease-in-out infinite;
+                pointer-events: none;
+                user-select: none;
+            }
+            @keyframes sparkle-twinkle {
+                0%, 100% { opacity: 0;   transform: scale(0.4) rotate(0deg); }
+                45%, 55% { opacity: 1;   transform: scale(1)   rotate(22deg); }
+            }
         </style>
     </x-slot:styles>
 
@@ -443,6 +479,13 @@
                     </span>
                 </div>
             @endif
+        @else
+            <div style="margin-top:0.75rem;">
+                <span class="hero-status-badge" style="background:#f3f4f6; border:1.5px solid #d1d5db; color:#6b7280;">
+                    <span class="dot" style="background:#9ca3af;"></span>
+                    Belum Dibuka
+                </span>
+            </div>
         @endif
 
         {{-- Event dates --}}
@@ -574,6 +617,55 @@
 
     <x-slot:scripts>
         <script>
+            /* ── Ambient hero animations ── */
+            (function () {
+                const hero = document.querySelector('.hero');
+                if (!hero) return;
+
+                const wrap = document.createElement('div');
+                wrap.setAttribute('aria-hidden', 'true');
+                wrap.style.cssText = 'position:absolute;inset:0;pointer-events:none;overflow:hidden;z-index:0;';
+
+                // Floating particles — gold dots drifting upward
+                const particleCount = 11;
+                for (let i = 0; i < particleCount; i++) {
+                    const p = document.createElement('span');
+                    p.className = 'hero-particle';
+                    const size = 3 + Math.random() * 4;
+                    p.style.cssText = [
+                        `left:${Math.random() * 100}%`,
+                        `top:${45 + Math.random() * 50}%`,
+                        `width:${size}px`,
+                        `height:${size}px`,
+                        `animation-delay:${(Math.random() * 6).toFixed(2)}s`,
+                        `animation-duration:${(3.5 + Math.random() * 3.5).toFixed(2)}s`,
+                        `opacity:${0.25 + Math.random() * 0.4}`,
+                    ].join(';');
+                    wrap.appendChild(p);
+                }
+
+                // Twinkling sparkles — ✦ characters blinking in/out
+                const sparkleChars = ['✦', '✧', '✶', '✸'];
+                const sparkleCount = 7;
+                for (let i = 0; i < sparkleCount; i++) {
+                    const s = document.createElement('span');
+                    s.className = 'hero-sparkle';
+                    s.textContent = sparkleChars[Math.floor(Math.random() * sparkleChars.length)];
+                    const fz = 7 + Math.random() * 9;
+                    s.style.cssText = [
+                        `left:${4 + Math.random() * 92}%`,
+                        `top:${6 + Math.random() * 88}%`,
+                        `font-size:${fz.toFixed(1)}px`,
+                        `animation-delay:${(Math.random() * 5).toFixed(2)}s`,
+                        `animation-duration:${(2.2 + Math.random() * 2.8).toFixed(2)}s`,
+                    ].join(';');
+                    wrap.appendChild(s);
+                }
+
+                hero.prepend(wrap);
+            })();
+
+            /* ── Page logic ── */
             const formUrl         = @json(route('registration.form'));
             const upcomingTier    = @json($upcomingTierData);
             const skipParokiCheck = @json($skipParokiCheck);
