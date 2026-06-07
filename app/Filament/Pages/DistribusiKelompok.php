@@ -34,11 +34,6 @@ class DistribusiKelompok extends Page implements HasActions, HasForms
     /** Holds the participant ID being moved, used by pindahAction form options. */
     public ?int $pindahParticipantId = null;
 
-    public function getHeading(): string
-    {
-        return '';
-    }
-
     // ── Header actions ────────────────────────────────────────────────────────
 
     protected function getHeaderActions(): array
