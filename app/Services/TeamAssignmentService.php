@@ -165,13 +165,17 @@ class TeamAssignmentService
                     $groupSize  = $matched->count();
                     $targetTeam = null;
 
-                    // Prefer the team with the most space that can fit the whole group
+                    // Collect all teams that can fit the whole group, then pick randomly
+                    $eligible = [];
                     foreach ($teams as $team) {
                         $space = $targets[$team->id] - $fills[$team->id];
                         if ($space >= $groupSize) {
-                            $targetTeam = $team;
-                            break;
+                            $eligible[] = $team;
                         }
+                    }
+
+                    if (! empty($eligible)) {
+                        $targetTeam = $eligible[array_rand($eligible)];
                     }
 
                     // Fallback: team with the most space (may slightly exceed target)
@@ -315,9 +319,10 @@ class TeamAssignmentService
     /**
      * Sort participants for distribution.
      *
-     * Sort by wilayah → grade only. Gender balancing is handled dynamically
-     * in Phase C via per-team gender fill counters in pickTeam(), so sorting
-     * by gender here would cluster one gender into the later teams.
+     * Primary sort: wilayah → grade (ensures wilayah/grade spread).
+     * Tertiary: random tiebreaker so participants with equal wilayah+grade
+     * are shuffled differently on every run, producing varied results.
+     * Gender balancing is handled dynamically in Phase C via pickTeam().
      */
     private function sortForDistribution(Collection $participants): Collection
     {
@@ -327,8 +332,10 @@ class TeamAssignmentService
                 $wilayahKey = str_pad((string) ($p->registration?->wilayah_id ?? 99999), 6, '0', STR_PAD_LEFT);
                 // Grade
                 $gradeKey   = str_pad((string) ($p->grade ?? 0), 2, '0', STR_PAD_LEFT);
+                // Random tiebreaker — ensures a different ordering each run
+                $randKey    = str_pad((string) random_int(0, 99999), 5, '0', STR_PAD_LEFT);
 
-                return "{$wilayahKey}_{$gradeKey}";
+                return "{$wilayahKey}_{$gradeKey}_{$randKey}";
             })
             ->values();
     }
