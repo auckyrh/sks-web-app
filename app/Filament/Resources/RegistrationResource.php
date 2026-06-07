@@ -4,7 +4,9 @@ namespace App\Filament\Resources;
 
 use App\Filament\Resources\RegistrationResource\Pages;
 use App\Filament\Resources\RegistrationResource\RelationManagers;
+use App\Models\EventClass;
 use App\Models\EventPeriod;
+use App\Models\Participant;
 use App\Models\Registration;
 use App\Models\TshirtSize;
 use Filament\Forms;
@@ -423,21 +425,26 @@ class RegistrationResource extends Resource
                     ->modalHeading('Buat Data Peserta')
                     ->modalDescription('Buat data peserta dari registrasi ini secara manual.')
                     ->action(function ($record) {
-                        \App\Models\Participant::create([
-                            'registration_id'  => $record->id,
-                            'event_period_id'  => $record->event_period_id,
-                            'event_class_id'   => null,
-                            'child_full_name'  => $record->child_full_name,
-                            'nickname'         => $record->nickname,
-                            'gender'           => $record->gender,
-                            'birth_date'       => $record->birth_date,
-                            'grade'            => $record->grade,
-                            'parent_name'      => $record->parent_name,
-                            'parent_whatsapp'        => $record->parent_whatsapp,
-                            'tshirt_size'      => $record->tshirt_size,
-                            'allergies'        => $record->allergies,
-                            'notes'            => $record->notes,
-                            'created_by'       => auth()->id(),
+                        $eventClass = EventClass::where('event_period_id', $record->event_period_id)
+                            ->where('grade_min', '<=', $record->grade)
+                            ->where('grade_max', '>=', $record->grade)
+                            ->first();
+
+                        Participant::create([
+                            'registration_id' => $record->id,
+                            'event_period_id' => $record->event_period_id,
+                            'event_class_id'  => $eventClass?->id,
+                            'child_full_name' => $record->child_full_name,
+                            'nickname'        => $record->nickname,
+                            'gender'          => $record->gender,
+                            'birth_date'      => $record->birth_date,
+                            'grade'           => $record->grade,
+                            'parent_name'     => $record->parent_name,
+                            'parent_whatsapp' => $record->parent_whatsapp,
+                            'tshirt_size'     => $record->tshirt_size,
+                            'allergies'       => $record->allergies,
+                            'notes'           => $record->notes,
+                            'created_by'      => auth()->id(),
                         ]);
 
                         Notification::make()
