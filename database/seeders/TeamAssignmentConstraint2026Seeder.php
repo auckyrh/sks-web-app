@@ -68,18 +68,17 @@ class TeamAssignmentConstraint2026Seeder extends Seeder
             ],
         ];
 
+        // Delete existing constraints for this period so the seeder is safe to re-run
+        TeamAssignmentConstraint::where('event_period_id', $period->id)->delete();
+
         foreach ($constraints as $data) {
-            TeamAssignmentConstraint::firstOrCreate(
-                [
-                    'event_period_id'      => $period->id,
-                    'type'                 => $data['type'],
-                    'registration_numbers' => json_encode($data['registration_numbers']),
-                ],
-                [
-                    'fixed_team_id' => $data['fixed_team_id'],
-                    'notes'         => $data['notes'],
-                ]
-            );
+            TeamAssignmentConstraint::create([
+                'event_period_id'      => $period->id,
+                'type'                 => $data['type'],
+                'registration_numbers' => $data['registration_numbers'], // raw array — let model cast encode it
+                'fixed_team_id'        => $data['fixed_team_id'],
+                'notes'                => $data['notes'],
+            ]);
         }
 
         $this->command->info('✅ TeamAssignmentConstraint2026Seeder: ' . count($constraints) . ' constraints seeded.');

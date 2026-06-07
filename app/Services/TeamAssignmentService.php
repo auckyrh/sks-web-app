@@ -92,7 +92,7 @@ class TeamAssignmentService
                     continue;
                 }
 
-                $regNums = $constraint->registration_numbers;
+                $regNums = $this->toArray($constraint->registration_numbers);
                 $matched = $allParticipants->filter(
                     fn ($p) => in_array($p->registration?->registration_number, $regNums)
                 );
@@ -150,7 +150,7 @@ class TeamAssignmentService
                 // ── Phase B: Same-team constraints ───────────────────────────
                 $sameConstraints = $constraints->where('type', 'same_team');
                 foreach ($sameConstraints as $constraint) {
-                    $regNums = $constraint->registration_numbers;
+                    $regNums = $this->toArray($constraint->registration_numbers);
 
                     // Only process participants that belong to THIS class and are unassigned
                     $matched = $classParticipants->filter(
@@ -267,6 +267,32 @@ class TeamAssignmentService
      * The greedy fill in Phase C then naturally distributes this sorted stream
      * across teams, achieving gender and wilayah balance without complex logic.
      */
+    /**
+     * Normalise registration_numbers to a plain PHP array.
+     *
+     * The seeder previously passed json_encode()'d strings into firstOrCreate(),
+     * which caused Eloquent's array cast to double-encode the value. This guard
+     * handles both correctly-cast arrays and the legacy double-encoded strings.
+     */
+    private function toArray(mixed $value): array
+    {
+        if (is_array($value)) {
+            return $value;
+        }
+
+        // First decode — may still return a string if double-encoded
+        $decoded = json_decode((string) $value, true);
+
+        if (is_array($decoded)) {
+            return $decoded;
+        }
+
+        // Second decode for double-encoded values
+        $decoded2 = json_decode((string) $decoded, true);
+
+        return is_array($decoded2) ? $decoded2 : [];
+    }
+
     private function sortForDistribution(Collection $participants): Collection
     {
         return $participants
