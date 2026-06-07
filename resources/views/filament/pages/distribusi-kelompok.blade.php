@@ -129,12 +129,12 @@
 
     {{-- ── Toolbar ──────────────────────────────────────────────────────────── --}}
     <div class="dk-toolbar">
-        <a href="{{ route('filament.admin.resources.team-assignment-constraints.index') }}"
+        <a href="{{ \App\Filament\Resources\TeamAssignmentConstraintResource::getUrl('index') }}"
            class="dk-link-btn">
             <x-heroicon-o-lock-closed style="width:1rem;height:1rem" />
             Kelola Constraints
         </a>
-        <a href="{{ route('filament.admin.resources.tim-kelompoks.index') }}"
+        <a href="{{ \App\Filament\Resources\TeamResource::getUrl('index') }}"
            class="dk-link-btn">
             <x-heroicon-o-user-group style="width:1rem;height:1rem" />
             Lihat Tim
