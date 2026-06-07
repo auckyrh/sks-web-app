@@ -198,12 +198,27 @@ class TeamAssignmentService
                 $remaining = $classParticipants->filter(fn ($p) => is_null($p->team_id));
                 $sorted    = $this->sortForDistribution($remaining);
 
+                // Track gender fills per team for gender-balanced distribution
+                $genderFills = [];
+                foreach ($teams as $team) {
+                    $genderFills[$team->id] = ['F' => 0, 'M' => 0];
+                }
+                // Seed from Phase-A/B assignments already in this class
+                foreach ($classParticipants->whereNotNull('team_id') as $pinned) {
+                    if (isset($genderFills[$pinned->team_id])) {
+                        $g = $pinned->gender === 'F' ? 'F' : 'M';
+                        $genderFills[$pinned->team_id][$g]++;
+                    }
+                }
+
                 foreach ($sorted as $participant) {
-                    $targetTeam = $this->pickTeam($teams, $targets, $fills);
+                    $gender     = $participant->gender === 'F' ? 'F' : 'M';
+                    $targetTeam = $this->pickTeam($teams, $targets, $fills, $genderFills, $gender);
 
                     $participant->team_id = $targetTeam->id;
                     $participant->save();
                     $fills[$targetTeam->id]++;
+                    $genderFills[$targetTeam->id][$gender]++;
                     $stats['assigned']++;
                 }
             }
@@ -215,12 +230,24 @@ class TeamAssignmentService
     /**
      * Pick the best team to assign the next participant to.
      *
-     * Priority: team with most remaining capacity → tie-break by lower number.
+     * Priority:
+     *   1. Most remaining total capacity (team not full)
+     *   2. Fewest of this gender already assigned (gender balance)
+     *   3. Tie-break by lower team number
+     *
      * Lower-numbered teams fill first, naturally receiving more members
      * when the total doesn't divide evenly.
+     *
+     * @param  array<int, array{F: int, M: int}>  $genderFills  fills per team per gender
+     * @param  string                              $gender       'F' or 'M'
      */
-    private function pickTeam(Collection $teams, array $targets, array $fills): Team
-    {
+    private function pickTeam(
+        Collection $teams,
+        array $targets,
+        array $fills,
+        array $genderFills = [],
+        string $gender = ''
+    ): Team {
         $best      = null;
         $bestScore = PHP_INT_MAX;
 
@@ -231,9 +258,15 @@ class TeamAssignmentService
                 continue; // this team is full
             }
 
-            // Lower score = preferred: fewer current fills → lower score;
-            // tie-break by lower team number
-            $score = ($fills[$team->id] * 10000) + $team->number;
+            $genderCount = ($gender !== '' && isset($genderFills[$team->id]))
+                ? ($genderFills[$team->id][$gender] ?? 0)
+                : 0;
+
+            // Lower score = preferred:
+            //   total fills (primary) → gender fills (secondary) → team number (tiebreak)
+            $score = ($fills[$team->id] * 1_000_000)
+                   + ($genderCount     *       1_000)
+                   + $team->number;
 
             if ($score < $bestScore) {
                 $bestScore = $score;
@@ -253,20 +286,6 @@ class TeamAssignmentService
         return $best;
     }
 
-    /**
-     * Sort participants for balanced distribution.
-     *
-     * Strategy:
-     *   1. Girls (P) before boys (L) — since girls outnumber boys, this ensures
-     *      each team receives girls from multiple wilayah before boys are placed.
-     *   2. Within gender: sort by wilayah_id ascending (null/outside-parish last).
-     *      Consecutive same-wilayah participants get spread across teams by the
-     *      round-robin fill algorithm.
-     *   3. Within wilayah: sort by grade ascending for age mixing.
-     *
-     * The greedy fill in Phase C then naturally distributes this sorted stream
-     * across teams, achieving gender and wilayah balance without complex logic.
-     */
     /**
      * Normalise registration_numbers to a plain PHP array.
      *
@@ -293,18 +312,23 @@ class TeamAssignmentService
         return is_array($decoded2) ? $decoded2 : [];
     }
 
+    /**
+     * Sort participants for distribution.
+     *
+     * Sort by wilayah → grade only. Gender balancing is handled dynamically
+     * in Phase C via per-team gender fill counters in pickTeam(), so sorting
+     * by gender here would cluster one gender into the later teams.
+     */
     private function sortForDistribution(Collection $participants): Collection
     {
         return $participants
             ->sortBy(function (Participant $p): string {
-                // Gender bucket: P=0, L=1
-                $genderKey  = $p->gender === 'P' ? '0' : '1';
                 // Wilayah: non-null sorted numerically; null goes last (99999)
                 $wilayahKey = str_pad((string) ($p->registration?->wilayah_id ?? 99999), 6, '0', STR_PAD_LEFT);
                 // Grade
                 $gradeKey   = str_pad((string) ($p->grade ?? 0), 2, '0', STR_PAD_LEFT);
 
-                return "{$genderKey}_{$wilayahKey}_{$gradeKey}";
+                return "{$wilayahKey}_{$gradeKey}";
             })
             ->values();
     }
