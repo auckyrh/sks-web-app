@@ -97,10 +97,14 @@
     .dark .dk-dot-p { box-shadow: 0 0 0 2px #4a1942; }
     .dark .dk-dot-l { box-shadow: 0 0 0 2px #1e3a5f; }
 
-    /* name */
-    .dk-name        { font-size: 0.875rem; font-weight: 600; color: #111827;
-                      flex: 1; min-width: 0; }
-    .dark .dk-name  { color: #f3f4f6; }
+    /* name block */
+    .dk-name-wrap       { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 0; }
+    .dk-name            { font-size: 0.875rem; font-weight: 600; color: #111827;
+                          white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .dark .dk-name      { color: #f3f4f6; }
+    .dk-fullname        { font-size: 0.7rem; color: #9ca3af; white-space: nowrap;
+                          overflow: hidden; text-overflow: ellipsis; }
+    .dark .dk-fullname  { color: #6b7280; }
 
     /* meta chips */
     .dk-meta        { display: flex; align-items: center; gap: 0.3rem; flex-shrink: 0; }
@@ -205,8 +209,8 @@
                                 $count < $target   => 'under',
                                 default            => 'over',
                             };
-                            $girlCount  = $team->participants->where('gender', 'P')->count();
-                            $boyCount   = $team->participants->where('gender', 'L')->count();
+                            $girlCount  = $team->participants->where('gender', 'F')->count();
+                            $boyCount   = $team->participants->where('gender', 'M')->count();
                         @endphp
                         <div class="dk-card">
 
@@ -237,24 +241,29 @@
                                 <ol class="dk-member-list">
                                     @foreach($team->participants->sortBy('child_full_name')->values() as $i => $participant)
                                         @php
-                                            $wilayah  = $participant->registration?->wilayah?->name;
-                                            $isUmum   = ! $wilayah;
-                                            $displayName = $participant->nickname ?: $participant->child_full_name;
+                                            $wilayah     = $participant->registration?->wilayah?->name;
+                                            $nickname    = $participant->nickname ?: null;
+                                            $fullName    = $participant->child_full_name;
+                                            $displayName = $nickname ?: $fullName;
+                                            $showFull    = $nickname && $nickname !== $fullName;
                                         @endphp
                                         <li class="dk-member">
                                             <span class="dk-num">{{ $i + 1 }}.</span>
 
                                             {{-- Gender dot --}}
-                                            <span class="dk-dot {{ $participant->gender === 'P' ? 'dk-dot-p' : 'dk-dot-l' }}"></span>
+                                            <span class="dk-dot {{ $participant->gender === 'F' ? 'dk-dot-p' : 'dk-dot-l' }}"></span>
 
-                                            {{-- Name --}}
-                                            <span class="dk-name" title="{{ $participant->child_full_name }}">
-                                                {{ $displayName }}
-                                            </span>
+                                            {{-- Name: nickname bold + full name small --}}
+                                            <div class="dk-name-wrap">
+                                                <span class="dk-name">{{ $displayName }}</span>
+                                                @if($showFull)
+                                                    <span class="dk-fullname">{{ $fullName }}</span>
+                                                @endif
+                                            </div>
 
                                             {{-- Meta: grade + wilayah + pindah --}}
                                             <div class="dk-meta">
-                                                <span class="dk-chip dk-chip-grade">Gr{{ $participant->grade }}</span>
+                                                <span class="dk-chip dk-chip-grade">Kls {{ $participant->grade }}</span>
 
                                                 @if($wilayah)
                                                     <span class="dk-chip dk-chip-wilayah" title="{{ $wilayah }}">

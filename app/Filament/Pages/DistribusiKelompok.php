@@ -13,6 +13,7 @@ use Filament\Actions\Contracts\HasActions;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Concerns\InteractsWithForms;
 use Filament\Forms\Contracts\HasForms;
+use Filament\Forms\Form;
 use Filament\Notifications\Notification;
 use Filament\Pages\Page;
 
@@ -93,8 +94,11 @@ class DistribusiKelompok extends Page implements HasActions, HasForms
             ->label('Pindah')
             ->modalHeading('Pindah Peserta ke Tim Lain')
             ->modalWidth('md')
-            ->mountUsing(function (array $arguments): void {
+            ->mountUsing(function (Form $form, array $arguments): void {
                 $this->pindahParticipantId = $arguments['id'] ?? null;
+
+                $participant = Participant::find($this->pindahParticipantId);
+                $form->fill(['team_id' => $participant?->team_id]);
             })
             ->form([
                 Select::make('team_id')
@@ -119,11 +123,7 @@ class DistribusiKelompok extends Page implements HasActions, HasForms
                                 $t->id => "{$t->name} ({$t->participants_count} peserta)",
                             ])
                             ->toArray();
-                    })
-                    ->default(fn (): ?int => $this->pindahParticipantId
-                        ? Participant::find($this->pindahParticipantId)?->team_id
-                        : null
-                    ),
+                    }),
             ])
             ->action(function (array $data): void {
                 if (! $this->pindahParticipantId) {
