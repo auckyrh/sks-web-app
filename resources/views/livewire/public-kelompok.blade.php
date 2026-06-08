@@ -50,31 +50,33 @@ $search = trim($search ?? '');
 
 <div>
 
-    {{-- ── Desktop: Top Pill Navigation (hidden on mobile) ──────────────────── --}}
-    <nav class="hidden sm:flex gap-2 mb-6 overflow-x-auto pb-1">
+    {{-- ── Desktop: Top Navigation (hidden on mobile) ────────────────────────── --}}
+    <nav class="hidden sm:flex items-center gap-1 mb-8 pb-5 border-b border-[#f0e8d8]">
         @foreach($navItems as $item)
+            @php $isActiveNav = ($currentSegment === $item['key']); @endphp
             <a href="{{ $item['url'] }}"
-               class="px-4 py-1.5 rounded-full text-sm font-medium whitespace-nowrap transition-all
-               {{ $currentSegment === $item['key']
-                   ? 'bg-amber-500 text-white shadow-sm'
-                   : 'bg-white text-stone-500 border border-[#f0e8d8] hover:border-amber-300 hover:text-amber-700' }}">
+               class="px-4 py-2 rounded-full text-sm font-semibold whitespace-nowrap transition-all"
+               style="{{ $isActiveNav
+                   ? 'background:#f59e0b; color:#fff; box-shadow:0 2px 8px rgba(245,158,11,0.35);'
+                   : 'background:#fff; color:#78716c; border:1px solid #f0e8d8;' }}
+                   {{ $isActiveNav ? '' : 'hover:border-color:#fcd34d;' }}">
                 {{ $item['label'] }}
             </a>
         @endforeach
     </nav>
 
     {{-- ── Page Header ──────────────────────────────────────────────────────── --}}
-    <div class="mb-5">
+    <div class="mb-6">
         <h1 style="font-family:'Lora',serif; font-size:28px; font-weight:700; color:#1c1410; line-height:1.2;">
             Kelompok
         </h1>
-        <p class="text-sm mt-0.5" style="color:#9c7a48;">
+        <p class="text-sm mt-1" style="color:#9c7a48; font-family:'DM Sans',sans-serif;">
             SKS {{ $period->year }} — {{ $period->theme }}
         </p>
     </div>
 
     {{-- ── Search Bar (hero) ────────────────────────────────────────────────── --}}
-    <div class="relative mb-6 search-bar bg-white border border-[#f0e8d8] rounded-full transition-all"
+    <div class="relative mb-7 search-bar bg-white border border-[#f0e8d8] rounded-full transition-all"
          style="box-shadow: 0px 4px 20px rgba(28,20,16,0.04);">
         <div class="absolute inset-y-0 left-4 flex items-center pointer-events-none">
             <span class="ms text-xl" style="color:#9c7a48;">search</span>
@@ -83,8 +85,8 @@ $search = trim($search ?? '');
             wire:model.live.debounce.300ms="search"
             type="text"
             placeholder="Cari nama anakmu di sini..."
-            class="w-full bg-transparent border-none outline-none py-3.5 pl-11 pr-11 text-sm"
-            style="font-family:'DM Sans',sans-serif; color:#1c1410; font-size:15px;"
+            class="w-full bg-transparent border-none outline-none py-4 pr-12 text-sm"
+            style="font-family:'DM Sans',sans-serif; color:#1c1410; font-size:15px; padding-left:3rem;"
         />
         @if($search !== '')
             <button
@@ -236,14 +238,14 @@ $search = trim($search ?? '');
         @else
 
             {{-- Class Tab Switcher --}}
-            <div class="flex p-1 rounded-full mb-1 gap-0.5" style="background:#ece7e6;">
+            <div class="flex p-1.5 rounded-full mb-2 gap-1" style="background:#ece7e6;">
                 @foreach($allClasses as $eventClass)
                     @php $ac = $accents[$eventClass->level] ?? $accents['kecil']; @endphp
                     <button
                         wire:click="$set('activeClass', '{{ $eventClass->level }}')"
-                        class="flex-1 py-2.5 text-center rounded-full text-sm font-semibold transition-all duration-200 whitespace-nowrap"
+                        class="flex-1 py-3 text-center rounded-full text-sm font-semibold transition-all duration-200 whitespace-nowrap"
                         style="{{ $activeClass === $eventClass->level
-                            ? "background:{$ac['primary']}; color:#ffffff; box-shadow: 0 2px 8px {$ac['primary']}60;"
+                            ? "background:{$ac['primary']}; color:#ffffff; box-shadow: 0 2px 8px {$ac['primary']}50;"
                             : 'color:#78716c; background:transparent;' }}">
                         {{ ucfirst($eventClass->level) }}
                     </button>
@@ -257,7 +259,7 @@ $search = trim($search ?? '');
             @endphp
 
             @if($activeClassData)
-                <div class="flex items-center gap-2 mb-5 mt-4">
+                <div class="flex items-center gap-2 mb-6 mt-5">
                     <span class="w-8 h-1 rounded-full" style="background:{{ $ac['primary'] }};"></span>
                     <p class="text-xs font-bold tracking-widest uppercase" style="color:{{ $ac['text'] }};">
                         Kelas {{ ucfirst($activeClassData->level) }} — {{ $activeClassData->saint_name }}
@@ -268,7 +270,7 @@ $search = trim($search ?? '');
                     <p class="text-sm italic" style="color:#9c7a48;">Belum ada tim di kelas ini.</p>
                 @else
                     {{-- Team Grid --}}
-                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-5">
                         @foreach($activeClassData->teams as $team)
                             <div class="bg-white rounded-[20px] overflow-hidden team-card border border-[#f0e8d8] relative transition-shadow">
                                 {{-- Accent bar --}}
