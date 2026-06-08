@@ -41,11 +41,31 @@ class DistribusiKelompok extends Page implements HasActions, HasForms
     {
         return [
             Action::make('generate')
-                ->label('Generate Otomatis')
-                ->icon('heroicon-o-bolt')
+                ->label(function (): string {
+                    $period = EventPeriod::where('is_active', true)->first();
+                    if (! $period) {
+                        return 'Acak Kelompok';
+                    }
+                    $hasAssigned = Participant::where('event_period_id', $period->id)
+                        ->whereNotNull('team_id')
+                        ->exists();
+
+                    return $hasAssigned ? 'Acak Ulang' : 'Acak Kelompok';
+                })
+                ->icon('heroicon-o-arrow-path')
                 ->color('warning')
                 ->requiresConfirmation()
-                ->modalHeading('Generate Distribusi Kelompok')
+                ->modalHeading(function (): string {
+                    $period = EventPeriod::where('is_active', true)->first();
+                    if (! $period) {
+                        return 'Acak Distribusi Kelompok';
+                    }
+                    $hasAssigned = Participant::where('event_period_id', $period->id)
+                        ->whereNotNull('team_id')
+                        ->exists();
+
+                    return $hasAssigned ? 'Acak Ulang Distribusi Kelompok' : 'Acak Distribusi Kelompok';
+                })
                 ->modalDescription(function (): string {
                     $period = EventPeriod::where('is_active', true)->first();
                     if (! $period) {
@@ -56,10 +76,10 @@ class DistribusiKelompok extends Page implements HasActions, HasForms
                         ->exists();
 
                     return $hasAssigned
-                        ? '⚠️ Beberapa peserta sudah memiliki kelompok. Proses ini akan MERESET semua assignment dan mendistribusikan ulang. Lanjutkan?'
-                        : 'Distribusikan semua peserta ke kelompok secara otomatis berdasarkan constraints dan balancing gender/wilayah/kelas. Lanjutkan?';
+                        ? '⚠️ Semua assignment akan DIRESET dan didistribusikan ulang secara acak. Lanjutkan?'
+                        : 'Distribusikan semua peserta ke kelompok secara acak berdasarkan constraints dan balancing gender/wilayah/kelas. Lanjutkan?';
                 })
-                ->modalSubmitActionLabel('Ya, Generate Sekarang')
+                ->modalSubmitActionLabel('Ya, Acak Sekarang')
                 ->action(function (): void {
                     $period = EventPeriod::where('is_active', true)->first();
                     if (! $period) {
