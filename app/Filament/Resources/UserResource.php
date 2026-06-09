@@ -4,6 +4,8 @@ namespace App\Filament\Resources;
 
 use App\Filament\Resources\UserResource\Pages;
 use App\Filament\Resources\UserResource\RelationManagers;
+use App\Models\Division;
+use App\Models\EventPeriod;
 use App\Models\User;
 use Filament\Forms;
 use Filament\Forms\Form;
@@ -152,6 +154,19 @@ class UserResource extends Resource
                         'admin'      => 'Admin',
                         'member'     => 'Member',
                     ]),
+                Tables\Filters\SelectFilter::make('division_id')
+                    ->label('Divisi (Aktif)')
+                    ->options(fn () => Division::orderBy('name')->pluck('name', 'id'))
+                    ->query(function (Builder $query, array $data): Builder {
+                        if (blank($data['value'])) {
+                            return $query;
+                        }
+                        $activePeriodId = EventPeriod::where('is_active', true)->value('id');
+                        return $query->whereHas('committeeAssignments', function (Builder $q) use ($data, $activePeriodId): void {
+                            $q->where('division_id', $data['value'])
+                              ->where('event_period_id', $activePeriodId);
+                        });
+                    }),
                 Tables\Filters\TrashedFilter::make(),
             ])
             ->actions([
