@@ -25,6 +25,7 @@ class Team extends Model
         'event_class_id',
         'number',
         'name',
+        'whatsapp_group_link',
     ];
 
     public function eventPeriod(): BelongsTo

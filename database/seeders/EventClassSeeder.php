@@ -17,9 +17,9 @@ class EventClassSeeder extends Seeder
                 ['level' => 'besar',  'saint_name' => 'St. Zakharia',           'grade_min' => 5, 'grade_max' => 6],
             ],
             2026 => [
-                ['level' => 'kecil',  'saint_name' => 'St. Carlo Acutis',      'grade_min' => 1, 'grade_max' => 2],
-                ['level' => 'tengah', 'saint_name' => 'St. Bernadette',         'grade_min' => 3, 'grade_max' => 4],
-                ['level' => 'besar',  'saint_name' => 'St. Vincentius A Paulo', 'grade_min' => 5, 'grade_max' => 6],
+                ['level' => 'kecil',  'saint_name' => 'St. Vincentius A Paulo',        'grade_min' => 1, 'grade_max' => 2],
+                ['level' => 'tengah', 'saint_name' => 'St. Bernadette Soubirus', 'grade_min' => 3, 'grade_max' => 4],
+                ['level' => 'besar',  'saint_name' => 'St. Carlo Acutis',  'grade_min' => 5, 'grade_max' => 6],
             ],
         ];
 
