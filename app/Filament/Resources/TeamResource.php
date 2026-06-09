@@ -54,6 +54,13 @@ class TeamResource extends Resource
                     ->label('Nama Tim')
                     ->required()
                     ->helperText('Contoh: St. Carlo Acutis 1'),
+                Forms\Components\TextInput::make('whatsapp_group_link')
+                    ->label('Link Grup WhatsApp Orang Tua')
+                    ->url()
+                    ->nullable()
+                    ->placeholder('https://chat.whatsapp.com/...')
+                    ->helperText('Link undangan grup WA untuk orang tua peserta kelompok ini.')
+                    ->columnSpanFull(),
             ])->columns(2),
         ]);
     }
@@ -84,6 +91,13 @@ class TeamResource extends Resource
                     ->sortable(query: fn (Builder $query, string $direction) =>
                         $query->orderBy('number', $direction)
                     ),
+                Tables\Columns\IconColumn::make('whatsapp_group_link')
+                    ->label('Grup WA')
+                    ->boolean()
+                    ->trueIcon('heroicon-o-chat-bubble-left-ellipsis')
+                    ->falseIcon('heroicon-o-minus')
+                    ->trueColor('success')
+                    ->falseColor('gray'),
                 Tables\Columns\TextColumn::make('facilitators_count')
                     ->label('Pendamping')
                     ->counts('facilitators')
