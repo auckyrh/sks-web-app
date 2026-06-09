@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources\RegistrationResource\Pages;
 
+use App\Exports\RegistrationExport;
 use App\Filament\Resources\RegistrationResource;
 use App\Models\EventClass;
 use App\Models\EventPeriod;
@@ -11,6 +12,7 @@ use Filament\Actions;
 use Filament\Notifications\Notification;
 use Filament\Resources\Pages\ListRecords;
 use Illuminate\Support\Facades\DB;
+use Maatwebsite\Excel\Facades\Excel;
 
 class ListRegistrations extends ListRecords
 {
@@ -20,6 +22,28 @@ class ListRegistrations extends ListRecords
     {
         return [
             Actions\CreateAction::make(),
+
+            Actions\Action::make('export')
+                ->label('Export Excel')
+                ->icon('heroicon-o-arrow-down-tray')
+                ->color('gray')
+                ->form([
+                    \Filament\Forms\Components\Select::make('event_period_id')
+                        ->label('Periode')
+                        ->options(EventPeriod::orderByDesc('year')->pluck('year', 'id'))
+                        ->default(fn () => EventPeriod::where('is_active', true)->first()?->id)
+                        ->required()
+                        ->native(false),
+                ])
+                ->action(function (array $data): \Symfony\Component\HttpFoundation\BinaryFileResponse {
+                    $period = EventPeriod::find($data['event_period_id']);
+                    $filename = 'registrasi-sks-' . ($period?->year ?? 'all') . '.xlsx';
+
+                    return Excel::download(
+                        new RegistrationExport($data['event_period_id']),
+                        $filename
+                    );
+                }),
 
             Actions\Action::make('bulk_generate_participants')
                 ->label('Generate Semua Peserta')

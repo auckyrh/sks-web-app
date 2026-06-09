@@ -51,21 +51,21 @@ $search = trim($search ?? '');
 <div>
 
     {{-- ── Desktop: Top Navigation (hidden on mobile) ────────────────────────── --}}
-    <nav class="hidden sm:flex items-center gap-1 mb-8 pb-5 border-b border-[#f0e8d8]">
+    <nav class="hidden sm:flex items-center gap-6 mb-8 pb-4 border-b border-[#f0e8d8]">
         @foreach($navItems as $item)
             @php $isActiveNav = ($currentSegment === $item['key']); @endphp
             <a href="{{ $item['url'] }}"
-               class="px-4 py-2 rounded-full text-sm font-semibold whitespace-nowrap transition-all"
+               class="pb-3 text-sm font-semibold whitespace-nowrap transition-all relative"
                style="{{ $isActiveNav
-                   ? 'background:#f59e0b; color:#fff; box-shadow:0 2px 8px rgba(245,158,11,0.35);'
-                   : 'background:#fff; color:#78716c; border:1px solid #f0e8d8;' }}
-                   {{ $isActiveNav ? '' : 'hover:border-color:#fcd34d;' }}">
+                   ? 'color:#f59e0b; border-bottom: 2px solid #f59e0b; margin-bottom: -1px;'
+                   : 'color:#78716c; border-bottom: 2px solid transparent; margin-bottom: -1px;' }}">
                 {{ $item['label'] }}
             </a>
         @endforeach
     </nav>
 
-    {{-- ── Page Header ──────────────────────────────────────────────────────── --}}
+    {{-- ── Page Header (hidden when searching) ────────────────────────────────── --}}
+    @if(!$isSearching)
     <div class="mb-6">
         <h1 style="font-family:'Lora',serif; font-size:28px; font-weight:700; color:#1c1410; line-height:1.2;">
             Kelompok
@@ -74,6 +74,7 @@ $search = trim($search ?? '');
             SKS {{ $period->year }} — {{ $period->theme }}
         </p>
     </div>
+    @endif
 
     {{-- ── Search Bar (hero) ────────────────────────────────────────────────── --}}
     <div class="relative mb-7 search-bar bg-white border border-[#f0e8d8] rounded-full transition-all"
@@ -103,10 +104,10 @@ $search = trim($search ?? '');
     @if($isSearching)
 
         @if(count($searchResults) > 0)
-            {{-- Success header --}}
-            <div class="flex items-center gap-1.5 mb-4" style="color:#10b981;">
-                <span class="ms ms-fill text-[20px]">check_circle</span>
-                <p class="text-sm font-semibold">
+            {{-- ✓ Ditemukan banner --}}
+            <div class="flex items-center gap-2 mb-5 px-3 py-2.5 rounded-xl" style="background:#d1fae5;">
+                <span class="ms ms-fill text-[18px]" style="color:#059669;">check_circle</span>
+                <p class="text-sm font-semibold" style="color:#065f46;">
                     Ditemukan! Menampilkan hasil untuk "{{ $search }}"
                 </p>
             </div>
@@ -157,8 +158,13 @@ $search = trim($search ?? '');
                                 </div>
                             @endif
 
+                            {{-- ANGGOTA KELOMPOK section label --}}
+                            <p class="text-[10px] font-bold tracking-widest uppercase mb-2 mt-1" style="color:#9c7a48;">
+                                Anggota Kelompok
+                            </p>
+
                             {{-- Participants --}}
-                            <ol class="space-y-1.5">
+                            <ul class="space-y-1.5">
                                 @foreach($team->participants as $i => $participant)
                                     @php
                                         $name      = $participant->nickname ?: $participant->child_full_name;
@@ -166,11 +172,8 @@ $search = trim($search ?? '');
                                         $genderDot = $participant->gender === 'F' ? '#ec4899' : '#3b82f6';
                                     @endphp
                                     <li class="flex items-center gap-2.5 rounded-lg transition-colors
-                                        {{ $isMatch ? '-mx-2 px-2 py-1.5 border' : '' }}"
+                                        {{ $isMatch ? '-mx-2 px-2 py-1.5 border' : 'py-0.5' }}"
                                         style="{{ $isMatch ? "background:{$ac['light']}; border-color:{$ac['primary']}40;" : '' }}">
-                                        <span class="text-xs w-5 text-right shrink-0 tabular-nums" style="color:#9c7a48;">
-                                            {{ $i + 1 }}.
-                                        </span>
                                         <span class="w-2 h-2 rounded-full shrink-0"
                                               style="background:{{ $genderDot }};"></span>
                                         <span class="text-sm {{ $isMatch ? 'font-bold' : '' }}"
@@ -178,19 +181,41 @@ $search = trim($search ?? '');
                                             {{ $name }}
                                         </span>
                                         @if($isMatch)
-                                            <span class="ml-auto text-[10px] text-white px-1.5 py-0.5 rounded-full font-bold shrink-0"
+                                            <span class="ml-auto text-[10px] text-white px-1.5 py-0.5 rounded-full font-bold shrink-0 uppercase tracking-wide"
                                                   style="background:{{ $ac['primary'] }};">
-                                                Cocok
+                                                Pencarian
                                             </span>
                                         @endif
                                     </li>
                                 @endforeach
-                            </ol>
+                            </ul>
 
-                            {{-- Count --}}
-                            <p class="text-xs mt-3 text-right" style="color:#9c7a48;">
+                            {{-- Count + suggestion --}}
+                            <p class="text-xs mt-3" style="color:#9c7a48;">
                                 {{ $team->participants->count() }} peserta
                             </p>
+                        </div>
+
+                        {{-- Suggestion footer --}}
+                        <div class="px-5 pb-4 pt-3 border-t border-[#f0e8d8]">
+                            <p class="text-xs mb-2" style="color:#9c7a48;">
+                                Bukan ini yang kamu cari?
+                            </p>
+                            <p class="text-xs mb-3" style="color:#78716c;">
+                                Coba cari berdasarkan nama orang tua atau nomor pendaftaran jika nama panggilan tidak ditemukan.
+                            </p>
+                            <div class="flex flex-wrap gap-2">
+                                <button wire:click="$set('search', '{{ $search }}')"
+                                        class="text-xs px-3 py-1.5 rounded-full border transition-opacity hover:opacity-70"
+                                        style="border-color:{{ $ac['primary'] }}40; color:{{ $ac['text'] }}; background:{{ $ac['light'] }};">
+                                    #{{ ucfirst($search) }}?
+                                </button>
+                                <button wire:click="$set('search', 'Anak{{ $team->name }}')"
+                                        class="text-xs px-3 py-1.5 rounded-full border transition-opacity hover:opacity-70"
+                                        style="border-color:{{ $ac['primary'] }}40; color:{{ $ac['text'] }}; background:{{ $ac['light'] }};">
+                                    #Anak{{ $team->name }}
+                                </button>
+                            </div>
                         </div>
                     </div>
                 @endforeach
@@ -198,23 +223,23 @@ $search = trim($search ?? '');
 
         @else
             {{-- No result --}}
-            <div class="flex flex-col items-center justify-center py-12 text-center rounded-3xl"
-                 style="background: linear-gradient(135deg, #fef3c7 0%, #fef8f0 100%);">
-                <div class="w-24 h-24 mb-5 flex items-center justify-center bg-white rounded-full"
-                     style="box-shadow: 0px 4px 20px rgba(28,20,16,0.08);">
-                    <span class="ms text-5xl" style="color:#f59e0b;">groups</span>
+            <div class="flex flex-col items-center justify-center py-14 text-center rounded-3xl"
+                 style="background: radial-gradient(circle at center, rgba(245,158,11,0.05) 0%, transparent 70%);">
+                <div class="w-32 h-32 mb-5 flex items-center justify-center bg-white rounded-full"
+                     style="box-shadow: 0px 8px 28px rgba(28,20,16,0.08);">
+                    <span class="ms text-[56px]" style="color:#f59e0b; font-size:56px;">groups</span>
                 </div>
-                <h2 style="font-family:'Lora',serif; font-size:20px; font-weight:600; color:#1c1410;" class="mb-2">
+                <h2 style="font-family:'Lora',serif; font-size:22px; font-weight:600; color:#1c1410;" class="mb-2">
                     Nama tidak ditemukan
                 </h2>
-                <p class="text-sm max-w-[260px]" style="color:#78716c;">
-                    Coba periksa kembali ejaan namanya. Pencarian menggunakan nama panggilan.
+                <p class="text-sm max-w-[280px]" style="color:#78716c;">
+                    Coba periksa kembali ejaan namanya atau cari berdasarkan kategori lain.
                 </p>
                 <button
                     wire:click="$set('search', '')"
-                    class="mt-6 px-5 py-2.5 rounded-xl text-sm font-semibold transition-opacity hover:opacity-80"
-                    style="background:#fef3c7; color:#92400e;">
-                    Lihat Semua Kelompok
+                    class="mt-7 px-6 py-3 rounded-xl text-sm font-semibold transition-all hover:opacity-90 active:scale-95"
+                    style="background:#fea619; color:#ffffff; box-shadow: 0 2px 8px rgba(254,166,25,0.35);">
+                    Lihat Semua Daftar
                 </button>
             </div>
         @endif
@@ -247,7 +272,7 @@ $search = trim($search ?? '');
                         style="{{ $activeClass === $eventClass->level
                             ? "background:{$ac['primary']}; color:#ffffff; box-shadow: 0 2px 8px {$ac['primary']}50;"
                             : 'color:#78716c; background:transparent;' }}">
-                        {{ ucfirst($eventClass->level) }}
+                        Kelas {{ ucfirst($eventClass->level) }}
                     </button>
                 @endforeach
             </div>
@@ -262,7 +287,7 @@ $search = trim($search ?? '');
                 <div class="flex items-center gap-2 mb-6 mt-5">
                     <span class="w-8 h-1 rounded-full" style="background:{{ $ac['primary'] }};"></span>
                     <p class="text-xs font-bold tracking-widest uppercase" style="color:{{ $ac['text'] }};">
-                        Kelas {{ ucfirst($activeClassData->level) }} — {{ $activeClassData->saint_name }}
+                        Kelas {{ strtoupper($activeClassData->level) }} — {{ strtoupper($activeClassData->saint_name) }}
                     </p>
                 </div>
 
@@ -309,28 +334,32 @@ $search = trim($search ?? '');
                                     @if($team->participants->isEmpty())
                                         <p class="text-xs italic" style="color:#9c7a48;">Belum ada peserta.</p>
                                     @else
-                                        <ol class="space-y-1.5">
+                                        <ul class="space-y-1.5">
                                             @foreach($team->participants as $i => $participant)
-                                                @php
-                                                    $name      = $participant->nickname ?: $participant->child_full_name;
-                                                    $genderDot = $participant->gender === 'F' ? '#ec4899' : '#3b82f6';
-                                                @endphp
+                                                @php $name = $participant->nickname ?: $participant->child_full_name; @endphp
                                                 <li class="flex items-center gap-2">
-                                                    <span class="text-xs w-5 text-right shrink-0 tabular-nums"
-                                                          style="color:#9c7a48;">{{ $i + 1 }}.</span>
-                                                    <span class="w-2 h-2 rounded-full shrink-0"
-                                                          style="background:{{ $genderDot }};"></span>
+                                                    <span class="w-1.5 h-1.5 rounded-full shrink-0"
+                                                          style="background:{{ $ac['primary'] }};"></span>
                                                     <span class="text-sm truncate" style="color:#374151;">
                                                         {{ $name }}
                                                     </span>
                                                 </li>
                                             @endforeach
-                                        </ol>
+                                        </ul>
 
-                                        <p class="text-xs mt-3 text-right" style="color:#9c7a48;">
+                                        <p class="text-xs mt-3" style="color:#9c7a48;">
                                             {{ $team->participants->count() }} peserta
                                         </p>
                                     @endif
+                                </div>
+
+                                {{-- Detail link --}}
+                                <div class="px-5 pb-4 border-t border-[#f0e8d8] pt-3">
+                                    <button class="flex items-center gap-1 text-xs font-semibold transition-opacity hover:opacity-70"
+                                            style="color:{{ $ac['primary'] }};">
+                                        Lihat Detail Kelompok
+                                        <span class="ms text-[16px]" style="color:{{ $ac['primary'] }};">chevron_right</span>
+                                    </button>
                                 </div>
                             </div>
                         @endforeach
@@ -339,6 +368,24 @@ $search = trim($search ?? '');
             @endif
 
         @endif
+
+        {{-- ── Atmospheric Banner ─────────────────────────────────────────── --}}
+        <div class="mt-10 rounded-2xl overflow-hidden relative"
+             style="background: linear-gradient(135deg, #78350f 0%, #92400e 40%, #b45309 100%); min-height: 120px;">
+            <div class="absolute inset-0 opacity-20"
+                 style="background-image: radial-gradient(circle at 30% 50%, rgba(251,191,36,0.6) 0%, transparent 60%), radial-gradient(circle at 80% 20%, rgba(245,158,11,0.4) 0%, transparent 50%);"></div>
+            <div class="relative z-10 p-6 flex flex-col justify-center" style="min-height:120px;">
+                <p class="text-xs font-bold tracking-widest uppercase mb-1" style="color:rgba(251,191,36,0.8);">
+                    SKS {{ $period->year }}
+                </p>
+                <h3 style="font-family:'Lora',serif; font-size:20px; font-weight:700; color:#ffffff; line-height:1.3;">
+                    Menabur Kasih,<br>Memanen Iman
+                </h3>
+                @if($period->theme)
+                    <p class="text-xs mt-2" style="color:rgba(255,255,255,0.65);">{{ $period->theme }}</p>
+                @endif
+            </div>
+        </div>
 
     @endif
 
