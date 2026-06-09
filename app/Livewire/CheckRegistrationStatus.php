@@ -19,7 +19,7 @@ class CheckRegistrationStatus extends Component
             'search' => 'required|string|min:3',
         ]);
 
-        $query = Registration::with(['eventPeriod', 'tshirtSize', 'participant.eventClass', 'participant.team']);
+        $query = Registration::with(['eventPeriod', 'tshirtSize', 'participant.eventClass', 'participant.team.facilitators']);
 
         if ($this->searchType === 'registration_number') {
             $query->where('registration_number', $this->search);

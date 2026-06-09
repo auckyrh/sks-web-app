@@ -285,10 +285,21 @@
                                             </svg>
                                             Gabung Grup WA
                                         </a>
-                                        <span style="font-size:0.7rem; color:#b8a070; font-style:italic;">Khusus orang tua &mdash; klik untuk bergabung ke grup WA kelompok anak Anda</span>
+                                        <span style="font-size:0.7rem; color:#b8a070; font-style:italic;">Khusus ORANG TUA &mdash; klik untuk bergabung ke grup WA kelompok anak Anda</span>
                                     @else
                                         <span style="color:#d4b896; font-style:italic; font-size:0.8125rem;">Belum tersedia</span>
                                     @endif
+                                </div>
+                                <div class="crs-row">
+                                    <span class="crs-row-label">Pendamping Kelompok</span>
+                                    <span class="crs-row-val">
+                                        @php $facilitators = $reg->participant?->team?->facilitators; @endphp
+                                        @if($facilitators && $facilitators->isNotEmpty())
+                                            {{ $facilitators->pluck('full_name')->join(', ') }}
+                                        @else
+                                            <span style="color:#d4b896; font-style:italic;">Pendamping kelompok belum ditentukan</span>
+                                        @endif
+                                    </span>
                                 </div>
                                 <div class="crs-row">
                                     <span class="crs-row-label">Ukuran Kaos</span>
