@@ -157,6 +157,12 @@
                 font-size: 0.8125rem;
                 border-bottom: 1px solid #faf4eb;
             }
+            .crs-wa-row-right {
+                display: flex;
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 0.3rem;
+            }
             @media (min-width: 640px) {
                 .crs-wa-row {
                     flex-direction: row;
@@ -165,10 +171,7 @@
                     gap: 1rem;
                 }
                 .crs-wa-row-right {
-                    display: flex;
-                    flex-direction: column;
                     align-items: flex-end;
-                    gap: 0.3rem;
                     text-align: right;
                 }
             }

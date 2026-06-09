@@ -91,13 +91,6 @@ class TeamResource extends Resource
                     ->sortable(query: fn (Builder $query, string $direction) =>
                         $query->orderBy('number', $direction)
                     ),
-                Tables\Columns\IconColumn::make('whatsapp_group_link')
-                    ->label('Grup WA')
-                    ->boolean()
-                    ->trueIcon('heroicon-o-chat-bubble-left-ellipsis')
-                    ->falseIcon('heroicon-o-minus')
-                    ->trueColor('success')
-                    ->falseColor('gray'),
                 Tables\Columns\TextColumn::make('facilitators_count')
                     ->label('Pendamping')
                     ->counts('facilitators')
@@ -125,6 +118,13 @@ class TeamResource extends Resource
                     ->relationship('eventClass', 'saint_name'),
             ])
             ->actions([
+                Tables\Actions\Action::make('buka_wa')
+                    ->label('Buka Grup WA')
+                    ->icon('heroicon-o-chat-bubble-left-ellipsis')
+                    ->color('success')
+                    ->url(fn (Team $record): string => $record->whatsapp_group_link ?? '')
+                    ->openUrlInNewTab()
+                    ->visible(fn (Team $record): bool => filled($record->whatsapp_group_link)),
                 Tables\Actions\EditAction::make(),
                 Tables\Actions\DeleteAction::make(),
             ])
