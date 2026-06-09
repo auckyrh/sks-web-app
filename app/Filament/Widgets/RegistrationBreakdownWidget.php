@@ -35,20 +35,33 @@ class RegistrationBreakdownWidget extends Widget
             '2XL-Dewasa', '3XL-Dewasa', '4XL-Dewasa', '5XL-Dewasa',
         ];
 
-        $gradeCounts = Registration::where('event_period_id', $period->id)
-            ->selectRaw('grade, COUNT(*) as total')
-            ->groupBy('grade')
-            ->pluck('total', 'grade');
+        // Grade × gender breakdown in one query
+        $gradeGenderRows = Registration::where('event_period_id', $period->id)
+            ->selectRaw('grade, gender, COUNT(*) as total')
+            ->groupBy('grade', 'gender')
+            ->get();
+
+        // Index: [grade][gender] => count
+        $gg = [];
+        foreach ($gradeGenderRows as $row) {
+            $gg[$row->grade][$row->gender] = (int) $row->total;
+        }
+
+        $grades = [];
+        $totalF = 0;
+        $totalM = 0;
+        foreach ($gradeOptions as $value => $label) {
+            $f = $gg[$value]['F'] ?? 0;
+            $m = $gg[$value]['M'] ?? 0;
+            $grades[] = ['label' => $label, 'count' => $f + $m, 'f' => $f, 'm' => $m];
+            $totalF += $f;
+            $totalM += $m;
+        }
 
         $sizeCounts = Registration::where('event_period_id', $period->id)
             ->selectRaw('tshirt_size, COUNT(*) as total')
             ->groupBy('tshirt_size')
             ->pluck('total', 'tshirt_size');
-
-        $grades = [];
-        foreach ($gradeOptions as $value => $label) {
-            $grades[] = ['label' => $label, 'count' => $gradeCounts[$value] ?? 0];
-        }
 
         $sizes = [];
         foreach ($sizeOptions as $size) {
@@ -58,6 +71,11 @@ class RegistrationBreakdownWidget extends Widget
             }
         }
 
-        return ['grades' => $grades, 'sizes' => $sizes];
+        return [
+            'grades' => $grades,
+            'sizes'  => $sizes,
+            'totalF' => $totalF,
+            'totalM' => $totalM,
+        ];
     }
 }
