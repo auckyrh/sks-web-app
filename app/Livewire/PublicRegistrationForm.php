@@ -8,6 +8,7 @@ use App\Models\PaymentTier;
 use App\Models\Registration;
 use App\Models\TshirtSize;
 use App\Models\Wilayah;
+use App\Support\PhoneNormalizer;
 use Illuminate\Support\Str;
 use Livewire\Component;
 use Livewire\WithFileUploads;
@@ -138,6 +139,11 @@ class PublicRegistrationForm extends Component
         }
     }
 
+    public function updatedParentWhatsapp(): void
+    {
+        $this->parent_whatsapp = PhoneNormalizer::normalize($this->parent_whatsapp);
+    }
+
     public function submit(): void
     {
         try {
@@ -154,7 +160,7 @@ class PublicRegistrationForm extends Component
             'registration_source' => 'required|in:BIAK,YCK,UMUM',
             'tshirt_size' => ['required', 'in:' . TshirtSize::where('event_period_id', $this->activePeriod?->id)->where('is_active', true)->pluck('code')->implode(',')],
             'parent_name' => 'required|string|max:255',
-            'parent_whatsapp' => 'required|string|max:20',
+            'parent_whatsapp' => ['required', 'regex:/^[0-9]{8,20}$/'],
             'payment_tier_id' => 'required|exists:payment_tiers,id',
             'donation_amount' => 'integer|min:0',
             'payer_name'      => 'required|string|max:255',
@@ -172,6 +178,7 @@ class PublicRegistrationForm extends Component
             'tshirt_size.required' => 'Ukuran kaos wajib dipilih.',
             'parent_name.required' => 'Nama orang tua wajib diisi.',
             'parent_whatsapp.required' => 'No. WhatsApp orang tua wajib diisi.',
+            'parent_whatsapp.regex'    => 'Format No. WhatsApp tidak valid.',
             'payment_tier_id.required' => 'Tier pembayaran wajib dipilih.',
             'payer_name.required'       => 'Nama rekening pengirim wajib diisi.',
             'payment_date.required'     => 'Tanggal transfer wajib diisi.',
@@ -211,7 +218,7 @@ class PublicRegistrationForm extends Component
             'allergies' => $this->allergies ?: null,
             'notes' => $this->notes ?: null,
             'parent_name' => ucwords(strtolower(trim($this->parent_name))),
-            'parent_whatsapp' => $this->parent_whatsapp,
+            'parent_whatsapp' => PhoneNormalizer::normalize($this->parent_whatsapp),
             'payment_tier_id' => $this->payment_tier_id,
             'payment_amount' => $tier->amount,
             'donation_amount' => $this->donation_amount,
