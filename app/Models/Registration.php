@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Support\PhoneNormalizer;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
@@ -49,6 +50,11 @@ class Registration extends Model
         'status', 'registration_verified_by', 'registration_verified_at',
         'created_by', 'deleted_by'
     ];
+
+    public function setParentWhatsappAttribute(string $value): void
+    {
+        $this->attributes['parent_whatsapp'] = PhoneNormalizer::normalize($value);
+    }
 
     protected $casts = [
         'birth_date' => 'date',

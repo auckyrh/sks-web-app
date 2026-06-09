@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Support\PhoneNormalizer;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
@@ -32,6 +33,11 @@ class Participant extends Model
         'parent_name', 'parent_whatsapp', 'tshirt_size', 'tshirt_size_id', 'allergies', 'notes',
         'created_by', 'deleted_by'
     ];
+
+    public function setParentWhatsappAttribute(string $value): void
+    {
+        $this->attributes['parent_whatsapp'] = PhoneNormalizer::normalize($value);
+    }
 
     protected $casts = ['birth_date' => 'date'];
 
