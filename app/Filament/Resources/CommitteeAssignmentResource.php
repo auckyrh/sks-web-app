@@ -89,7 +89,8 @@ class CommitteeAssignmentResource extends Resource
                 Tables\Columns\TextColumn::make('user.full_name')
                     ->label('Nama')
                     ->searchable()
-                    ->sortable(),
+                    ->sortable()
+                    ->copyable(),
                 Tables\Columns\TextColumn::make('division.name')
                     ->label('Divisi')
                     ->badge()
