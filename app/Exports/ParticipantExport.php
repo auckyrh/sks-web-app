@@ -39,26 +39,37 @@ class ParticipantExport implements
             ->get();
     }
 
+    private static array $months = [
+        1 => 'Jan', 2 => 'Feb', 3 => 'Mar', 4 => 'Apr',
+        5 => 'Mei', 6 => 'Jun', 7 => 'Jul', 8 => 'Agu',
+        9 => 'Sep', 10 => 'Okt', 11 => 'Nov', 12 => 'Des',
+    ];
+
+    private function formatDate(?\Carbon\Carbon $date): string
+    {
+        if (! $date) return '-';
+        return $date->day . ' ' . self::$months[$date->month] . ' ' . $date->year;
+    }
+
     public function headings(): array
     {
         return [
             'No. Pendaftaran',
             'Nama Lengkap',
             'Nama Panggilan',
-            'Jenis Kelamin',
+            'JK',
             'Tanggal Lahir',
             'Kelas',
-            'Kelas Kelompok',
-            'No. Tim',
+            'Level',
             'Nama Tim',
-            'Link Grup WA Tim',
-            'Wilayah',
-            'Lingkungan',
             'Nama Orang Tua',
             'No. WA Orang Tua',
             'Ukuran Kaos',
             'Alergi',
             'Catatan',
+            'Wilayah',
+            'Lingkungan',
+            'Link Grup WA Tim',
         ];
     }
 
@@ -68,20 +79,19 @@ class ParticipantExport implements
             $row->registration?->registration_number ?? '-',
             $row->child_full_name,
             $row->nickname,
-            $row->gender === 'F' ? 'Perempuan' : 'Laki-laki',
-            $row->birth_date?->format('d/m/Y'),
+            $row->gender === 'F' ? 'P' : 'L',
+            $this->formatDate($row->birth_date),
             'Kelas ' . $row->grade,
-            $row->eventClass?->name ?? '-',
-            $row->team?->number ?? '-',
+            ucfirst($row->eventClass?->level ?? '-'),
             $row->team?->name ?? '-',
-            $row->team?->whatsapp_group_link ?? '-',
-            $row->registration?->wilayah?->name ?? '-',
-            $row->registration?->lingkungan?->name ?? '-',
             $row->parent_name,
             $row->parent_whatsapp,
             $row->tshirt_size,
             $row->allergies ?? '-',
             $row->notes ?? '-',
+            $row->registration?->wilayah?->name ?? '-',
+            $row->registration?->lingkungan?->name ?? '-',
+            $row->team?->whatsapp_group_link ?? '-',
         ];
     }
 
